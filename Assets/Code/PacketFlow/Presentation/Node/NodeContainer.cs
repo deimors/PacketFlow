@@ -1,4 +1,5 @@
 ﻿using PacketFlow.Domain;
+using PacketFlow.UseCases;
 using Zenject;
 
 namespace PacketFlow.Presentation.Node
@@ -13,6 +14,8 @@ namespace PacketFlow.Presentation.Node
 		public override void InstallBindings()
 		{
 			Container.BindInstance(Identifier);
+
+			Container.Bind<SetNodePositionWhenNodeAdded>().AsSingle().NonLazy();
 		}
 	}
 }

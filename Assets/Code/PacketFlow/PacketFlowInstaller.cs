@@ -8,7 +8,7 @@ namespace PacketFlow.Presentation
 	public class PacketFlowInstaller : MonoInstaller
 	{
 		[SerializeField]
-		private readonly GameObject _nodePrefab;
+		private GameObject _nodePrefab;
 
 		public override void InstallBindings()
 		{
