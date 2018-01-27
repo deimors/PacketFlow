@@ -85,6 +85,7 @@ namespace PacketFlow.Domain
 
 		private Maybe<NetworkError> AddNode(NetworkCommand.AddNode command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
+				.Record(() => new NetworkEvent.NodeAdded(command.Node))
 				.Execute();
 
 		private Maybe<NetworkError> LinkNodes(NetworkCommand.LinkNodes command)
