@@ -7,7 +7,7 @@ using UniRx;
 
 namespace Assets.Code.HackItFlow.GraphSystem
 {
-	public class LoadBalancerNode : INode
+	public class LoadBalancerNode : ILoadBalancerNode	
 	{
 		public ReactiveProperty<float> X { get; } = new ReactiveProperty<float>();
 
