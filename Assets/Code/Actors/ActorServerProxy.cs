@@ -5,7 +5,6 @@ namespace PacketFlow.Actors
 {
 	public class ActorServerProxy<TEvent, TCommand> : IActor<TEvent, TCommand>
 	{
-		private readonly ISubject<TEvent> _eventSubject = new Subject<TEvent>();
 		private readonly IActor<TEvent, TCommand> _wrapped;
 
 		public ActorServerProxy(IActor<TEvent, TCommand> wrapped, IActorServer<TEvent, TCommand> server)
