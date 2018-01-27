@@ -11,7 +11,7 @@ namespace Assets.Code.HackItFlow.IoC
 	public class FirewallNodeInstaller : MonoInstaller
 	{
 		[Inject]
-		public INode Node { get; set; }
+		public IFirewallNode Node { get; set; }
 
 		public override void InstallBindings()
 		{

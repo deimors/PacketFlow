@@ -21,6 +21,7 @@ namespace Assets.Code.HackItFlow.Presentation
 		public void Initialize(IRoot graphSystemRoot, FirewallNodeFactory firewallNodeFactory)
 		{
 			_graphSystemRoot = graphSystemRoot;
+			_firewallNodeFactory = firewallNodeFactory;
 
 			_graphSystemRoot
 				.Nodes

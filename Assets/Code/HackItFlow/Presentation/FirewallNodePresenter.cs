@@ -9,7 +9,7 @@ using Zenject;
 
 namespace Assets.Code.HackItFlow.Presentation
 {
-	public class FirewallNodeFactory : Factory<IFirewallNode, GameObject>
+	public class FirewallNodeFactory : Factory<IFirewallNode, IFirewallNode>
 	{
 	}
 }

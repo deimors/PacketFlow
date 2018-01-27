@@ -20,12 +20,13 @@ namespace Assets.Code.HackItFlow.IoC
 
 		public override void InstallBindings()
 		{
-			Container.Bind<IRoot>().To<Root>().AsSingle();
-			
+			Container.BindInterfacesAndSelfTo<Root>().AsSingle();
+
 			Container
-				.BindFactory<IFirewallNode, GameObject, FirewallNodeFactory>()
+				.BindFactory<IFirewallNode, IFirewallNode, FirewallNodeFactory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<FirewallNodeInstaller>(_firewallNodePrefab);
+				.ByNewPrefab<FirewallNodeInstaller>(_firewallNodePrefab)
+				.UnderTransform(_graphSystemObject.transform);
 		}
 	}
 }
