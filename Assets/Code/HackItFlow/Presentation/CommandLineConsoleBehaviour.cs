@@ -15,33 +15,16 @@ namespace Assets.Code.HackItFlow.Presentation
 	{
 		private ICommandLineConsole _commandLineConsole;
 
-		private CommandLineTextFactory _commandLineTextFactory;
-
 		[Inject]
-		public void Initialize(ICommandLineConsole commandLineConsole, CommandLineTextFactory commandLineTextFactory)
+		public void Initialize(ICommandLineConsole commandLineConsole)
 		{
 			_commandLineConsole = commandLineConsole;
-			_commandLineTextFactory = commandLineTextFactory;
-
-			_commandLineConsole
-				.LinesToDisplay
-				.ObserveAdd()
-				.OfType<ICommandLineText, ICommandLineText>()
-				.Subscribe(AddText)
-				.DisposeWith(this);
-
-			_commandLineConsole
-				.LinesToDisplay
-				.ObserveRemove()
-				.OfType<ICommandLineText, ICommandLineText>()
-				.Subscribe(RemoveText)
-				.DisposeWith(this);
 		}
 
-		private void AddText(ICommandLineText text) => _commandLineTextFactory.Create(text);
-
-		private void RemoveText(ICommandLineText text)
+		[Inject]
+		public ReactiveCollection<string> GetConsoleText()
 		{
+			return _commandLineConsole.Text.ToReactiveCollection();
 		}
 	}
 }

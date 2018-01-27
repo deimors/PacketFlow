@@ -10,8 +10,26 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 {
 	public class CommandLineConsole : ICommandLineConsole
 	{
-		public ReactiveSet<ICommandLineText> LinesToDisplay { get; } = new ReactiveSet<ICommandLineText>();
+		private const int MAX_LINES_OF_TEXT = 20;
 
-		IReadOnlyReactiveSet<ICommandLineText> ICommandLineConsole.LinesToDisplay => LinesToDisplay;
+		private ReactiveCollection<string> _text;
+
+		public IReadOnlyReactiveCollection<string> Text
+		{
+			get
+			{
+				return _text;
+			}
+		}
+
+		IReadOnlyReactiveCollection<string> ICommandLineConsole.Text => Text;
+
+		public void AddText(string text)
+		{
+			if (_text.Count >= MAX_LINES_OF_TEXT)
+				_text.RemoveAt(0);
+
+			_text.Add(text);
+		}
 	}
 }

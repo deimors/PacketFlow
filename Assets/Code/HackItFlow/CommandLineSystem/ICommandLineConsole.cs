@@ -10,6 +10,8 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 {
 	public interface ICommandLineConsole
 	{
-		IReadOnlyReactiveSet<ICommandLineText> LinesToDisplay { get; }
+		IReadOnlyReactiveCollection<string> Text { get; }
+
+		void AddText(string text);
 	}
 }
