@@ -75,35 +75,76 @@ namespace PacketFlow.Domain
 			=> $"({X}, {Y})";
 	}
 
-	public class Node
+	public abstract class Node : OneOfBase<Node.Gateway, Node.Router, Node.Consumer>
 	{
 		public NodeIdentifier Id { get; }
 		public NodePosition Position { get; }
 		public NodeQueue Queue { get; }
-		public NodeType Type { get; }
 		public NodePortSet Ports { get; }
 
-		public Node(NodeIdentifier id, NodePosition position, NodeQueue queue, NodeType type, NodePortSet ports)
+		public Node(NodeIdentifier id, NodePosition position, NodeQueue queue, NodePortSet ports)
 		{
 			Id = id ?? throw new ArgumentNullException(nameof(id));
 			Position = position ?? throw new ArgumentNullException(nameof(position));
 			Queue = queue ?? throw new ArgumentNullException(nameof(queue));
-			Type = type ?? throw new ArgumentNullException(nameof(type));
 			Ports = ports ?? throw new ArgumentNullException(nameof(ports));
 		}
 
-		public Node With(
-			Func<NodePosition, NodePosition> position = null,
+		public abstract Node With(
 			Func<NodeQueue, NodeQueue> queue = null,
-			Func<NodeType, NodeType> type = null,
 			Func<NodePortSet, NodePortSet> ports = null
-		) => new Node(
-			Id,
-			(position ?? Function.Ident)(Position),
-			(queue ?? Function.Ident)(Queue),
-			(type ?? Function.Ident)(Type),
-			(ports ?? Function.Ident)(Ports)
 		);
+
+		public class Gateway : Node
+		{
+			public Gateway(NodeIdentifier id, NodePosition position, NodeQueue queue, NodePortSet ports) : base(id, position, queue, ports)
+			{
+			}
+
+			public override Node With(
+				Func<NodeQueue, NodeQueue> queue = null,
+				Func<NodePortSet, NodePortSet> ports = null
+			) => new Gateway(
+				Id,
+				Position,
+				(queue ?? Function.Ident)(Queue),
+				(ports ?? Function.Ident)(Ports)
+			);
+		}
+
+		public class Router : Node
+		{
+			public Router(NodeIdentifier id, NodePosition position, NodeQueue queue, NodePortSet ports) : base(id, position, queue, ports)
+			{
+			}
+
+			public override Node With(
+				Func<NodeQueue, NodeQueue> queue = null,
+				Func<NodePortSet, NodePortSet> ports = null
+			) => new Router(
+				Id,
+				Position,
+				(queue ?? Function.Ident)(Queue),
+				(ports ?? Function.Ident)(Ports)
+			);
+		}
+
+		public class Consumer : Node
+		{
+			public Consumer(NodeIdentifier id, NodePosition position, NodeQueue queue, NodePortSet ports) : base(id, position, queue, ports)
+			{
+			}
+
+			public override Node With(
+				Func<NodeQueue, NodeQueue> queue = null,
+				Func<NodePortSet, NodePortSet> ports = null
+			) => new Consumer(
+				Id,
+				Position,
+				(queue ?? Function.Ident)(Queue),
+				(ports ?? Function.Ident)(Ports)
+			);
+		}
 	}
 
 	public class NodeQueue
@@ -124,44 +165,23 @@ namespace PacketFlow.Domain
 		public NodeQueue Enqueue(PacketIdentifier packetId)
 			=> new NodeQueue(Content.Enqueue(packetId), Capacity);
 	}
-
-	public abstract class NodeType : OneOfBase<NodeType.Gateway, NodeType.Router, NodeType.Consumer>
-	{
-		public class Gateway : NodeType
-		{
-			public Gateway(GatewayNodeState state)
-			{
-
-			}
-		}
-
-		public class Router : NodeType
-		{
-
-		}
-
-		public class Consumer : NodeType
-		{
-
-		}
-	}
-
-	public class GatewayNodeState
+	
+	public class RouterState
 	{
 		private readonly PortDirection[] _packetTypeToPortMap;
 
-		public GatewayNodeState()
+		public RouterState()
 		{
 			_packetTypeToPortMap = Enumerable.Repeat(PortDirection.Top, Enum.GetValues(typeof(PacketType)).Length).ToArray();
 		}
 
-		public GatewayNodeState(PortDirection[] packetTypeToPortMap)
+		public RouterState(PortDirection[] packetTypeToPortMap)
 		{
 			_packetTypeToPortMap = packetTypeToPortMap;
 		}
 
-		public GatewayNodeState WithPacketDirection(PacketType packetType, PortDirection port)
-			=> new GatewayNodeState(
+		public RouterState WithPacketDirection(PacketType packetType, PortDirection port)
+			=> new RouterState(
 				_packetTypeToPortMap
 					.Select((p, i) => i == (int)packetType ? port : p)
 					.ToArray()

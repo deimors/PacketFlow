@@ -66,22 +66,48 @@ namespace PacketFlow.Domain
 		}
 	}
 
-	public abstract class NetworkCommand : OneOfBase<NetworkCommand.AddNode, NetworkCommand.LinkNodes, NetworkCommand.AddPacket>
+	public abstract class NetworkCommand : OneOfBase<NetworkCommand.AddGatewayNode, NetworkCommand.AddRouterNode, NetworkCommand.AddConsumerNode, NetworkCommand.LinkNodes, NetworkCommand.AddPacket>
 	{
-		public class AddNode : NetworkCommand
+		public class AddGatewayNode : NetworkCommand
 		{
-			public AddNode(NodeIdentifier nodeId, NodePosition position, int capacity, NodeType type)
+			public AddGatewayNode(NodeIdentifier nodeId, NodePosition position, int capacity)
 			{
 				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
 				Position = position ?? throw new System.ArgumentNullException(nameof(position));
 				Capacity = capacity;
-				Type = type ?? throw new System.ArgumentNullException(nameof(type));
 			}
 
 			public NodeIdentifier NodeId { get; }
 			public NodePosition Position { get; }
 			public int Capacity { get; }
-			public NodeType Type { get; }
+		}
+
+		public class AddRouterNode : NetworkCommand
+		{
+			public AddRouterNode(NodeIdentifier nodeId, NodePosition position, int capacity)
+			{
+				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
+				Position = position ?? throw new System.ArgumentNullException(nameof(position));
+				Capacity = capacity;
+			}
+
+			public NodeIdentifier NodeId { get; }
+			public NodePosition Position { get; }
+			public int Capacity { get; }
+		}
+
+		public class AddConsumerNode : NetworkCommand
+		{
+			public AddConsumerNode(NodeIdentifier nodeId, NodePosition position, int capacity)
+			{
+				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
+				Position = position ?? throw new System.ArgumentNullException(nameof(position));
+				Capacity = capacity;
+			}
+
+			public NodeIdentifier NodeId { get; }
+			public NodePosition Position { get; }
+			public int Capacity { get; }
 		}
 
 		public class LinkNodes : NetworkCommand
@@ -162,14 +188,26 @@ namespace PacketFlow.Domain
 
 		public Maybe<NetworkError> HandleCommand(NetworkCommand command)
 			=> command.Match(
-				AddNode,
+				AddGatewayNode,
+				AddRouterNode,
+				AddConsumerNode,
 				LinkNodes,
 				AddPacket
 			);
 
-		private Maybe<NetworkError> AddNode(NetworkCommand.AddNode command)
+		private Maybe<NetworkError> AddGatewayNode(NetworkCommand.AddGatewayNode command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
-				.Record(() => new NetworkEvent.NodeAdded(new Node(command.NodeId, command.Position, new NodeQueue(command.Capacity), command.Type, new NodePortSet())))
+				.Record(() => new NetworkEvent.NodeAdded(new Node.Gateway(command.NodeId, command.Position, new NodeQueue(command.Capacity), new NodePortSet())))
+				.Execute();
+
+		private Maybe<NetworkError> AddRouterNode(NetworkCommand.AddRouterNode command)
+			=> this.BuildCommand<NetworkEvent, NetworkError>()
+				.Record(() => new NetworkEvent.NodeAdded(new Node.Router(command.NodeId, command.Position, new NodeQueue(command.Capacity), new NodePortSet())))
+				.Execute();
+
+		private Maybe<NetworkError> AddConsumerNode(NetworkCommand.AddConsumerNode command)
+			=> this.BuildCommand<NetworkEvent, NetworkError>()
+				.Record(() => new NetworkEvent.NodeAdded(new Node.Consumer(command.NodeId, command.Position, new NodeQueue(command.Capacity), new NodePortSet())))
 				.Execute();
 
 		private Maybe<NetworkError> LinkNodes(NetworkCommand.LinkNodes command)
