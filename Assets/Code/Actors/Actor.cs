@@ -6,7 +6,7 @@ using Workshop.Core;
 
 namespace PacketFlow.Actors
 {
-	public abstract class Actor<TEvent, TCommand, TError> : IObservable<TEvent>, IEnqueueCommand<TCommand>
+	public abstract class Actor<TEvent, TCommand, TError> : IActor<TEvent, TCommand>
 	{
 		private readonly CommandQueue<TCommand, TError> _commandQueue;
 
