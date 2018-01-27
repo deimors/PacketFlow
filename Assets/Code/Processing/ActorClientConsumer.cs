@@ -9,16 +9,16 @@ using static Assets.Code.Constants;
 
 namespace Assets.Code.Processing
 {
-	public class ActorClientConsumer<TEvent> : MonoBehaviour, IActorClient<TEvent, NetworkCommand>
+	public class ActorClientConsumer : MonoBehaviour, IActorClient<NetworkEvent, NetworkCommand>
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
 		private readonly ClientEventDispatcher _eventDispatcher = new ClientEventDispatcher();
 
 		public NetworkManager NetworkManagerInstance;
 
-		public IObservable<TEvent> ReceivedEvents;
+		public IObservable<NetworkEvent> ReceivedEvents;
 
-		IObservable<TEvent> IActorClient<TEvent, NetworkCommand>.ReceivedEvents
+		IObservable<NetworkEvent> IActorClient<NetworkEvent, NetworkCommand>.ReceivedEvents
 		{
 			get
 			{
