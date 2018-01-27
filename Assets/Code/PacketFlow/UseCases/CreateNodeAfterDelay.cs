@@ -1,6 +1,5 @@
 ﻿using PacketFlow.Actors;
 using PacketFlow.Domain;
-using PacketFlow.Presentation.Node;
 using System;
 using UniRx;
 
@@ -11,25 +10,16 @@ namespace PacketFlow.UseCases
 		public CreateNodeAfterDelay(IEnqueueCommand<NetworkCommand> commandQueue)
 		{
 			Observable.Timer(TimeSpan.FromSeconds(1))
-				.Subscribe(_ => commandQueue.Enqueue(BuildAddNodeCommand()));
+				.Subscribe(_ => BuildNetwork(commandQueue));
 		}
 
-		private NetworkCommand BuildAddNodeCommand()
-			=> new NetworkCommand.AddNode(new NodeIdentifier(), new NodePosition(0, 0), 5);
-	}
-
-	public class InstantiateNodeContainerWhenNodeAdded
-	{
-		public InstantiateNodeContainerWhenNodeAdded(IObservable<NetworkEvent> networkEvents, NodeContainer.Factory nodeFactory)
+		private void BuildNetwork(IEnqueueCommand<NetworkCommand> commandQueue)
 		{
-			networkEvents
-				.OfType<NetworkEvent, NetworkEvent.NodeAdded>()
-				.Subscribe(nodeAdded => CreateNodeContainer(nodeFactory, nodeAdded));
+			commandQueue.Enqueue(BuildAddNodeCommand(0, 0));
+			commandQueue.Enqueue(BuildAddNodeCommand(4, 4));
 		}
 
-		private static void CreateNodeContainer(NodeContainer.Factory nodeFactory, NetworkEvent.NodeAdded nodeAdded)
-		{
-			nodeFactory.Create(nodeAdded.Node.Id);
-		}
+		private NetworkCommand BuildAddNodeCommand(float x, float y)
+			=> new NetworkCommand.AddNode(new NodeIdentifier(), new NodePosition(x, y), 5, new NodeType.Gateway());
 	}
 }

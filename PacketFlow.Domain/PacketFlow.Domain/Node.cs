@@ -10,7 +10,8 @@ namespace PacketFlow.Domain
 {
 	public class NodeIdentifier
 	{
-
+		public override string ToString()
+			=> $"{GetHashCode().ToString("X")}";
 	}
 
 	public class NodePosition : IEquatable<NodePosition>
@@ -45,6 +46,9 @@ namespace PacketFlow.Domain
 
 		public static bool operator !=(NodePosition position1, NodePosition position2) 
 			=> !(position1 == position2);
+
+		public override string ToString()
+			=> $"({X}, {Y})";
 	}
 
 	public class Node

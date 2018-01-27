@@ -14,9 +14,7 @@ namespace PacketFlow.Actors
 
 			server.ReceivedCommands.Subscribe(Enqueue);
 			
-			_wrapped.Subscribe(_eventSubject);
-
-			_eventSubject.Subscribe(server.SendEvent);
+			_wrapped.Subscribe(server.SendEvent);
 		}
 
 		public void Enqueue(TCommand command)
@@ -26,7 +24,7 @@ namespace PacketFlow.Actors
 
 		public IDisposable Subscribe(IObserver<TEvent> observer)
 		{
-			return _eventSubject.Subscribe(observer);
+			return _wrapped.Subscribe(observer);
 		}
 	}
 }

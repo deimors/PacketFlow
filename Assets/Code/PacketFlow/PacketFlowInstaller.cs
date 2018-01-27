@@ -19,11 +19,17 @@ namespace PacketFlow.Presentation
 				.FromSubContainerResolve()
 				.ByNewPrefab<NodeContainer>(_nodePrefab);
 			
+			
 			Container
 				.BindInterfacesTo<ActorServerProxy<NetworkEvent, NetworkCommand>>()
 				.FromInstance(new ActorServerProxy<NetworkEvent, NetworkCommand>(new NetworkActor(Observable.EveryUpdate().AsUnitObservable()), new FakeNetworkActorServer()))
 				.AsSingle();
-
+			/*
+			Container
+				.BindInterfacesTo<NetworkActor>()
+				.AsSingle()
+				.WithArguments(Observable.EveryUpdate().AsUnitObservable());
+			*/
 			Container.Bind<CreateNodeAfterDelay>().AsSingle().NonLazy();
 			Container.Bind<InstantiateNodeContainerWhenNodeAdded>().AsSingle().NonLazy();
 		}
