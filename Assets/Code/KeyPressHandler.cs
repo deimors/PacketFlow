@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.Networking.NetworkSystem;
 
 public class KeyPressHandler : MonoBehaviour {
 
@@ -12,9 +14,10 @@ public class KeyPressHandler : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		//foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(Input.GetKeyDown))
-			
-		
+	void Update ()
+	{
+		foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => Input.GetKeyDown(x)))
+			NetworkServer.SendToAll(1, new StringMessage(key.ToString()));
+
 	}
 }
