@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 using static Assets.Code.Constants;
 
+/// <summary>
+/// HackItFlow
+/// </summary>
 public class PacketFlowMessageClientConsumer : MonoBehaviour
 {
 	private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
@@ -24,9 +27,9 @@ public class PacketFlowMessageClientConsumer : MonoBehaviour
 		if (!NetworkManagerInstance.IsClientConnected())
 			return;
 
-		if (!NetworkManagerInstance.client.handlers.ContainsKey(MESSAGE_TYPE_ID))
+		if (!NetworkManagerInstance.client.handlers.ContainsKey(ADMIN_PLAYER_MESSAGE_TYPE_ID))
 		{
-			NetworkManagerInstance.client.RegisterHandler(MESSAGE_TYPE_ID, networkMessage =>
+			NetworkManagerInstance.client.RegisterHandler(ADMIN_PLAYER_MESSAGE_TYPE_ID, networkMessage =>
 			{
 				var message = networkMessage.ReadMessage<PacketFlowMessage>();
 				_messageQueue.Enqueue(message);

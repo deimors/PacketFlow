@@ -8,8 +8,9 @@ namespace Assets.Code
 {
 	public static class Constants
 	{
-		public const int MESSAGE_TYPE_ID = 888;
-		public const int HACKER_TYPE = 0;
-		public const int ADMIN_TYPE = 1;
+		public const int HACKER_PLAYER_MESSAGE_TYPE_ID = 880;
+		public const int ADMIN_PLAYER_MESSAGE_TYPE_ID = 881;
+		public const int HACKER_PLAYER_TYPE = 0;
+		public const int ADMIN_PLAYER_TYPE = 1;
 	}
 }
