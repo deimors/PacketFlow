@@ -9,9 +9,16 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 {
 	public enum ActionType
 	{
+		[ActionText("crack-password")]
 		CrackPassword,
+
+		[ActionText("infect-node")]
 		InfectNode,
+
+		[ActionText("connect-node")]
 		ConnectNode,
+
+		[ActionText("disconnect-node")]
 		DisconnectNode
 	}
 }
