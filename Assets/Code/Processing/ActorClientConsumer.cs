@@ -31,7 +31,7 @@ namespace Assets.Code.Processing
 			if (!SafeToSend)
 				return;
 
-			var message = new NetworkCommandToPacketFlowMessageMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
+			var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 
 			NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);			
 		}				
