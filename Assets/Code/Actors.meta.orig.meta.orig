@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+<<<<<<< e0ad40da03a473fb29a25ff32d832f229a86fc79
+guid: 46625bc14c039dd41bffc5c399e9a1fc
+timeCreated: 1517032299
+=======
+guid: 9927c211fa40fb7439a2d29ae397ce72
+timeCreated: 1517032157
+>>>>>>> Adds ability to spawn firewall node prefabs.
+licenseType: Free
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
