@@ -15,9 +15,9 @@ namespace PacketFlow.Presentation
 
 		public override void InstallBindings()
 		{
-			Container.BindFactory<NodeIdentifier, NodeContainer, NodeContainer.Factory>()
+			Container.BindFactory<NodeIdentifier, GatewayNodeContainer, GatewayNodeContainer.Factory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<NodeContainer>(_nodePrefab);
+				.ByNewPrefab<GatewayNodeContainer>(_nodePrefab);
 			
 			
 			Container
