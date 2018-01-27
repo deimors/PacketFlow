@@ -11,7 +11,7 @@ public class KeyPressListener : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		NetworkServer.RegisterHandler(1, networkMessage =>
+		NetworkServer.RegisterHandler(888, networkMessage =>
 		{
 			var message = networkMessage.ReadMessage<StringMessage>();
 			_messageQueue.Enqueue(message);

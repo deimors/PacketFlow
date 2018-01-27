@@ -14,15 +14,17 @@ public class KeyPressHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		client = networkManager.StartClient();
-		Debug.Log("Client started successfully");
+		
 	}
 	
 	
 	// Update is called once per frame
-	void Update () 
+	void Update ()
 	{
+		if (!networkManager.IsClientConnected())
+			return;
+
 		foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => Input.GetKeyDown(x)))
-			client.Send(1, new StringMessage(key.ToString()));
+			networkManager.client.Send(888, new StringMessage(key.ToString()));
 	}
 }
