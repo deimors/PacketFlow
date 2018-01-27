@@ -73,9 +73,9 @@ namespace PacketFlow.Domain
 			);
 	}
 
-	public class Network : AggregateRoot<NetworkEvent, NetworkState>, IHandleCommand<NetworkCommand, NetworkError>
+	public class NetworkAggregate : AggregateRoot<NetworkEvent, NetworkState>, IHandleCommand<NetworkCommand, NetworkError>
 	{
-		public Network() : base(new NetworkState()) { }
+		public NetworkAggregate() : base(new NetworkState()) { }
 
 		public Maybe<NetworkError> HandleCommand(NetworkCommand command)
 			=> command.Match(
