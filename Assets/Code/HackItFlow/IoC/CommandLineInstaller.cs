@@ -28,7 +28,13 @@ namespace Assets.Code.HackItFlow.IoC
 			//	.ByNewPrefab<FirewallNodeInstaller>(_firewallNodePrefab)
 			//	.UnderTransform(_graphSystemObject.transform);
 
+			Container.BindInterfacesAndSelfTo<CommandLineConsole>().AsSingle();
 
+			Container
+				.BindFactory<ICommandLineText, ICommandLineText, CommandLineTextFactory>()
+				.FromSubContainerResolve()
+				.ByNewPrefab<CommandLineTextInstaller>(_commandLinePrefab)
+				.UnderTransform(_commandLineObject.transform);
 		}
 	}
 }
