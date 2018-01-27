@@ -27,7 +27,7 @@ namespace Assets.Code
 			public const int Left = 3;
 		}
 
-		public static class PacketType
+		public static class TransportPacketType
 		{
 			public const int Red = 0;
 			public const int Blue = 1;
