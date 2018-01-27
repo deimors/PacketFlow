@@ -12,12 +12,14 @@ namespace Assets.Code.Processing
 {
 	public class NetworkCommandToPacketFlowMessageMapper
 	{
+		/*
 		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type>
 		{
-			{ TransportCommandPayloadType.AddNode, typeof(AddNodeCommandTransport) },
-			{ TransportCommandPayloadType.LinkNodes, typeof(LinkNodesCommandTransport) },
-			{ TransportCommandPayloadType.AddPacket, typeof(AddPacketCommandTransport) }
+			{ (int)TransportCommandPayloadType.AddNode, typeof(AddNodeCommandTransport) },
+			{ (int)TransportCommandPayloadType.LinkNodes, typeof(LinkNodesCommandTransport) },
+			{ (int)TransportCommandPayloadType.AddPacket, typeof(AddPacketCommandTransport) }
 		};
+		*/
 
 		public PacketFlowMessage Map(int senderID, int senderType, NetworkCommand command)
 		{
@@ -26,9 +28,9 @@ namespace Assets.Code.Processing
 				senderID = senderID,
 				senderType = senderType,
 				payloadType = command.Match(
-					addNode => TransportCommandPayloadType.AddNode,
-					linkNodes => TransportCommandPayloadType.LinkNodes,
-					addPacket => TransportCommandPayloadType.AddPacket),
+					addNode => (int)TransportCommandPayloadType.AddNode,
+					linkNodes => (int)TransportCommandPayloadType.LinkNodes,
+					addPacket => (int)TransportCommandPayloadType.AddPacket),
 				payload = JsonUtility.ToJson(command.Match(
 					addNodeCommand => GetPayloadForAddNodeCommand(addNodeCommand),
 					linkNodesCommand => GetPayloadForLinkNodesCommand(linkNodesCommand),
@@ -36,7 +38,7 @@ namespace Assets.Code.Processing
 			};
 		}
 		
-		private object GetPayloadForAddNodeCommand(NetworkCommand.AddNode addNodeCommand)
+		private object GetPayloadForAddNodeCommand (NetworkCommand.AddNode addNodeCommand)
 		{
 			return new AddNodeCommandTransport
 			{
@@ -77,7 +79,53 @@ namespace Assets.Code.Processing
 
 		public NetworkCommand Map(PacketFlowMessage message)
 		{
-			return (NetworkCommand)JsonUtility.FromJson(message.payload, payloadTypeLookup[message.payloadType]);
-		}			
+			//return (NetworkCommand)JsonUtility.FromJson(message.payload, payloadTypeLookup[message.payloadType]);
+			switch ((TransportCommandPayloadType)message.payloadType)
+			{
+				case TransportCommandPayloadType.AddNode:
+					return GetCommandForAddNodePayload(message.payload);
+				case TransportCommandPayloadType.LinkNodes:
+					return GetCommandForLinkNodesPayload(message.payload);
+				case TransportCommandPayloadType.AddPacket:
+					return GetCommandForAddPacketPayload(message.payload);
+				default:
+					return null;
+			}
+		}
+
+		private NetworkCommand.AddNode GetCommandForAddNodePayload(string payload)
+		{
+			var transport = JsonUtility.FromJson<AddNodeCommandTransport>(payload);
+			return new NetworkCommand.AddNode
+				(
+					new NodeIdentifier(transport.ID),
+					new NodePosition(transport.X, transport.Y),
+					transport.Capacity,
+					new NodeType.Consumer()
+				);
+		}
+
+		private NetworkCommand.LinkNodes GetCommandForLinkNodesPayload(string payload)
+		{
+			var transport = JsonUtility.FromJson<LinkNodesCommandTransport>(payload);
+			return new NetworkCommand.LinkNodes
+				(
+					new NodeIdentifier(transport.SourceID),
+					(PortDirection)transport.SourcePortDirection,
+					new NodeIdentifier(transport.SinkID),
+					(PortDirection)transport.SinkPortDirection
+				);
+		}
+
+		private NetworkCommand.AddPacket GetCommandForAddPacketPayload(string payload)
+		{
+			var transport = JsonUtility.FromJson<AddPacketCommandTransport>(payload);
+			return new NetworkCommand.AddPacket
+				(
+					new PacketIdentifier(transport.PacketID),
+					(PacketType)transport.Type,
+					new NodeIdentifier(transport.NodeId)
+				);
+		}
 	}
 }
