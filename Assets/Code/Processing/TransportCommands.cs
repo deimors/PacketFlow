@@ -8,6 +8,13 @@ namespace Assets.Code.Processing
 {
 	public class TransportCommands
 	{
+		public enum TransportCommandPayloadType
+		{
+			AddNode = 0,
+			LinkNodes = 1,
+			AddPacket = 2
+		}
+
 		public class AddNodeCommandTransport
 		{
 			public Guid ID;

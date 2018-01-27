@@ -18,13 +18,6 @@ namespace Assets.Code
 			public const int Gateway = 0;
 			public const int Router = 1;
 			public const int Consumer = 2;
-		}
-
-		public static class TransportCommandPayloadType
-		{
-			public const int AddNode = 0;
-			public const int LinkNode = 1;
-			public const int AddPacket = 2;
-		}
+		}		
 	}
 }
