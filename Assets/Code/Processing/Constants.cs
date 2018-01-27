@@ -12,12 +12,5 @@ namespace Assets.Code
 		public const int ADMIN_PLAYER_TYPE = 1;
 		public const int ADD_NODE_TRE_PAYLOAD_TYPE = 0;
 		public const int EVENT_PAYLOAD_TYPE = 1;
-
-		public static class TransportNodeType
-		{
-			public const int Gateway = 0;
-			public const int Router = 1;
-			public const int Consumer = 2;
-		}		
 	}
 }
