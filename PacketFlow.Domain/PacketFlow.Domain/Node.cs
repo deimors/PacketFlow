@@ -114,9 +114,12 @@ namespace PacketFlow.Domain
 
 		public class Router : Node
 		{
-			public Router(NodeIdentifier id, NodePosition position, NodeQueue queue, NodePortSet ports) : base(id, position, queue, ports)
+			public Router(NodeIdentifier id, NodePosition position, NodeQueue queue, NodePortSet ports, RouterState state) : base(id, position, queue, ports)
 			{
+				State = state ?? throw new ArgumentNullException(nameof(state));
 			}
+
+			public RouterState State { get; }
 
 			public override Node With(
 				Func<NodeQueue, NodeQueue> queue = null,
@@ -125,8 +128,30 @@ namespace PacketFlow.Domain
 				Id,
 				Position,
 				(queue ?? Function.Ident)(Queue),
-				(ports ?? Function.Ident)(Ports)
+				(ports ?? Function.Ident)(Ports),
+				State
 			);
+
+			public Node With(
+				Func<RouterState, RouterState> state = null
+			) => new Router(
+				Id,
+				Position,
+				Queue,
+				Ports,
+				(state ?? Function.Ident)(State)
+			);
+
+			public PortDirection NextOutputPort(PacketType packetType)
+			{
+				var outputs = Ports.Outputs.ToArray();
+				var currentIndex = outputs.Where(port => port == Ports[State[packetType]]).Select((port, i) => i).FirstMaybe();
+				
+				return currentIndex.SelectOrElse(
+					index => outputs[index + 1 % outputs.Length].Port,
+					() => PortDirection.Top
+				);
+			}
 		}
 
 		public class Consumer : Node
@@ -180,6 +205,9 @@ namespace PacketFlow.Domain
 			_packetTypeToPortMap = packetTypeToPortMap;
 		}
 
+		public PortDirection this[PacketType packetType]
+			=> _packetTypeToPortMap[(int)packetType];
+
 		public RouterState WithPacketDirection(PacketType packetType, PortDirection port)
 			=> new RouterState(
 				_packetTypeToPortMap
@@ -194,11 +222,23 @@ namespace PacketFlow.Domain
 
 	public abstract class NodePort : OneOfBase<NodePort.Disconnected, NodePort.Connected>
 	{
-		public class Disconnected : NodePort { }
+		protected NodePort(PortDirection port)
+		{
+			Port = port;
+		}
+
+		public PortDirection Port { get; }
+
+		public class Disconnected : NodePort
+		{
+			public Disconnected(PortDirection direction) : base(direction)
+			{
+			}
+		}
 
 		public class Connected : NodePort
 		{
-			public Connected(LinkIdentifier linkId, ConnectionDirection direction)
+			public Connected(PortDirection port, LinkIdentifier linkId, ConnectionDirection direction) : base(port)
 			{
 				LinkId = linkId ?? throw new ArgumentNullException(nameof(linkId));
 				Direction = direction;
@@ -215,7 +255,7 @@ namespace PacketFlow.Domain
 
 		public NodePortSet()
 		{
-			_ports = Enumerable.Repeat(new NodePort.Disconnected(), Enum.GetValues(typeof(PortDirection)).Length).OfType<NodePort>().ToArray();
+			_ports = Enum.GetValues(typeof(PortDirection)).OfType<PortDirection>().Select(port => new NodePort.Disconnected(port)).Cast<NodePort>().ToArray();
 		}
 
 		public NodePortSet(NodePort[] ports)
@@ -231,13 +271,19 @@ namespace PacketFlow.Domain
 			}
 		}
 
+		public IEnumerable<NodePort> Inputs
+			=> _ports.Where(port => port.Match(_ => false, connected => connected.Direction == ConnectionDirection.Input));
+
+		public IEnumerable<NodePort> Outputs
+			=> _ports.Where(port => port.Match(_ => false, connected => connected.Direction == ConnectionDirection.Output));
+
 		public bool IsDisconnected(PortDirection direction)
 			=> _ports[(int)direction] is NodePort.Disconnected;
 
 		public NodePortSet ConnectPort(PortDirection port, LinkIdentifier linkId, ConnectionDirection direction)
 			=> new NodePortSet(
 				_ports
-					.Select((p, i) => i == (int)port ? new NodePort.Connected(linkId, direction) : p)
+					.Select((p, i) => i == (int)port ? new NodePort.Connected(port, linkId, direction) : p)
 					.ToArray()
 			);
 
