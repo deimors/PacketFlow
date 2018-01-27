@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using static Assets.Code.Constants;
+using PacketFlow.Domain;
 
 namespace Assets.Code.Processing
 {
-	public class CommandToPacketFlowMessageMapper<NetworkCommand>
+	public class NetworkCommandToPacketFlowMessageMapper
 	{
 		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type> { { COMMAND_PAYLOAD_TYPE, typeof(NetworkCommand) } };
 
@@ -19,7 +20,7 @@ namespace Assets.Code.Processing
 				senderID = senderID,
 				senderType = senderType,
 				payloadType = COMMAND_PAYLOAD_TYPE,
-				payload = JsonUtility.ToJson(command)
+				payload = JsonUtility.ToJson(command.Match)
 			};
 		}
 
