@@ -29,10 +29,10 @@ public class InputProcessor : MonoBehaviour {
 		if (IsAServer) 
 		{
 
-			if (Input.GetKeyDown(KeyCode.A))
+			if (Input.GetKeyDown(KeyCode.G))
 			{
-				var domainCommand = new NetworkCommand.AddNode(new NodeIdentifier(), new NodePosition(0.0f, 0.0f), 10);
-				var commandToSendAcrossWire = new NetworkCommandToPacketFlowMessageMapper().Map(SenderID, ADMIN_PLAYER_TYPE, domainCommand);
+				var domainCommand = new NetworkCommand.AddGatewayNode(new NodeIdentifier(), new NodePosition(0.0f, 0.0f), 10);
+				var commandToSendAcrossWire = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, domainCommand);
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, commandToSendAcrossWire);
 			}
 			/*
