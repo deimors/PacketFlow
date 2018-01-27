@@ -8,16 +8,20 @@ using UnityEngine.Networking.NetworkSystem;
 
 public class KeyPressHandler : MonoBehaviour {
 
+	public NetworkManager networkManager;
+
+	public NetworkClient client;
+
 	// Use this for initialization
 	void Start () {
-		
+		client = networkManager.StartClient();		
 	}
 	
+	
 	// Update is called once per frame
-	void Update ()
+	void Update () 
 	{
 		foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => Input.GetKeyDown(x)))
-			NetworkServer.SendToAll(1, new StringMessage(key.ToString()));
-
+			client.Send(1, new StringMessage(key.ToString()));
 	}
 }
