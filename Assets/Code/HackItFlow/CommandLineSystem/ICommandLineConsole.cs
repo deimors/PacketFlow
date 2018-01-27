@@ -1,17 +1,15 @@
-﻿using System;
+﻿using Assets.Code.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel;
+using UniRx;
 
 namespace Assets.Code.HackItFlow.CommandLineSystem
 {
-	public enum ActionType
+	public interface ICommandLineConsole
 	{
-		CrackPassword,
-		InfectNode,
-		ConnectNode,
-		DisconnectNode
+		IReadOnlyReactiveSet<ICommandLineText> LinesToDisplay { get; }
 	}
 }
