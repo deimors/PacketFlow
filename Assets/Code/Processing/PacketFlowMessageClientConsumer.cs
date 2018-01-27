@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 using static Assets.Code.Constants;
 
 /// <summary>
-/// HackItFlow
+/// HackItFlow -> client
 /// </summary>
 public class PacketFlowMessageClientConsumer : MonoBehaviour
 {

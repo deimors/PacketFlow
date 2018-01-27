@@ -8,7 +8,7 @@ using UnityEngine.Networking.NetworkSystem;
 using static Assets.Code.Constants;
 
 /// <summary>
-/// PacketFlow
+/// PacketFlow -> server 
 /// </summary>
 public class PacketFlowMessageNetworkConsumer : MonoBehaviour {
 

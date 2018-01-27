@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assets.Code
 {
@@ -12,5 +9,7 @@ namespace Assets.Code
 		public const int ADMIN_PLAYER_MESSAGE_TYPE_ID = 881;
 		public const int HACKER_PLAYER_TYPE = 0;
 		public const int ADMIN_PLAYER_TYPE = 1;
+		public const int COMMAND_PAYLOAD_TYPE = 0;
+		public const int EVENT_PAYLOAD_TYPE = 1;	
 	}
 }

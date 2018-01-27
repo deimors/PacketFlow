@@ -4,30 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Assets.Code.Constants;
 
 namespace Assets.Code.Processing
 {
-	public class ComnmandToPacketFlowMessageMapper
+	public class CommandToPacketFlowMessageMapper<NetworkCommand>
 	{
-		private const int SAMPLE_MESSAGE_TYPE_ID = -99;
-		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type> { { SAMPLE_MESSAGE_TYPE_ID, typeof(int) } };
+		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type> { { COMMAND_PAYLOAD_TYPE, typeof(NetworkCommand) } };
 
-		public PacketFlowMessage Map(object thing)
+		public PacketFlowMessage Map(int senderID, int senderType, NetworkCommand command)
 		{
 			return new PacketFlowMessage()
 			{
-				senderID = -99,
-				senderType = -99,
-				payloadType = SAMPLE_MESSAGE_TYPE_ID,
-				payload = JsonUtility.ToJson(thing)
+				senderID = senderID,
+				senderType = senderType,
+				payloadType = COMMAND_PAYLOAD_TYPE,
+				payload = JsonUtility.ToJson(command)
 			};
 		}
 
-		public object Map(PacketFlowMessage message)
+		public NetworkCommand Map(PacketFlowMessage message)
 		{
-			return JsonUtility.FromJson(message.payload, payloadTypeLookup[message.payloadType]);
-		}
-
-			
+			return (NetworkCommand)JsonUtility.FromJson(message.payload, payloadTypeLookup[message.payloadType]);
+		}			
 	}
 }
