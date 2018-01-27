@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class NetworkLink : MonoBehaviour
 {
-	private LineRenderer _lineRenderer;
+	private LineRenderer _lineRenderer; 
 
 	[SerializeField]
 	public Vector2 StartPoint = new Vector2();
@@ -22,16 +23,43 @@ public class NetworkLink : MonoBehaviour
 
 	private float _midpointInterpolationAmount;
 
+	internal class TransportingGameObject
+	{
+		internal GameObject gameObject;
+		internal float timeToLive;
+		internal float lifeTime;
+	}
+	
+	private List<TransportingGameObject> _travelingGameObjects = new List<TransportingGameObject>();
+
 	void Start()
 	{
 		InitializeLineRender();
 	}
 		
-	void Update ()
+	void FixedUpdate ()
 	{
-		HandlePositionChanges();
+		HandleEndpointPositionChanges();
 		HandleColorChanges();
+		
+		HandleTravelingGameObjects(Time.deltaTime);
 	}
+
+	public void AddGameObject(GameObject gameObject, float travelTime)
+	{
+		if (travelTime <= 0)
+			travelTime = float.Epsilon;
+
+		gameObject.transform.position = _previousStartPoint;
+
+		_travelingGameObjects.Add(new TransportingGameObject()
+		{
+			gameObject = gameObject,
+			timeToLive = travelTime,
+			lifeTime = 0f
+		});
+	}
+
 
 	public Vector3 GetInterpolatedPostion(float amount)
 	{
@@ -40,6 +68,20 @@ public class NetworkLink : MonoBehaviour
 		
 		else
 			return Vector3.Lerp(_postions[1], _postions[2], (amount - _midpointInterpolationAmount) / (1 - _midpointInterpolationAmount));
+	}
+
+	private void HandleTravelingGameObjects(float deltaTime)
+	{
+		_travelingGameObjects.ForEach(o => o.lifeTime += deltaTime);
+		
+		_travelingGameObjects.RemoveAll(o => o.lifeTime > o.timeToLive);
+
+		_travelingGameObjects.ForEach(o => o.gameObject.transform.position = GetInterpolatedPostion(GetTransportingGameObjectInterpolationAmount(o)));
+	}
+
+	private float GetTransportingGameObjectInterpolationAmount(TransportingGameObject gameObject)
+	{
+		return gameObject.lifeTime / gameObject.timeToLive;
 	}
 
 	private void InitializeLineRender()
@@ -59,7 +101,7 @@ public class NetworkLink : MonoBehaviour
 		}
 	}
 
-	private void HandlePositionChanges()
+	private void HandleEndpointPositionChanges()
 	{
 		if (StartPoint != _previousStartPoint || EndPoint != _previousStartPoint)
 		{
