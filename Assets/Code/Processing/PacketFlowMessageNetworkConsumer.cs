@@ -7,6 +7,9 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using static Assets.Code.Constants;
 
+/// <summary>
+/// PacketFlow
+/// </summary>
 public class PacketFlowMessageNetworkConsumer : MonoBehaviour {
 
 	private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
@@ -14,7 +17,7 @@ public class PacketFlowMessageNetworkConsumer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		NetworkServer.RegisterHandler(MESSAGE_TYPE_ID, networkMessage =>
+		NetworkServer.RegisterHandler(HACKER_PLAYER_MESSAGE_TYPE_ID, networkMessage =>
 		{
 			var message = networkMessage.ReadMessage<PacketFlowMessage>();
 			_messageQueue.Enqueue(message);
