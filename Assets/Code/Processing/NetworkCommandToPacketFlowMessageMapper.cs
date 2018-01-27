@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static Assets.Code.Constants;
 using PacketFlow.Domain;
+using static Assets.Code.Processing.TransportCommands;
 
 namespace Assets.Code.Processing
 {
@@ -35,31 +36,33 @@ namespace Assets.Code.Processing
 				X = addNodeCommand.Position.X,
 				Y = addNodeCommand.Position.Y,
 				Capacity = addNodeCommand.Capacity,
-				NodeType = addNodeCommand.Type.Match(gateway => 0, router => 1, consumer => 2)
+				NodeType = addNodeCommand.Type.Match(
+						gateway => TransportNodeType.Gateway,
+						router => TransportNodeType.Router,
+						consumer => TransportNodeType.Consumer)
 			};
 		}
+
+		
 
 		private object GetPayloadForLinkNodesCommand(NetworkCommand.LinkNodes linkNodesCommand)
 		{
 			return new LinkNodeCommand
 			{
+				
 
 			};
 		}
+
+		
 
 		private object GetPayloadForAddPacketCommand(NetworkCommand.AddPacket addPacketCommand)
 		{
 			return null;
 		}
 
-		private class AddNodeCommand
-		{
-			public Guid ID;
-			public float X;
-			public float Y;
-			public int Capacity;
-			public int NodeType;
-		}
+		
+		
 
 		public NetworkCommand Map(PacketFlowMessage message)
 		{
