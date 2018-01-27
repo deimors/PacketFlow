@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
 using static Assets.Code.Constants;
+using PacketFlow.Domain;
+using Assets.Code.Processing;
 
 public class InputProcessor : MonoBehaviour {
 
@@ -26,11 +28,20 @@ public class InputProcessor : MonoBehaviour {
 
 		if (IsAServer) 
 		{
+
+			if (Input.GetKeyDown(KeyCode.A))
+			{
+				var domainCommand = new NetworkCommand.AddNode(new NodeIdentifier(), new NodePosition(0.0f, 0.0f), 10);
+				var commandToSendAcrossWire = new NetworkCommandToPacketFlowMessageMapper().Map(SenderID, ADMIN_PLAYER_TYPE, domainCommand);
+				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, commandToSendAcrossWire);
+			}
+			/*
 			foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsNumber() && Input.GetKeyDown(x)))
 			{
 				var message = new PacketFlowMessage() { senderID = SenderID, senderType = ADMIN_PLAYER_TYPE, payload = key.ToString() };
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
+			*/
 		}
 		else
 		{

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PacketFlow.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Assets.Code.Processing
 	public class EventToPacketFlowMessageMapper
 	{
 		private const int SAMPLE_MESSAGE_TYPE_ID = -99;
-		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type> { { SAMPLE_MESSAGE_TYPE_ID, typeof(int) } };
+		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type> { { SAMPLE_MESSAGE_TYPE_ID, typeof(NetworkEvent) } };
 
 		public PacketFlowMessage Map(object thing)
 		{
@@ -23,11 +24,9 @@ namespace Assets.Code.Processing
 			};
 		}
 
-		public object Map(PacketFlowMessage message)
+		public NetworkEvent Map(PacketFlowMessage message)
 		{
-			return JsonUtility.FromJson(message.payload, payloadTypeLookup[message.payloadType]);
-		}
-
-			
+			return (NetworkEvent)JsonUtility.FromJson(message.payload, payloadTypeLookup[message.payloadType]);
+		}			
 	}
 }

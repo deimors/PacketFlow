@@ -1,5 +1,6 @@
 ﻿using Assets.Code;
 using PacketFlow.Actors;
+using PacketFlow.Domain;
 using System;
 using System.Collections.Concurrent;
 using UnityEngine;
@@ -8,7 +9,7 @@ using static Assets.Code.Constants;
 
 namespace Assets.Code.Processing
 {
-	public class ActorClientConsumer<TEvent, TCommand> : MonoBehaviour, IActorClient<TEvent, TCommand>
+	public class ActorClientConsumer<TEvent> : MonoBehaviour, IActorClient<TEvent, NetworkCommand>
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
 		private readonly ClientEventDispatcher _eventDispatcher = new ClientEventDispatcher();
@@ -17,7 +18,7 @@ namespace Assets.Code.Processing
 
 		public IObservable<TEvent> ReceivedEvents;
 
-		IObservable<TEvent> IActorClient<TEvent, TCommand>.ReceivedEvents
+		IObservable<TEvent> IActorClient<TEvent, NetworkCommand>.ReceivedEvents
 		{
 			get
 			{
@@ -25,12 +26,12 @@ namespace Assets.Code.Processing
 			}
 		}
 
-		public void SendCommand(TCommand command)
+		public void SendCommand(NetworkCommand command)
 		{
 			if (!SafeToSend)
 				return;
 
-			var message = new CommandToPacketFlowMessageMapper<TCommand>().Map(SenderID, HACKER_PLAYER_TYPE, command);
+			var message = new NetworkCommandToPacketFlowMessageMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 
 			NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);			
 		}				
@@ -56,6 +57,7 @@ namespace Assets.Code.Processing
 					_eventDispatcher.Dispatch(message);
 			}
 		}
+
 
 		private bool SafeToSend => NetworkManagerInstance?.IsClientConnected() ?? false;
 		private int SenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
