@@ -28,7 +28,7 @@ public class InputProcessor : MonoBehaviour {
 		{
 			foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsNumber() && Input.GetKeyDown(x)))
 			{
-				var message = new PacketFlowMessage() { senderID = ServerSenderID, senderType = ADMIN_PLAYER_TYPE, payload = key.ToString() };
+				var message = new PacketFlowMessage() { senderID = SenderID, senderType = ADMIN_PLAYER_TYPE, payload = key.ToString() };
 				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
@@ -37,14 +37,13 @@ public class InputProcessor : MonoBehaviour {
 		{
 			foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsLetter() && Input.GetKeyDown(x)))
 			{
-				var message = new PacketFlowMessage() { senderID = ClientSenderID, senderType = HACKER_PLAYER_TYPE, payload = key.ToString() };
+				var message = new PacketFlowMessage() { senderID = SenderID, senderType = HACKER_PLAYER_TYPE, payload = key.ToString() };
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}				
 		}
 	}
 
 	private bool SafeToSend => NetworkManagerInstance?.IsClientConnected() ?? false;
-	private int ClientSenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
-	private int ServerSenderID => 0;
+	private int SenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
 	private static bool IsAServer => NetworkServer.connections.Count > 0; // server has connections, client does not (https://stackoverflow.com/a/41685717)
 }
