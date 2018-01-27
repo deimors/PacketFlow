@@ -1,19 +1,21 @@
-﻿using System.Collections;
+﻿using Assets.Code;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
+using static Assets.Code.Constants;
 
 public class KeyPressListener : MonoBehaviour {
 
-	private readonly ConcurrentQueue<StringMessage> _messageQueue = new ConcurrentQueue<StringMessage>();
+	private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
 
 	// Use this for initialization
 	void Start () {
-		NetworkServer.RegisterHandler(888, networkMessage =>
+		NetworkServer.RegisterHandler(MESSAGE_TYPE_ID, networkMessage =>
 		{
-			var message = networkMessage.ReadMessage<StringMessage>();
+			var message = networkMessage.ReadMessage<PacketFlowMessage>();
 			_messageQueue.Enqueue(message);
 		});
 	}
@@ -23,10 +25,10 @@ public class KeyPressListener : MonoBehaviour {
 	{
 		while (!_messageQueue.IsEmpty)
 		{
-			StringMessage stringMessage;
-			if (_messageQueue.TryDequeue(out stringMessage))
+			PacketFlowMessage message;
+			if (_messageQueue.TryDequeue(out message))
 			{
-				Debug.Log(stringMessage.value);
+				Debug.Log(message.payload);
 			}
 		}
 	}
