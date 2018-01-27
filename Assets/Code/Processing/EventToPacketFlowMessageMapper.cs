@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Code.Processing
 {
-	public class ThingToPacketFlowMessageMapper
+	public class EventToPacketFlowMessageMapper
 	{
 		private const int SAMPLE_MESSAGE_TYPE_ID = -99;
 		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type> { { SAMPLE_MESSAGE_TYPE_ID, typeof(int) } };
