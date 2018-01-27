@@ -22,6 +22,12 @@ public class PacketFlowMessageNetworkConsumer : MonoBehaviour {
 			var message = networkMessage.ReadMessage<PacketFlowMessage>();
 			_messageQueue.Enqueue(message);
 		});
+
+		NetworkServer.RegisterHandler(ADMIN_PLAYER_MESSAGE_TYPE_ID, networkMessage =>
+		{
+			var message = networkMessage.ReadMessage<PacketFlowMessage>();
+			_messageQueue.Enqueue(message);
+		});
 	}
 	
 	// Update is called once per frame
