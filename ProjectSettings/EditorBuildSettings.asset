@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/LoadingScreen.unity
+    guid: f6826960cebffa64fa98591c8465c330
+  - enabled: 1
+    path: Assets/Scenes/HackItFlow.unity
+    guid: 8244afc901b0d724daaa64bb310a1ceb
