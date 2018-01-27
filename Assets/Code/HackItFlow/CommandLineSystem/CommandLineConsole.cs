@@ -12,17 +12,14 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 	{
 		private const int MAX_LINES_OF_TEXT = 20;
 
-		private ReactiveCollection<string> _text;
-
-		public IReadOnlyReactiveCollection<string> Text
+		private ReactiveCollection<string> _text = new ReactiveCollection<string>()
 		{
-			get
-			{
-				return _text;
-			}
-		}
+			"Test1",
+			"test2",
+			"test3"
+		};
 
-		IReadOnlyReactiveCollection<string> ICommandLineConsole.Text => Text;
+		public IReadOnlyReactiveCollection<string> Text => _text;
 
 		public void AddText(string text)
 		{
