@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using Workshop.Core;
 
 namespace PacketFlow.Domain
 {
@@ -45,11 +49,41 @@ namespace PacketFlow.Domain
 	{
 		public NodeIdentifier Id { get; }
 		public NodePosition Position { get; }
+		public NodeQueue Queue { get; }
 
-		public Node(NodeIdentifier id, NodePosition position)
+		public Node(NodeIdentifier id, NodePosition position, NodeQueue queue)
 		{
 			Id = id ?? throw new ArgumentNullException(nameof(id));
 			Position = position ?? throw new ArgumentNullException(nameof(position));
+			Queue = queue ?? throw new ArgumentNullException(nameof(queue));
 		}
+
+		public Node With(
+			Func<NodePosition, NodePosition> position = null,
+			Func<NodeQueue, NodeQueue> queue = null
+		) => new Node(
+			Id,
+			(position ?? Function.Ident)(Position),
+			(queue ?? Function.Ident)(Queue)
+		);
+	}
+
+	public class NodeQueue
+	{
+		public NodeQueue(int capacity) : this(ImmutableQueue<PacketIdentifier>.Empty, capacity) { }
+
+		public NodeQueue(ImmutableQueue<PacketIdentifier> content, int capacity)
+		{
+			Content = content ?? throw new ArgumentNullException(nameof(content));
+			Capacity = capacity;
+		}
+
+		public ImmutableQueue<PacketIdentifier> Content { get; }
+		public int Capacity { get; }
+
+		public bool IsFull => Content.Count() == Capacity;
+
+		public NodeQueue Enqueue(PacketIdentifier packetId)
+			=> new NodeQueue(Content.Enqueue(packetId), Capacity);
 	}
 }
