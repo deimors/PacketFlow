@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Code.Extensions;
+using Assets.Code.Processing;
+using PacketFlow.Domain;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.NetworkSystem;
@@ -24,13 +26,20 @@ public class InputProcessor : MonoBehaviour {
 		if (!SafeToSend)
 			return;
 
-		if (IsAServer) 
+		if (IsAServer)
 		{
-			foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsNumber() && Input.GetKeyDown(x)))
+			if (Input.GetKeyDown(KeyCode.A))
+			{
+				var domainCommand = new NetworkCommand.AddNode(new NodeIdentifier(), new NodePosition(0.0f, 0.0f), 10);
+				var commandToSendAcrossWire = new ComnmandToPacketFlowMessageMapper().Map(domainCommand);
+				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, commandToSendAcrossWire);
+			}
+				
+			/*foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsNumber() && Input.GetKeyDown(x)))
 			{
 				var message = new PacketFlowMessage() { senderID = SenderID, senderType = ADMIN_PLAYER_TYPE, payload = key.ToString() };
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
-			}
+			}*/
 		}
 		else
 		{
