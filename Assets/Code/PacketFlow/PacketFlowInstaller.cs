@@ -11,15 +11,28 @@ namespace PacketFlow.Presentation
 	public class PacketFlowInstaller : MonoInstaller
 	{
 		[SerializeField]
-		private GameObject _nodePrefab;
+		private GameObject _gatewayNodePrefab;
+
+		[SerializeField]
+		private GameObject _routerNodePrefab;
+
+		[SerializeField]
+		private GameObject _consumerNodePrefab;
 
 		public override void InstallBindings()
 		{
-			Container.BindFactory<NodeIdentifier, NodeContainer, NodeContainer.Factory>()
+			Container.BindFactory<NodeIdentifier, GatewayNodeContainer, GatewayNodeContainer.Factory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<NodeContainer>(_nodePrefab);
-			
-			
+				.ByNewPrefab<GatewayNodeContainer>(_gatewayNodePrefab);
+
+			Container.BindFactory<NodeIdentifier, RouterNodeContainer, RouterNodeContainer.Factory>()
+				.FromSubContainerResolve()
+				.ByNewPrefab<RouterNodeContainer>(_routerNodePrefab);
+
+			Container.BindFactory<NodeIdentifier, ConsumerNodeContainer, ConsumerNodeContainer.Factory>()
+				.FromSubContainerResolve()
+				.ByNewPrefab<ConsumerNodeContainer>(_consumerNodePrefab);
+
 			Container
 				.BindInterfacesTo<ActorServerProxy<NetworkEvent, NetworkCommand>>()
 				.FromInstance(new ActorServerProxy<NetworkEvent, NetworkCommand>(new NetworkActor(Observable.EveryUpdate().AsUnitObservable()), new FakeNetworkActorServer()))
