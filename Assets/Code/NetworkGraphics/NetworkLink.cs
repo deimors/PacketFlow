@@ -73,8 +73,8 @@ public class NetworkLink : MonoBehaviour
 	private void HandleTravelingGameObjects(float deltaTime)
 	{
 		_travelingGameObjects.ForEach(o => o.lifeTime += deltaTime);
-		
-		_travelingGameObjects.RemoveAll(o => o.lifeTime > o.timeToLive);
+				
+		_travelingGameObjects.RemoveAll(o => !o.gameObject.activeSelf || o.lifeTime > o.timeToLive);
 
 		_travelingGameObjects.ForEach(o => o.gameObject.transform.position = GetInterpolatedPostion(GetTransportingGameObjectInterpolationAmount(o)));
 	}
