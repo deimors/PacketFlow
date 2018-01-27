@@ -20,7 +20,7 @@ public class InputProcessor : MonoBehaviour {
 		
 	}
 
-	#region LOCAL FUNCTIONS ARE NOT ALLOWD :(
+	#region LOCAL FUNCTIONS ARE NOT ALLOWED :(
 	private NodePosition Position => new NodePosition(0.0f, 0.0f);
 	private NodeIdentifier ID => new NodeIdentifier();
 	private int Capacity => 10;
@@ -34,7 +34,7 @@ public class InputProcessor : MonoBehaviour {
 		if (!SafeToSend)
 			return;
 
-		if (IsAServer) 
+		if (IsAServer) // Packet
 		{
 			if (Input.GetKeyDown(KeyCode.G))
 			{
@@ -59,7 +59,7 @@ public class InputProcessor : MonoBehaviour {
 
 			if (Input.GetKeyDown(KeyCode.L))
 			{
-				var command = new NetworkCommand.LinkNodes(ID, Direction, ID, Direction); 
+				var command = new NetworkCommand.LinkNodes(ID, Direction, ID, Direction);
 				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
@@ -76,15 +76,51 @@ public class InputProcessor : MonoBehaviour {
 				var command = new NetworkCommand.IncrementPacketTypeDirection(ID, PT);
 				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
-			}
+			}		
 		}
-		else
+		else // Hackit
 		{
-			foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsLetter() && Input.GetKeyDown(x)))
+			if (Input.GetKeyDown(KeyCode.G))
 			{
-				var message = new PacketFlowMessage() { senderID = SenderID, senderType = HACKER_PLAYER_TYPE, payload = key.ToString() };
+				var command = new NetworkCommand.AddGatewayNode(ID, Position, Capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
-			}				
+			}
+
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				var command = new NetworkCommand.AddRouterNode(ID, Position, Capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.C))
+			{
+				var command = new NetworkCommand.AddConsumerNode(ID, Position, Capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.L))
+			{
+				var command = new NetworkCommand.LinkNodes(ID, Direction, ID, Direction);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.P))
+			{
+				var command = new NetworkCommand.AddPacket(new PacketIdentifier(), PT, ID);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.I))
+			{
+				var command = new NetworkCommand.IncrementPacketTypeDirection(ID, PT);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
+			}
 		}
 	}
 
