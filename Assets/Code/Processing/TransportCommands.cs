@@ -8,7 +8,7 @@ namespace Assets.Code.Processing
 {
 	public class TransportCommands
 	{
-		public class AddNodeCommand
+		public class AddNodeCommandTransport
 		{
 			public Guid ID;
 			public float X;
@@ -17,7 +17,7 @@ namespace Assets.Code.Processing
 			public int NodeType;
 		}
 
-		public class LinkNodeCommand
+		public class LinkNodesCommandTransport
 		{
 			public Guid SourceID;
 			public int SourcePortDirection;
@@ -25,7 +25,7 @@ namespace Assets.Code.Processing
 			public int SinkPortDirection;
 		}
 
-		public class AddPacketCommand
+		public class AddPacketCommandTransport
 		{
 			public Guid PacketID;
 			public int Type;

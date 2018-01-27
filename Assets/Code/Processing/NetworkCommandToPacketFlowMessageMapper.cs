@@ -12,7 +12,12 @@ namespace Assets.Code.Processing
 {
 	public class NetworkCommandToPacketFlowMessageMapper
 	{
-		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type> { { COMMAND_PAYLOAD_TYPE, typeof(NetworkCommand) } };
+		private readonly Dictionary<int, Type> payloadTypeLookup = new Dictionary<int, Type>
+		{
+			{ TransportCommandPayloadType.AddNode, typeof(AddNodeCommandTransport) },
+			{ TransportCommandPayloadType.LinkNodes, typeof(LinkNodesCommandTransport) },
+			{ TransportCommandPayloadType.AddPacket, typeof(AddPacketCommandTransport) }
+		};
 
 		public PacketFlowMessage Map(int senderID, int senderType, NetworkCommand command)
 		{
@@ -20,7 +25,10 @@ namespace Assets.Code.Processing
 			{
 				senderID = senderID,
 				senderType = senderType,
-				payloadType = COMMAND_PAYLOAD_TYPE,
+				payloadType = command.Match(
+					addNode => TransportCommandPayloadType.AddNode,
+					linkNodes => TransportCommandPayloadType.LinkNodes,
+					addPacket => TransportCommandPayloadType.AddPacket),
 				payload = JsonUtility.ToJson(command.Match(
 					addNodeCommand => GetPayloadForAddNodeCommand(addNodeCommand),
 					linkNodesCommand => GetPayloadForLinkNodesCommand(linkNodesCommand),
@@ -30,7 +38,7 @@ namespace Assets.Code.Processing
 		
 		private object GetPayloadForAddNodeCommand(NetworkCommand.AddNode addNodeCommand)
 		{
-			return new AddNodeCommand
+			return new AddNodeCommandTransport
 			{
 				ID = addNodeCommand.NodeId.Value,
 				X = addNodeCommand.Position.X,
@@ -41,24 +49,27 @@ namespace Assets.Code.Processing
 						router => TransportNodeType.Router,
 						consumer => TransportNodeType.Consumer)
 			};
-		}
-
-		
+		}		
 
 		private object GetPayloadForLinkNodesCommand(NetworkCommand.LinkNodes linkNodesCommand)
 		{
-			return new LinkNodeCommand
+			return new LinkNodesCommandTransport
 			{
-				
-
+				SourceID = linkNodesCommand.Source.Value,
+				SourcePortDirection = (int)linkNodesCommand.SourcePort,
+				SinkID = linkNodesCommand.Sink.Value,
+				SinkPortDirection = (int)linkNodesCommand.SinkPort				
 			};
-		}
-
-		
+		}		
 
 		private object GetPayloadForAddPacketCommand(NetworkCommand.AddPacket addPacketCommand)
 		{
-			return null;
+			return new AddPacketCommandTransport
+			{
+				NodeId = addPacketCommand.NodeId.Value,
+				Type = (int)addPacketCommand.Type,
+				PacketID = addPacketCommand.PackedId.Value
+			};
 		}
 
 		
