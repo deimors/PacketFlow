@@ -29,7 +29,6 @@ public class InputProcessor : MonoBehaviour {
 			foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsNumber() && Input.GetKeyDown(x)))
 			{
 				var message = new PacketFlowMessage() { senderID = SenderID, senderType = ADMIN_PLAYER_TYPE, payload = key.ToString() };
-				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 		}
