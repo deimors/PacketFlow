@@ -49,6 +49,7 @@
     <Compile Include="Link.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
