@@ -345,4 +345,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 276456e11cbbf6047b4711866399e223, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 1990203334}
+  NetworkManager: {fileID: 1990203334}
