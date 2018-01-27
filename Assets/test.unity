@@ -204,6 +204,9 @@ GameObject:
   - component: {fileID: 1990203335}
   - component: {fileID: 1990203334}
   - component: {fileID: 1990203333}
+  - component: {fileID: 1990203336}
+  - component: {fileID: 1990203338}
+  - component: {fileID: 1990203337}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -246,7 +249,8 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 0}
+  m_PlayerPrefab: {fileID: 1869407806587292, guid: b57c367ae639f91499dd3e164901d621,
+    type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 
@@ -320,3 +324,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1990203336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1990203332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4871242617192524f8174683efedc9d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkManagerInstance: {fileID: 1990203334}
+--- !u!114 &1990203337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1990203332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab8218b3c72faa94d8907b150928189b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkManagerInstance: {fileID: 1990203334}
+--- !u!114 &1990203338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1990203332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b1e4f5d9e778904393d005f4e189b64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
