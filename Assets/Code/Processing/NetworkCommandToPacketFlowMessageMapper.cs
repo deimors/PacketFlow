@@ -20,8 +20,45 @@ namespace Assets.Code.Processing
 				senderID = senderID,
 				senderType = senderType,
 				payloadType = COMMAND_PAYLOAD_TYPE,
-				payload = JsonUtility.ToJson(command.Match)
+				payload = JsonUtility.ToJson(command.Match(
+					addNodeCommand => GetPayloadForAddNodeCommand(addNodeCommand),
+					linkNodesCommand => GetPayloadForLinkNodesCommand(linkNodesCommand),
+					addPacketCommand => GetPayloadForAddPacketCommand(addPacketCommand)))
 			};
+		}
+		
+		private object GetPayloadForAddNodeCommand(NetworkCommand.AddNode addNodeCommand)
+		{
+			return new AddNodeCommand
+			{
+				ID = addNodeCommand.NodeId.Value,
+				X = addNodeCommand.Position.X,
+				Y = addNodeCommand.Position.Y,
+				Capacity = addNodeCommand.Capacity,
+				NodeType = addNodeCommand.Type.Match(gateway => 0, router => 1, consumer => 2)
+			};
+		}
+
+		private object GetPayloadForLinkNodesCommand(NetworkCommand.LinkNodes linkNodesCommand)
+		{
+			return new LinkNodeCommand
+			{
+
+			};
+		}
+
+		private object GetPayloadForAddPacketCommand(NetworkCommand.AddPacket addPacketCommand)
+		{
+			return null;
+		}
+
+		private class AddNodeCommand
+		{
+			public Guid ID;
+			public float X;
+			public float Y;
+			public int Capacity;
+			public int NodeType;
 		}
 
 		public NetworkCommand Map(PacketFlowMessage message)
