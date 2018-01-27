@@ -129,7 +129,10 @@ namespace PacketFlow.Domain
 	{
 		public class Gateway : NodeType
 		{
-			
+			public Gateway(GatewayNodeState state)
+			{
+
+			}
 		}
 
 		public class Router : NodeType
@@ -141,6 +144,28 @@ namespace PacketFlow.Domain
 		{
 
 		}
+	}
+
+	public class GatewayNodeState
+	{
+		private readonly PortDirection[] _packetTypeToPortMap;
+
+		public GatewayNodeState()
+		{
+			_packetTypeToPortMap = Enumerable.Repeat(PortDirection.Top, Enum.GetValues(typeof(PacketType)).Length).ToArray();
+		}
+
+		public GatewayNodeState(PortDirection[] packetTypeToPortMap)
+		{
+			_packetTypeToPortMap = packetTypeToPortMap;
+		}
+
+		public GatewayNodeState WithPacketDirection(PacketType packetType, PortDirection port)
+			=> new GatewayNodeState(
+				_packetTypeToPortMap
+					.Select((p, i) => i == (int)packetType ? port : p)
+					.ToArray()
+			);
 	}
 
 	public enum ConnectionDirection { Input, Output }
