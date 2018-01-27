@@ -13,7 +13,7 @@ public class LoadingScene : MonoBehaviour {
 
     public void PacketFlow()
     {
-        SceneManager.LoadScene("HackItFlow");
+        SceneManager.LoadScene("PacketFlow");
     }
 
     void Update()
