@@ -7,16 +7,28 @@ namespace PacketFlow.UseCases
 {
 	public class InstantiateNodeContainerWhenNodeAdded
 	{
-		public InstantiateNodeContainerWhenNodeAdded(IObservable<NetworkEvent> networkEvents, NodeContainer.Factory nodeFactory)
+		private readonly GatewayNodeContainer.Factory gatewayNodeFactory;
+		private readonly RouterNodeContainer.Factory routerNodeFactory;
+		private readonly ConsumerNodeContainer.Factory consumerNodeFactory;
+
+		public InstantiateNodeContainerWhenNodeAdded(IObservable<NetworkEvent> networkEvents, GatewayNodeContainer.Factory gatewayNodeFactory, RouterNodeContainer.Factory routerNodeFactory, ConsumerNodeContainer.Factory consumerNodeFactory)
 		{
+			this.gatewayNodeFactory = gatewayNodeFactory;
+			this.routerNodeFactory = routerNodeFactory;
+			this.consumerNodeFactory = consumerNodeFactory;
+
 			networkEvents
 				.OfType<NetworkEvent, NetworkEvent.NodeAdded>()
-				.Subscribe(nodeAdded => CreateNodeContainer(nodeFactory, nodeAdded));
+				.Subscribe(nodeAdded => CreateNodeContainer(nodeAdded));
 		}
 
-		private static void CreateNodeContainer(NodeContainer.Factory nodeFactory, NetworkEvent.NodeAdded nodeAdded)
+		private void CreateNodeContainer(NetworkEvent.NodeAdded nodeAdded)
 		{
-			nodeFactory.Create(nodeAdded.Node.Id);
+			nodeAdded.Node.Switch(
+				gateway => gatewayNodeFactory.Create(nodeAdded.Node.Id),
+				router => routerNodeFactory.Create(nodeAdded.Node.Id),
+				consumer => consumerNodeFactory.Create(nodeAdded.Node.Id)
+			);
 		}
 	}
 }

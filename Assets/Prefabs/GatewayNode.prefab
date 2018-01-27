@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114041681707687124}
   - component: {fileID: 114585467816407242}
   m_Layer: 0
-  m_Name: Node
+  m_Name: GatewayNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,7 +85,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1664594519938620}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84b533632d460184d91ce65b3ac7088e, type: 3}
+  m_Script: {fileID: 11500000, guid: 942bb15799a4c5640a2c68bb6297b015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114585467816407242

@@ -4,9 +4,9 @@ using Zenject;
 
 namespace PacketFlow.Presentation.Node
 {
-	public class NodeContainer : MonoInstaller
+	public class GatewayNodeContainer : MonoInstaller
 	{
-		public class Factory : Factory<NodeIdentifier, NodeContainer> { }
+		public class Factory : Factory<NodeIdentifier, GatewayNodeContainer> { }
 
 		[Inject]
 		public NodeIdentifier Identifier { get; set; }
