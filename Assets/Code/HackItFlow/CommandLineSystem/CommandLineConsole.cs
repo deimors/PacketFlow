@@ -23,9 +23,6 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 
 		public void AddText(string text)
 		{
-			if (_text.Count >= MAX_LINES_OF_TEXT)
-				_text.RemoveAt(0);
-
 			_text.Add(text);
 		}
 	}
