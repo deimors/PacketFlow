@@ -19,7 +19,15 @@ public class InputProcessor : MonoBehaviour {
 	void Start () {
 		
 	}
-		
+
+	#region LOCAL FUNCTIONS ARE NOT ALLOWD :(
+	private NodePosition Position => new NodePosition(0.0f, 0.0f);
+	private NodeIdentifier ID => new NodeIdentifier();
+	private int Capacity => 10;
+	private PortDirection Direction => PortDirection.Top;
+	private PacketType PT => PacketType.Blue;
+	#endregion
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -28,20 +36,47 @@ public class InputProcessor : MonoBehaviour {
 
 		if (IsAServer) 
 		{
-
 			if (Input.GetKeyDown(KeyCode.G))
 			{
-				var domainCommand = new NetworkCommand.AddGatewayNode(new NodeIdentifier(), new NodePosition(0.0f, 0.0f), 10);
-				var commandToSendAcrossWire = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, domainCommand);
-				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, commandToSendAcrossWire);
-			}
-			/*
-			foreach (var key in Enum.GetValues(typeof(KeyCode)).Cast<KeyCode>().Where(x => x.IsNumber() && Input.GetKeyDown(x)))
-			{
-				var message = new PacketFlowMessage() { senderID = SenderID, senderType = ADMIN_PLAYER_TYPE, payload = key.ToString() };
+				var command = new NetworkCommand.AddGatewayNode(ID, Position, Capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
 				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
-			*/
+
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				var command = new NetworkCommand.AddRouterNode(ID, Position, Capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.C))
+			{
+				var command = new NetworkCommand.AddConsumerNode(ID, Position, Capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.L))
+			{
+				var command = new NetworkCommand.LinkNodes(ID, Direction, ID, Direction); 
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.P))
+			{
+				var command = new NetworkCommand.AddPacket(new PacketIdentifier(), PT, ID);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+			}
+
+			if (Input.GetKeyDown(KeyCode.I))
+			{
+				var command = new NetworkCommand.IncrementPacketTypeDirection(ID, PT);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+			}
 		}
 		else
 		{
@@ -52,6 +87,8 @@ public class InputProcessor : MonoBehaviour {
 			}				
 		}
 	}
+
+	
 
 	private bool SafeToSend => NetworkManagerInstance?.IsClientConnected() ?? false;
 	private int SenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
