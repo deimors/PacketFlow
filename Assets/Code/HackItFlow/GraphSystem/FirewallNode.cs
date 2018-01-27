@@ -7,7 +7,7 @@ using UniRx;
 
 namespace Assets.Code.HackItFlow.GraphSystem
 {
-	public class FirewallNode : INode
+	public class FirewallNode : IFirewallNode
 	{
 		public ReactiveProperty<float> X { get; } = new ReactiveProperty<float>();
 

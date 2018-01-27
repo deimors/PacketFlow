@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Code.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,12 @@ namespace Assets.Code.HackItFlow.GraphSystem
 {
 	public class Root : IRoot
 	{
-		public ReactiveCollection<INode> Nodes = new ReactiveCollection<INode>();
+		public ReactiveSet<INode> Nodes = new ReactiveSet<INode>();
 
-		IReadOnlyReactiveCollection<INode> IRoot.Nodes => Nodes;
+		IReadOnlyReactiveSet<INode> IRoot.Nodes => Nodes;
 
-		public ReactiveCollection<ILink> Links { get; } = new ReactiveCollection<ILink>();
+		public ReactiveSet<ILink> Links { get; } = new ReactiveSet<ILink>();
 
-		IReadOnlyReactiveCollection<ILink> IRoot.Links => Links;
+		IReadOnlyReactiveSet<ILink> IRoot.Links => Links;
 	}
 }
