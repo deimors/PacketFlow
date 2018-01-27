@@ -54,16 +54,18 @@ namespace PacketFlow.Domain
 	{
 		public class AddNode : NetworkCommand
 		{
-			public AddNode(NodeIdentifier nodeId, NodePosition position, int capacity)
+			public AddNode(NodeIdentifier nodeId, NodePosition position, int capacity, NodeType type)
 			{
 				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
 				Position = position ?? throw new System.ArgumentNullException(nameof(position));
 				Capacity = capacity;
+				Type = type ?? throw new System.ArgumentNullException(nameof(type));
 			}
 
 			public NodeIdentifier NodeId { get; }
 			public NodePosition Position { get; }
 			public int Capacity { get; }
+			public NodeType Type { get; }
 		}
 
 		public class LinkNodes : NetworkCommand
@@ -138,7 +140,7 @@ namespace PacketFlow.Domain
 
 		private Maybe<NetworkError> AddNode(NetworkCommand.AddNode command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
-				.Record(() => new NetworkEvent.NodeAdded(new Node(command.NodeId, command.Position, new NodeQueue(command.Capacity))))
+				.Record(() => new NetworkEvent.NodeAdded(new Node(command.NodeId, command.Position, new NodeQueue(command.Capacity), command.Type)))
 				.Execute();
 
 		private Maybe<NetworkError> LinkNodes(NetworkCommand.LinkNodes command)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OneOf;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -50,21 +51,25 @@ namespace PacketFlow.Domain
 		public NodeIdentifier Id { get; }
 		public NodePosition Position { get; }
 		public NodeQueue Queue { get; }
+		public NodeType Type { get; }
 
-		public Node(NodeIdentifier id, NodePosition position, NodeQueue queue)
+		public Node(NodeIdentifier id, NodePosition position, NodeQueue queue, NodeType type)
 		{
 			Id = id ?? throw new ArgumentNullException(nameof(id));
 			Position = position ?? throw new ArgumentNullException(nameof(position));
 			Queue = queue ?? throw new ArgumentNullException(nameof(queue));
+			Type = type ?? throw new ArgumentNullException(nameof(type));
 		}
 
 		public Node With(
 			Func<NodePosition, NodePosition> position = null,
-			Func<NodeQueue, NodeQueue> queue = null
+			Func<NodeQueue, NodeQueue> queue = null,
+			Func<NodeType, NodeType> type = null
 		) => new Node(
 			Id,
 			(position ?? Function.Ident)(Position),
-			(queue ?? Function.Ident)(Queue)
+			(queue ?? Function.Ident)(Queue),
+			(type ?? Function.Ident)(Type)
 		);
 	}
 
@@ -85,5 +90,23 @@ namespace PacketFlow.Domain
 
 		public NodeQueue Enqueue(PacketIdentifier packetId)
 			=> new NodeQueue(Content.Enqueue(packetId), Capacity);
+	}
+
+	public abstract class NodeType : OneOfBase<NodeType.Gateway, NodeType.Router, NodeType.Consumer>
+	{
+		public class Gateway : NodeType
+		{
+			
+		}
+
+		public class Router : NodeType
+		{
+
+		}
+
+		public class Consumer : NodeType
+		{
+
+		}
 	}
 }
