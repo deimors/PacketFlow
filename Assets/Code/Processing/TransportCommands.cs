@@ -6,18 +6,36 @@ namespace Assets.Code.Processing
 	{
 		public enum TransportCommandPayloadType
 		{
-			AddNode = 0,
-			LinkNodes = 1,
-			AddPacket = 2
+			AddGatewayNode = 0,
+			AddRouterNode,
+			AddConsumerNode,
+			LinkNodes,
+			AddPacket,
+			IncrementPacketTypeDirection
 		}
 
-		public class AddNodeCommandTransport
+		public class AddGatewayNodeCommandTransport
 		{
-			public Guid ID;
+			public Guid NodeID;
 			public float X;
 			public float Y;
 			public int Capacity;
-			public int NodeType;
+		}
+
+		public class AddRouterNodeCommandTransport
+		{
+			public Guid NodeID;
+			public float X;
+			public float Y;
+			public int Capacity;
+		}
+
+		public class AddConsumerNodeCommandTransport
+		{
+			public Guid NodeID;
+			public float X;
+			public float Y;
+			public int Capacity;
 		}
 
 		public class LinkNodesCommandTransport
@@ -32,8 +50,13 @@ namespace Assets.Code.Processing
 		{
 			public Guid PacketID;
 			public int Type;
-			public Guid NodeId;
+			public Guid NodeID;
 		}
 
+		public class IncrementPacketTypeDirectionCommandTransport
+		{
+			public Guid NodeID;
+			public int Type;
+		}
 	}
 }
