@@ -20,7 +20,7 @@ public class NetworkLink : MonoBehaviour
 	public Color Color = Color.white;
 	private Color _previousColor = Color.white;
 
-
+	private float _midpointInterpolationAmount;
 
 	void Start()
 	{
@@ -31,6 +31,23 @@ public class NetworkLink : MonoBehaviour
 	{
 		HandlePositionChanges();
 		HandleColorChanges();
+	}
+
+	public Vector3 GetInterpolatedPostion(float amount)
+	{
+		if (amount < _midpointInterpolationAmount)
+		 	return Vector3.Lerp(_postions[0], _postions[1], amount / _midpointInterpolationAmount);
+		
+		else
+			return Vector3.Lerp(_postions[1], _postions[2], (amount - _midpointInterpolationAmount) / (1 - _midpointInterpolationAmount));
+	}
+
+	private void InitializeLineRender()
+	{
+		_lineRenderer = gameObject.AddComponent<LineRenderer>();
+		_lineRenderer.widthMultiplier = 0.2f;
+
+		_lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
 	}
 
 	private void HandleColorChanges()
@@ -48,21 +65,14 @@ public class NetworkLink : MonoBehaviour
 		{
 			_previousStartPoint = StartPoint;
 			_previousEndPoint = EndPoint;
-
+			
 			_postions = CalculateLineRendererPositions(_previousStartPoint, _previousEndPoint);
 			SetLineRendererPositions(_postions);
+
+			_midpointInterpolationAmount = CalculateMidpointInterpolationAmount(_postions);
 		}
 	}
-
-	private void InitializeLineRender()
-	{
-
-		_lineRenderer = gameObject.AddComponent<LineRenderer>();
-		_lineRenderer.widthMultiplier = 0.2f;
-
-		_lineRenderer.material = new Material(Shader.Find("Unlit/Color");
-	}
-
+	
 	private Vector3[] CalculateLineRendererPositions(Vector2 startPosition, Vector2 endPosition)
 	{
 		return new Vector3[]
@@ -71,6 +81,13 @@ public class NetworkLink : MonoBehaviour
 			new Vector3(endPosition.x, startPosition.y),
 			new Vector3(endPosition.x, endPosition.y)
 		};
+	}
+
+	private float CalculateMidpointInterpolationAmount(Vector3[] postions)
+	{
+		var midpointLength = Vector3.Distance(postions[0], postions[1]);			
+		var totalLength = midpointLength + Vector3.Distance(postions[1], postions[2]);
+		return midpointLength / totalLength;
 	}
 
 	private void SetLineRendererPositions(Vector3[] positions)
