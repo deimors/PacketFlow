@@ -15,4 +15,38 @@ public class LoadingScene : MonoBehaviour {
     {
         SceneManager.LoadScene("HackItFlow");
     }
+
+    void Update()
+    {
+        if (Input.GetKeyDown("down") || Input.GetKeyDown("up"))
+        {
+            if (GameObject.Find("PacketFlowArrow").GetComponent<Image>().IsActive() == true)
+            {
+                GameObject.Find("PacketFlowArrow").GetComponent<Image>().enabled = false;
+                GameObject.Find("HackItFlowArrow").GetComponent<Image>().enabled = true;
+            }
+            else
+            {
+                GameObject.Find("PacketFlowArrow").GetComponent<Image>().enabled = true;
+                GameObject.Find("HackItFlowArrow").GetComponent<Image>().enabled = false;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (GameObject.Find("PacketFlowArrow").GetComponent<Image>().IsActive() == true)
+            {
+                PacketFlow();
+            }
+            else
+            {
+                HackItFlow();
+            }
+        }
+    }
+
+    public void ArrowPosition()
+    {
+        
+    }
 }
