@@ -5,7 +5,6 @@ namespace PacketFlow.Actors
 {
 	public class ActorServerProxy<TEvent, TCommand> : IActor<TEvent, TCommand>
 	{
-		private readonly ISubject<TEvent> _eventSubject = new Subject<TEvent>();
 		private readonly IActor<TEvent, TCommand> _wrapped;
 
 		public ActorServerProxy(IActor<TEvent, TCommand> wrapped, IActorServer<TEvent, TCommand> server)
@@ -14,9 +13,7 @@ namespace PacketFlow.Actors
 
 			server.ReceivedCommands.Subscribe(Enqueue);
 			
-			_wrapped.Subscribe(_eventSubject);
-
-			_eventSubject.Subscribe(server.SendEvent);
+			_wrapped.Subscribe(server.SendEvent);
 		}
 
 		public void Enqueue(TCommand command)
@@ -26,7 +23,7 @@ namespace PacketFlow.Actors
 
 		public IDisposable Subscribe(IObserver<TEvent> observer)
 		{
-			return _eventSubject.Subscribe(observer);
+			return _wrapped.Subscribe(observer);
 		}
 	}
 }

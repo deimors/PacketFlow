@@ -5,7 +5,7 @@ using Workshop.Core;
 
 namespace PacketFlow.Domain
 {
-	public abstract class NetworkEvent : OneOfBase<NetworkEvent.NodeAdded, NetworkEvent.LinkAdded, NetworkEvent.PacketAdded, NetworkEvent.PacketEnqueued>
+	public abstract class NetworkEvent : OneOfBase<NetworkEvent.NodeAdded, NetworkEvent.LinkAdded, NetworkEvent.PacketAdded, NetworkEvent.PacketEnqueued, NetworkEvent.PortAssigned>
 	{
 		public class NodeAdded : NetworkEvent
 		{
@@ -48,34 +48,56 @@ namespace PacketFlow.Domain
 			public PacketIdentifier PacketId { get; }
 			public NodeIdentifier NodeId { get; }
 		}
+
+		public class PortAssigned : NetworkEvent
+		{
+			public PortAssigned(NodeIdentifier nodeId, PortDirection port, LinkIdentifier linkId, ConnectionDirection direction)
+			{
+				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
+				Port = port;
+				LinkId = linkId ?? throw new System.ArgumentNullException(nameof(linkId));
+				Direction = direction;
+			}
+
+			public NodeIdentifier NodeId { get; }
+			public PortDirection Port { get; }
+			public LinkIdentifier LinkId { get; }
+			public ConnectionDirection Direction { get; }
+		}
 	}
 
 	public abstract class NetworkCommand : OneOfBase<NetworkCommand.AddNode, NetworkCommand.LinkNodes, NetworkCommand.AddPacket>
 	{
 		public class AddNode : NetworkCommand
 		{
-			public AddNode(NodeIdentifier nodeId, NodePosition position, int capacity)
+			public AddNode(NodeIdentifier nodeId, NodePosition position, int capacity, NodeType type)
 			{
 				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
 				Position = position ?? throw new System.ArgumentNullException(nameof(position));
 				Capacity = capacity;
+				Type = type ?? throw new System.ArgumentNullException(nameof(type));
 			}
 
 			public NodeIdentifier NodeId { get; }
 			public NodePosition Position { get; }
 			public int Capacity { get; }
+			public NodeType Type { get; }
 		}
 
 		public class LinkNodes : NetworkCommand
 		{
-			public LinkNodes(NodeIdentifier source, NodeIdentifier sink)
+			public LinkNodes(NodeIdentifier source, PortDirection sourcePort, NodeIdentifier sink, PortDirection sinkPort)
 			{
 				Source = source ?? throw new System.ArgumentNullException(nameof(source));
+				SourcePort = sourcePort;
 				Sink = sink ?? throw new System.ArgumentNullException(nameof(sink));
+				SinkPort = sinkPort;
 			}
 
 			public NodeIdentifier Source { get; }
+			public PortDirection SourcePort { get; }
 			public NodeIdentifier Sink { get; }
+			public PortDirection SinkPort { get; }
 		}
 
 		public class AddPacket : NetworkCommand
@@ -97,7 +119,8 @@ namespace PacketFlow.Domain
 	{
 		UnknownNode,
 		PacketAlreadyAdded,
-		QueueFull
+		QueueFull,
+		PortFull
 	}
 
 	public class NetworkState : IApplyEvent<NetworkEvent>
@@ -115,13 +138,21 @@ namespace PacketFlow.Domain
 				nodeAdded => _nodes.Add(nodeAdded.Node.Id, nodeAdded.Node),
 				linkAdded => _links.Add(linkAdded.Link.Id, linkAdded.Link),
 				packedAdded => _packets.Add(packedAdded.Packet.Id, packedAdded.Packet),
-				packetEnqueued => EnqueuePacked(packetEnqueued.PacketId, packetEnqueued.NodeId)
+				packetEnqueued => EnqueuePacked(packetEnqueued.PacketId, packetEnqueued.NodeId),
+				portAssigned => AssignPort(portAssigned)
 			);
 
 		private void EnqueuePacked(PacketIdentifier packetId, NodeIdentifier nodeId)
 		{
 			var node = _nodes[nodeId];
-			_nodes[nodeId] = node.With(queue: q => q.Enqueue(packetId));
+			_nodes[node.Id] = node.With(queue: q => q.Enqueue(packetId));
+		}
+
+		private void AssignPort(NetworkEvent.PortAssigned @event)
+		{
+			var node = _nodes[@event.NodeId];
+
+			_nodes[node.Id] = node.With(ports: p => p.ConnectPort(@event.Port, @event.LinkId, @event.Direction));
 		}
 	}
 
@@ -138,15 +169,23 @@ namespace PacketFlow.Domain
 
 		private Maybe<NetworkError> AddNode(NetworkCommand.AddNode command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
-				.Record(() => new NetworkEvent.NodeAdded(new Node(command.NodeId, command.Position, new NodeQueue(command.Capacity))))
+				.Record(() => new NetworkEvent.NodeAdded(new Node(command.NodeId, command.Position, new NodeQueue(command.Capacity), command.Type, new NodePortSet())))
 				.Execute();
 
 		private Maybe<NetworkError> LinkNodes(NetworkCommand.LinkNodes command)
-			=> this.BuildCommand<NetworkEvent, NetworkError>()
+		{
+			var newLinkId = new LinkIdentifier();
+
+			return this.BuildCommand<NetworkEvent, NetworkError>()
 				.FailIf(() => !State.Nodes.ContainsKey(command.Source), () => NetworkError.UnknownNode)
 				.FailIf(() => !State.Nodes.ContainsKey(command.Sink), () => NetworkError.UnknownNode)
-				.Record(() => new NetworkEvent.LinkAdded(new Link(new LinkIdentifier(), command.Source, command.Sink)))
+				.FailIf(() => !State.Nodes[command.Source].Ports.IsDisconnected(command.SourcePort), () => NetworkError.PortFull)
+				.FailIf(() => !State.Nodes[command.Sink].Ports.IsDisconnected(command.SinkPort), () => NetworkError.PortFull)
+				.Record(() => new NetworkEvent.LinkAdded(new Link(newLinkId, command.Source, command.Sink)))
+				.Record(() => new NetworkEvent.PortAssigned(command.Source, command.SourcePort, newLinkId, ConnectionDirection.Output))
+				.Record(() => new NetworkEvent.PortAssigned(command.Sink, command.SinkPort, newLinkId, ConnectionDirection.Input))
 				.Execute();
+		}
 
 		private Maybe<NetworkError> AddPacket(NetworkCommand.AddPacket command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
