@@ -15,6 +15,8 @@ namespace PacketFlow.Presentation.Node
 		{
 			Container.BindInstance(Identifier);
 
+			Container.BindInstance(this);
+
 			Container.Bind<SetNodePositionWhenNodeAdded>().AsSingle().NonLazy();
 		}
 	}
