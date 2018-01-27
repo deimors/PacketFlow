@@ -5,7 +5,7 @@ using Workshop.Core;
 
 namespace PacketFlow.Domain
 {
-	public abstract class NetworkEvent : OneOfBase<NetworkEvent.NodeAdded, NetworkEvent.LinkAdded, NetworkEvent.PacketAdded>
+	public abstract class NetworkEvent : OneOfBase<NetworkEvent.NodeAdded, NetworkEvent.LinkAdded, NetworkEvent.PacketAdded, NetworkEvent.PacketEnqueued>
 	{
 		public class NodeAdded : NetworkEvent
 		{
@@ -36,18 +36,34 @@ namespace PacketFlow.Domain
 
 			public Packet Packet { get; }
 		}
+
+		public class PacketEnqueued : NetworkEvent
+		{
+			public PacketEnqueued(PacketIdentifier packetId, NodeIdentifier nodeId)
+			{
+				PacketId = packetId ?? throw new System.ArgumentNullException(nameof(packetId));
+				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
+			}
+
+			public PacketIdentifier PacketId { get; }
+			public NodeIdentifier NodeId { get; }
+		}
 	}
 
 	public abstract class NetworkCommand : OneOfBase<NetworkCommand.AddNode, NetworkCommand.LinkNodes, NetworkCommand.AddPacket>
 	{
 		public class AddNode : NetworkCommand
 		{
-			public AddNode(Node node)
+			public AddNode(NodeIdentifier nodeId, NodePosition position, int capacity)
 			{
-				Node = node ?? throw new System.ArgumentNullException(nameof(node));
+				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
+				Position = position ?? throw new System.ArgumentNullException(nameof(position));
+				Capacity = capacity;
 			}
 
-			public Node Node { get; }
+			public NodeIdentifier NodeId { get; }
+			public NodePosition Position { get; }
+			public int Capacity { get; }
 		}
 
 		public class LinkNodes : NetworkCommand
@@ -68,19 +84,20 @@ namespace PacketFlow.Domain
 			{
 				PackedId = packedId ?? throw new System.ArgumentNullException(nameof(packedId));
 				Type = type;
-				Node = node ?? throw new System.ArgumentNullException(nameof(node));
+				NodeId = node ?? throw new System.ArgumentNullException(nameof(node));
 			}
 
 			public PacketIdentifier PackedId { get; }
 			public PacketType Type { get; }
-			public NodeIdentifier Node { get; }
+			public NodeIdentifier NodeId { get; }
 		}
 	}
 
 	public enum NetworkError
 	{
 		UnknownNode,
-		PacketAlreadyAdded
+		PacketAlreadyAdded,
+		QueueFull
 	}
 
 	public class NetworkState : IApplyEvent<NetworkEvent>
@@ -97,8 +114,15 @@ namespace PacketFlow.Domain
 			=> @event.Switch(
 				nodeAdded => _nodes.Add(nodeAdded.Node.Id, nodeAdded.Node),
 				linkAdded => _links.Add(linkAdded.Link.Id, linkAdded.Link),
-				packedAdded => _packets.Add(packedAdded.Packet.Id, packedAdded.Packet)
+				packedAdded => _packets.Add(packedAdded.Packet.Id, packedAdded.Packet),
+				packetEnqueued => EnqueuePacked(packetEnqueued.PacketId, packetEnqueued.NodeId)
 			);
+
+		private void EnqueuePacked(PacketIdentifier packetId, NodeIdentifier nodeId)
+		{
+			var node = _nodes[nodeId];
+			_nodes[nodeId] = node.With(queue: q => q.Enqueue(packetId));
+		}
 	}
 
 	public class NetworkAggregate : AggregateRoot<NetworkEvent, NetworkState>, IHandleCommand<NetworkCommand, NetworkError>
@@ -114,7 +138,7 @@ namespace PacketFlow.Domain
 
 		private Maybe<NetworkError> AddNode(NetworkCommand.AddNode command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
-				.Record(() => new NetworkEvent.NodeAdded(command.Node))
+				.Record(() => new NetworkEvent.NodeAdded(new Node(command.NodeId, command.Position, new NodeQueue(command.Capacity))))
 				.Execute();
 
 		private Maybe<NetworkError> LinkNodes(NetworkCommand.LinkNodes command)
@@ -127,8 +151,10 @@ namespace PacketFlow.Domain
 		private Maybe<NetworkError> AddPacket(NetworkCommand.AddPacket command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
 				.FailIf(() => State.Packets.ContainsKey(command.PackedId), () => NetworkError.PacketAlreadyAdded)
-				.FailIf(() => !State.Nodes.ContainsKey(command.Node), () => NetworkError.UnknownNode)
+				.FailIf(() => !State.Nodes.ContainsKey(command.NodeId), () => NetworkError.UnknownNode)
+				.FailIf(() => State.Nodes[command.NodeId].Queue.IsFull, () => NetworkError.QueueFull)
 				.Record(() => new NetworkEvent.PacketAdded(new Packet(command.PackedId, command.Type)))
+				.Record(() => new NetworkEvent.PacketEnqueued(command.PackedId, command.NodeId))
 				.Execute();
 	}
 }
