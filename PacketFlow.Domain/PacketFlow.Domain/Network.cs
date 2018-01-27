@@ -5,7 +5,7 @@ using Workshop.Core;
 
 namespace PacketFlow.Domain
 {
-	public abstract class NetworkEvent : OneOfBase<NetworkEvent.NodeAdded, NetworkEvent.LinkAdded>
+	public abstract class NetworkEvent : OneOfBase<NetworkEvent.NodeAdded, NetworkEvent.LinkAdded, NetworkEvent.PacketAdded>
 	{
 		public class NodeAdded : NetworkEvent
 		{
@@ -26,9 +26,19 @@ namespace PacketFlow.Domain
 
 			public Link Link { get; }
 		}
+
+		public class PacketAdded : NetworkEvent
+		{
+			public PacketAdded(Packet packet)
+			{
+				Packet = packet ?? throw new System.ArgumentNullException(nameof(packet));
+			}
+
+			public Packet Packet { get; }
+		}
 	}
 
-	public abstract class NetworkCommand : OneOfBase<NetworkCommand.AddNode, NetworkCommand.LinkNodes>
+	public abstract class NetworkCommand : OneOfBase<NetworkCommand.AddNode, NetworkCommand.LinkNodes, NetworkCommand.AddPacket>
 	{
 		public class AddNode : NetworkCommand
 		{
@@ -51,25 +61,43 @@ namespace PacketFlow.Domain
 			public NodeIdentifier Source { get; }
 			public NodeIdentifier Sink { get; }
 		}
+
+		public class AddPacket : NetworkCommand
+		{
+			public AddPacket(PacketIdentifier packedId, PacketType type, NodeIdentifier node)
+			{
+				PackedId = packedId ?? throw new System.ArgumentNullException(nameof(packedId));
+				Type = type;
+				Node = node ?? throw new System.ArgumentNullException(nameof(node));
+			}
+
+			public PacketIdentifier PackedId { get; }
+			public PacketType Type { get; }
+			public NodeIdentifier Node { get; }
+		}
 	}
 
 	public enum NetworkError
 	{
-		UnknownNode
+		UnknownNode,
+		PacketAlreadyAdded
 	}
 
 	public class NetworkState : IApplyEvent<NetworkEvent>
 	{
 		private readonly Dictionary<NodeIdentifier, Node> _nodes = new Dictionary<NodeIdentifier, Node>();
 		private readonly Dictionary<LinkIdentifier, Link> _links = new Dictionary<LinkIdentifier, Link>();
+		private readonly Dictionary<PacketIdentifier, Packet> _packets = new Dictionary<PacketIdentifier, Packet>();
 
 		public IReadOnlyDictionary<NodeIdentifier, Node> Nodes { get; }
 		public IReadOnlyDictionary<LinkIdentifier, Link> Links { get; }
+		public IReadOnlyDictionary<PacketIdentifier, Packet> Packets { get; }
 
 		public void ApplyEvent(NetworkEvent @event)
 			=> @event.Switch(
 				nodeAdded => _nodes.Add(nodeAdded.Node.Id, nodeAdded.Node),
-				linkAdded => _links.Add(linkAdded.Link.Id, linkAdded.Link)
+				linkAdded => _links.Add(linkAdded.Link.Id, linkAdded.Link),
+				packedAdded => _packets.Add(packedAdded.Packet.Id, packedAdded.Packet)
 			);
 	}
 
@@ -80,7 +108,8 @@ namespace PacketFlow.Domain
 		public Maybe<NetworkError> HandleCommand(NetworkCommand command)
 			=> command.Match(
 				AddNode,
-				LinkNodes
+				LinkNodes,
+				AddPacket
 			);
 
 		private Maybe<NetworkError> AddNode(NetworkCommand.AddNode command)
@@ -93,6 +122,13 @@ namespace PacketFlow.Domain
 				.FailIf(() => !State.Nodes.ContainsKey(command.Source), () => NetworkError.UnknownNode)
 				.FailIf(() => !State.Nodes.ContainsKey(command.Sink), () => NetworkError.UnknownNode)
 				.Record(() => new NetworkEvent.LinkAdded(new Link(new LinkIdentifier(), command.Source, command.Sink)))
+				.Execute();
+
+		private Maybe<NetworkError> AddPacket(NetworkCommand.AddPacket command)
+			=> this.BuildCommand<NetworkEvent, NetworkError>()
+				.FailIf(() => State.Packets.ContainsKey(command.PackedId), () => NetworkError.PacketAlreadyAdded)
+				.FailIf(() => !State.Nodes.ContainsKey(command.Node), () => NetworkError.UnknownNode)
+				.Record(() => new NetworkEvent.PacketAdded(new Packet(command.PackedId, command.Type)))
 				.Execute();
 	}
 }
