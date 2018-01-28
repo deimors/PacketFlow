@@ -2,6 +2,7 @@
 using PacketFlow.Domain;
 using System;
 using UniRx;
+using UnityEngine;
 
 namespace PacketFlow.UseCases
 {
@@ -30,6 +31,6 @@ namespace PacketFlow.UseCases
 		}
 
 		private NetworkCommand BuildAddNodeCommand(NodeIdentifier nodeId, float x, float y)
-			=> new NetworkCommand.AddRouterNode(nodeId, new NodePosition(x, y), 5);
+			=> new NetworkCommand.AddGatewayNode(nodeId, new NodePosition(x, y), 5);
 	}
 }

@@ -48,7 +48,7 @@ namespace PacketFlow.Presentation
 			*/
 			Container.Bind<NodePositionReadModel>().AsSingle().NonLazy();
 
-			Container.Bind<CreateNodeAfterDelay>().AsSingle().NonLazy();
+			Container.Bind<BuildLevel>().AsSingle().NonLazy();
 			Container.Bind<InstantiateNodeContainerWhenNodeAdded>().AsSingle().NonLazy();
 			Container.Bind<InstantiateLinkContainerWhenNodesLinked>().AsSingle().NonLazy();
 		}

@@ -81,7 +81,7 @@ namespace PacketFlow.Domain
 
 		private Maybe<NetworkError> ProcessGatewayNode(Node.Gateway node)
 		{
-			if (!node.Queue.IsEmpty)
+			if (node.Queue.IsEmpty)
 				return Maybe<NetworkError>.Nothing;
 
 			var nextPacket = node.Queue.Peek();
