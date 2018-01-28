@@ -14,7 +14,6 @@ namespace PacketFlow.UseCases
 		public IncrementPacketTypeDirectionWhenArrowClicked(IArrowClickedObservable arrowClicks, NodeIdentifier nodeId, IEnqueueCommand<NetworkCommand> enqueueCommand)
 		{
 			arrowClicks
-				.Do(packetType => Debug.Log($"Packet Type: '{packetType}'"))
 				.Select(packetType => BuildCommand(packetType, nodeId))
 				.Subscribe(enqueueCommand.Enqueue);
 		}
