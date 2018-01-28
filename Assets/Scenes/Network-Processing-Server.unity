@@ -122,7 +122,6 @@ GameObject:
   m_Component:
   - component: {fileID: 108555551}
   - component: {fileID: 108555550}
-  - component: {fileID: 108555549}
   - component: {fileID: 108555548}
   - component: {fileID: 108555547}
   - component: {fileID: 108555546}
@@ -170,21 +169,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkManagerInstance: {fileID: 108555550}
---- !u!114 &108555549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 108555545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 0}
-  showGUI: 1
-  offsetX: 100
-  offsetY: 0
 --- !u!114 &108555550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,7 +184,7 @@ MonoBehaviour:
   m_ServerBindToIP: 0
   m_ServerBindAddress: 
   m_NetworkAddress: localhost
-  m_DontDestroyOnLoad: 1
+  m_DontDestroyOnLoad: 0
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
@@ -264,7 +248,7 @@ MonoBehaviour:
   m_MatchHost: mm.unet.unity3d.com
   m_MatchPort: 443
   matchName: default
-  matchSize: 4
+  matchSize: 2
   isNetworkActive: 0
   matchMaker: {fileID: 0}
 --- !u!4 &108555551
@@ -389,6 +373,7 @@ GameObject:
   - component: {fileID: 1812020595}
   - component: {fileID: 1812020594}
   - component: {fileID: 1812020597}
+  - component: {fileID: 1812020598}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -414,6 +399,8 @@ MonoBehaviour:
   _consumerNodePrefab: {fileID: 1664594519938620, guid: 3dd855f97b8565e4ea600bf93da8c9c6,
     type: 2}
   _linkPrefab: {fileID: 1339726271762410, guid: 422bc73a3cbe0de4bb25482ca873cc18,
+    type: 2}
+  _packetPrefab: {fileID: 1783177557963610, guid: f8c1b7eb587bae7458ff2fc3913103f8,
     type: 2}
 --- !u!114 &1812020595
 MonoBehaviour:
@@ -460,3 +447,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db72f924d154144458dcf2e574679f06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1812020598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1812020593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b5f2e34168e24a46b474dcae5976102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkManagerInstance: {fileID: 108555550}

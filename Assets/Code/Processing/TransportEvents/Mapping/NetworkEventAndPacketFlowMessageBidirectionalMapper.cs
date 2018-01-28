@@ -49,8 +49,8 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 						packetTransmissionStartedEvent => packetTransmissionStartedEvent.ToPacketTransmissionStartedEventTransport(),
 						packetTransmissionFinishedEvent => packetTransmissionFinishedEvent.ToPackedTransmissionFinishedEventTransport(),
 						packetDequeued => packetDequeued.ToPacketDequeuedEventTransport(),
-						packetLost => { throw new NotImplementedException(); },
-						packetConsumed => { throw new NotImplementedException(); } //TODO: Mapping!
+						packetLost => packetLost.ToPacketLostEventTransport(),
+						packetConsumed => packetConsumed.ToPacketConsumedEventTransport()
 					)
 				)
 			};
@@ -78,6 +78,10 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 					return JsonUtility.FromJson<PacketTransmissionFinishedEventTransport>(message.payload).ToNetworkEvent();
 				case (PACKET_DEQUEUED_EVENT_TYPE_ID):
 					return JsonUtility.FromJson<PacketDequeuedEventTransport>(message.payload).ToNetworkEvent();
+				case (PACKET_LOST_EVENT_TYPE_ID):
+					return JsonUtility.FromJson<PacketLostEventTransport>(message.payload).ToNetworkEvent();
+				case (PACKET_CONSUMED_EVENT_TYPE_ID):
+					return JsonUtility.FromJson<PacketConsumedEventTransport>(message.payload).ToNetworkEvent();
 				default:
 					throw new NotImplementedException();
 			}

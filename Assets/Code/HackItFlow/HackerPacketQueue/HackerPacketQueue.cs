@@ -29,7 +29,6 @@ namespace Assets.Code.HackItFlow.HackerPacketQueue
 			if (_items.Count >= 8)
 			{
 				_items.RemoveAt(_items.Count - 1);
-
 			}
 
 			while (_items.Count < 8)

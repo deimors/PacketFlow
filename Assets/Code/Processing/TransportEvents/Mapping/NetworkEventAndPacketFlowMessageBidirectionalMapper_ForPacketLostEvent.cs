@@ -4,7 +4,7 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 {
 	public static partial class NetworkEventAndPacketFlowMessageBidirectionalMapper
 	{
-		private static object ToPacketlostEventTransport(this NetworkEvent.PacketLost source)
+		private static object ToPacketLostEventTransport(this NetworkEvent.PacketLost source)
 		{
 			return new PacketLostEventTransport
 			{

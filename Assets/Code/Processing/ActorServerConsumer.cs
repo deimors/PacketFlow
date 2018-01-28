@@ -13,11 +13,10 @@ using static Assets.Code.Constants;
 public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, NetworkCommand>
 {
 	private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
-
 	private readonly ISubject<NetworkCommand> _commandSubject = new Subject<NetworkCommand>();
-	public IObservable<NetworkCommand> ReceivedCommands => _commandSubject;
 
 	public NetworkManager NetworkManagerInstance;
+	public IObservable<NetworkCommand> ReceivedCommands => _commandSubject;
 
 	public void SendEvent(NetworkEvent @event)
 	{
@@ -38,6 +37,12 @@ public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, Net
 			var message = networkMessage.ReadMessage<PacketFlowMessage>();
 			_messageQueue.Enqueue(message);
 		});
+
+		NetworkServer.RegisterHandler(SERVER_MESSAGE_TYPE_ID, networkMessage =>
+		{
+			var message = networkMessage.ReadMessage<PacketFlowMessage>();
+			_messageQueue.Enqueue(message);
+		});
 	}
 
 	void Update()
@@ -45,11 +50,12 @@ public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, Net
 		while (!_messageQueue.IsEmpty)
 		{
 			PacketFlowMessage message;
-			if (_messageQueue.TryDequeue(out message))
-			{
-				var command = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(message);
-				_commandSubject.OnNext(command);
-			}
+			if (!_messageQueue.TryDequeue(out message))
+				continue;
+
+			var command = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(message);
+			_commandSubject.OnNext(command);
+			Debug.Log("Server consumer received message: " + message.payload);
 		}
 	}		
 }

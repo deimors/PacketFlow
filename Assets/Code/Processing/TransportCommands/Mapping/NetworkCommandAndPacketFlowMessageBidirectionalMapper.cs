@@ -134,7 +134,8 @@ namespace Assets.Code.Processing
 				case TransportCommandPayloadType.AddPacket:						return GetCommandForAddPacketPayload(message.payload);
 				case TransportCommandPayloadType.IncrementPacketTypeDirection:	return GetCommandForIncrementPacketTypeDirectionPayload(message.payload);
 				case TransportCommandPayloadType.ProcessNodeQueue:				return GetCommandForProcessNodeQueuePayload(message.payload);
-				default:														throw new System.Exception("Taylor messed up a mapper... maybe. Or someone else made a breaking change. Someone.");
+				case TransportCommandPayloadType.CompleteTransmission:			return GetCommandForCompleteTransmissionPayload(message.payload);
+				default:														throw new NotImplementedException();
 			}
 		}
 
@@ -212,6 +213,16 @@ namespace Assets.Code.Processing
 			return new NetworkCommand.ProcessNodeQueue
 				(
 					new NodeIdentifier(transport.NodeID)
+				);
+		}
+
+		private NetworkCommand.CompleteTransmission GetCommandForCompleteTransmissionPayload(string payload)
+		{
+			var transport = JsonUtility.FromJson<CompleteTransmissionCommandTransport>(payload);
+			return new NetworkCommand.CompleteTransmission
+				(
+					new PacketIdentifier(transport.PacketID),
+					new LinkIdentifier(transport.LinkID)
 				);
 		}
 		#endregion

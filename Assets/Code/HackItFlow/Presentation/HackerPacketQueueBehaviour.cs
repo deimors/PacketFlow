@@ -7,11 +7,16 @@ using UnityEngine;
 using Assets.Code.HackItFlow.HackerPacketQueue;
 using Zenject;
 using Assets.Code.HackItFlow.CommandLineSystem;
+using Assets.Code.Processing;
+using PacketFlow.Domain;
+using UnityEngine.Networking;
 
 namespace Assets.Code.HackItFlow.Presentation
 {
 	public class HackerPacketQueueBehaviour : MonoBehaviour
 	{
+		public NetworkManager NetworkManagerInstance;
+
 		private IHackerPacketQueue _queue;
 		private ICommandLineConsole _commandLineConsole;
 
@@ -54,12 +59,28 @@ namespace Assets.Code.HackItFlow.Presentation
 			{
 				if (_queue.TryAddItem(type, colour))
 				{
+					int senderID = NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
+					var command = new NetworkCommand.AddPacket(new PacketIdentifier(), GetPacketTypeFromHackerPacketQueueItemColour(colour), new NodeIdentifier());
+					var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(senderID, Constants.HACKER_PLAYER_TYPE, command);
+					NetworkManagerInstance?.client?.Send(Constants.HACKER_PLAYER_MESSAGE_TYPE_ID, message);
+
 					_commandLineConsole.AddText($"inject-packet {colour.ToString()}");
 				}
 				else
 				{
 					_commandLineConsole.AddText($"inject-packet {colour.ToString()}", "SYSTEM ERROR, PACKET REJECTED", string.Empty);
 				}
+			}
+		}
+
+		private static PacketType GetPacketTypeFromHackerPacketQueueItemColour(HackerPacketQueueItemColour colour)
+		{
+			switch (colour)
+			{
+				case HackerPacketQueueItemColour.Red: return PacketType.Red;
+				case HackerPacketQueueItemColour.Green: return PacketType.Green;
+				case HackerPacketQueueItemColour.Blue: return PacketType.Blue;
+				default: throw new NotImplementedException();
 			}
 		}
 	}

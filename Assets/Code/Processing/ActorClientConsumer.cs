@@ -10,46 +10,45 @@ using UnityEngine;
 using UnityEngine.Networking;
 using static Assets.Code.Constants;
 
-	public class ActorClientConsumer : MonoBehaviour, IActorClient<NetworkEvent, PresentationCommand>
+public class ActorClientConsumer : MonoBehaviour, IActorClient<NetworkEvent, NetworkCommand>
+{
+	private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
+	private readonly ISubject<NetworkEvent> _eventSubject = new Subject<NetworkEvent>();
+
+	public NetworkManager NetworkManagerInstance;
+	public IObservable<NetworkEvent> ReceivedEvents => _eventSubject;
+	private int SenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
+	private bool IsClientConnected => NetworkManagerInstance?.IsClientConnected() ?? false;
+
+	public void SendCommand(NetworkCommand command)
 	{
-		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
-		private int _senderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
-		private bool _isClientConnected => NetworkManagerInstance?.IsClientConnected() ?? false;
-		public NetworkManager NetworkManagerInstance;
-
-		private ISubject<NetworkEvent> _eventSubject = new Subject<NetworkEvent>();
-		public IObservable<NetworkEvent> ReceivedEvents => _eventSubject;
-
-		public void SendCommand(PresentationCommand command)
-		{
-			Debug.Log(command);
-			/*var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
-			NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);*/
-		}				
+		// TODO: fire off presentation commands
+		Debug.Log(command);
+	}				
 		
-		void Update()
+	void Update()
+	{
+		if (!IsClientConnected)
+			return;
+
+		if (!NetworkManagerInstance.client.handlers.ContainsKey(SERVER_MESSAGE_TYPE_ID))
 		{
-			if (!_isClientConnected)
-				return;
-
-			if (!NetworkManagerInstance.client.handlers.ContainsKey(SERVER_MESSAGE_TYPE_ID))
+			NetworkManagerInstance.client.RegisterHandler(SERVER_MESSAGE_TYPE_ID, networkMessage =>
 			{
-				NetworkManagerInstance.client.RegisterHandler(SERVER_MESSAGE_TYPE_ID, networkMessage =>
-				{
-					var message = networkMessage.ReadMessage<PacketFlowMessage>();
-					_messageQueue.Enqueue(message);
-				});
-			}
+				var message = networkMessage.ReadMessage<PacketFlowMessage>();
+				_messageQueue.Enqueue(message);
+			});
+		}
 
-			while (!_messageQueue.IsEmpty)
-			{
-				PacketFlowMessage message;
-				if (_messageQueue.TryDequeue(out message))
-				{
-					var @event = NetworkEventAndPacketFlowMessageBidirectionalMapper.Map(message);
-					_eventSubject.OnNext(@event);
-					Debug.Log("Message received: " + message.payload);
-				}
-			}
-		}		
-	}
+		while (!_messageQueue.IsEmpty)
+		{
+			PacketFlowMessage message;
+			if (!_messageQueue.TryDequeue(out message))
+				continue;
+
+			var @event = NetworkEventAndPacketFlowMessageBidirectionalMapper.Map(message);
+			_eventSubject.OnNext(@event);
+			Debug.Log("Client consumer received message: " + message.payload);
+		}
+	}		
+}
