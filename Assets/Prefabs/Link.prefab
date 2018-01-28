@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 114148625216628046}
   - component: {fileID: 114241801164461794}
   - component: {fileID: 114381311325615280}
-  - component: {fileID: 114062582829566162}
   - component: {fileID: 120065102973466308}
   m_Layer: 0
   m_Name: Link
@@ -46,21 +45,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114062582829566162
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1339726271762410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6d370ec7251378489de49cb1144490b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _lineRenderer: {fileID: 120065102973466308}
-  StartPoint: {x: 0, y: 0}
-  EndPoint: {x: 0, y: 0}
-  Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114067996757614418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -116,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87defab221c7ba9479ab87c0a92c7d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _link: {fileID: 114062582829566162}
+  _link: {fileID: 114874602617705148}
 --- !u!114 &114874602617705148
 MonoBehaviour:
   m_ObjectHideFlags: 1
