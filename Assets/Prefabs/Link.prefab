@@ -24,7 +24,9 @@ GameObject:
   - component: {fileID: 114148625216628046}
   - component: {fileID: 114241801164461794}
   - component: {fileID: 114381311325615280}
+  - component: {fileID: 114062582829566162}
   - component: {fileID: 120065102973466308}
+  - component: {fileID: 114571287376347384}
   m_Layer: 0
   m_Name: Link
   m_TagString: Untagged
@@ -45,6 +47,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114062582829566162
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1339726271762410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d370ec7251378489de49cb1144490b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lineRenderer: {fileID: 120065102973466308}
+  StartPoint: {x: 0, y: 0}
+  EndPoint: {x: 0, y: 0}
+  Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114067996757614418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -86,6 +103,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _components:
   - {fileID: 114381311325615280}
+  - {fileID: 114571287376347384}
   _identifier: 
   _context: {fileID: 114067996757614418}
   _bindType: 1
@@ -100,7 +118,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87defab221c7ba9479ab87c0a92c7d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _link: {fileID: 114874602617705148}
+  _link: {fileID: 114062582829566162}
+--- !u!114 &114571287376347384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1339726271762410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b73c52b636f614d8838ee085e11ea7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _link: {fileID: 114062582829566162}
+  _prefab: {fileID: 1783177557963610, guid: f8c1b7eb587bae7458ff2fc3913103f8, type: 2}
 --- !u!114 &114874602617705148
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -112,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d370ec7251378489de49cb1144490b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lineRenderer: {fileID: 120065102973466308}
+  _lineRenderer: {fileID: 0}
   StartPoint: {x: 0, y: 0}
   EndPoint: {x: 0, y: 0}
   Color: {r: 1, g: 1, b: 1, a: 1}

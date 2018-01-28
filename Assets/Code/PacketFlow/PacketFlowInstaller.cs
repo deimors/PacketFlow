@@ -47,6 +47,7 @@ namespace PacketFlow.Presentation
 				.WithArguments(Observable.EveryUpdate().AsUnitObservable());
 			*/
 			Container.Bind<NodePositionReadModel>().AsSingle().NonLazy();
+			Container.Bind<LinkLatencyReadModel>().AsSingle().NonLazy();
 
 			Container.Bind<BuildLevel>().AsSingle().NonLazy();
 			Container.Bind<InstantiateNodeContainerWhenNodeAdded>().AsSingle().NonLazy();
