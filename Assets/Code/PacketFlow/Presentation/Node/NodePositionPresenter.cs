@@ -6,11 +6,12 @@ namespace PacketFlow.Presentation.Node
 {
 	public class NodePositionPresenter : MonoBehaviour, IDisplayNodePosition
 	{
+		private readonly NodePositionToVector3Converter _positionConverter = new NodePositionToVector3Converter();
 		public NodePosition Position
 		{
 			set
 			{
-				transform.position = new Vector3(value.X, value.Y);
+				transform.position = _positionConverter.Convert(value);
 			}
 		}
 	}

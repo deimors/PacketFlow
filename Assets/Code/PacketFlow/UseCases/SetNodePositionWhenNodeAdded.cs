@@ -1,4 +1,5 @@
-﻿using PacketFlow.Domain;
+﻿using Functional.Maybe;
+using PacketFlow.Domain;
 using System;
 using UniRx;
 using UnityEngine;
