@@ -8,7 +8,7 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		{
 			return new PacketDequeuedEventTransport
 			{
-				NodeID = source.NodeId.Value,
+				NodeID = new SerializableGuid(source.NodeId.Value),
 			};
 		}
 

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using static Assets.Code.Constants;
 using PacketFlow.Domain;
-using static Assets.Code.Processing.TransportCommands;
 using System;
+using Assets.Code.Processing.TransportCommands;
 
 namespace Assets.Code.Processing
 {
@@ -22,7 +22,7 @@ namespace Assets.Code.Processing
 					ap => (int)TransportCommandPayloadType.AddPacket,
 					iptd => (int)TransportCommandPayloadType.IncrementPacketTypeDirection,
 					pnq => (int)TransportCommandPayloadType.ProcessNodeQueue,
-					ct => { throw new NotImplementedException(); } // TODO: Taylor
+					ct => (int)TransportCommandPayloadType.CompleteTransmission
 				),
 				payload = JsonUtility.ToJson(
 						command.Match(
@@ -33,83 +33,92 @@ namespace Assets.Code.Processing
 						ap => GetPayloadForAddPacketCommand(ap),
 						iptd => GetPayloadForIncrementPacketTypeDirectionCommand(iptd),
 						pnq => GetPayloadForProcessNodeQueueCommand(pnq),
-						ct => { throw new NotImplementedException(); } // TODO: Taylor
+						ct => GetPayloadForCompleteTransmissionCommand(ct)
 					)
 				)
 			};
 		}
 
 		#region Get Payloads for Commands
-		private object GetPayloadForAddGatewayNodeCommand (NetworkCommand.AddGatewayNode addGatewayNode)
+		private object GetPayloadForAddGatewayNodeCommand (NetworkCommand.AddGatewayNode command)
 		{
 			return new AddGatewayNodeCommandTransport
 			{
-				NodeID = addGatewayNode.NodeId.Value,
-				X = addGatewayNode.Position.X,
-				Y = addGatewayNode.Position.Y,
-				Capacity = addGatewayNode.Capacity
+				NodeID = new SerializableGuid(command.NodeId.Value),
+				X = command.Position.X,
+				Y = command.Position.Y,
+				Capacity = command.Capacity
 			};
 		}
 
-		private object GetPayloadForAddRouterNodeCommand(NetworkCommand.AddRouterNode addRouterNode)
+		private object GetPayloadForAddRouterNodeCommand(NetworkCommand.AddRouterNode command)
 		{
 			return new AddRouterNodeCommandTransport
 			{
-				NodeID = addRouterNode.NodeId.Value,
-				X = addRouterNode.Position.X,
-				Y = addRouterNode.Position.Y,
-				Capacity = addRouterNode.Capacity
+				NodeID = new SerializableGuid(command.NodeId.Value),
+				X = command.Position.X,
+				Y = command.Position.Y,
+				Capacity = command.Capacity
 			};
 		}
 
-		private object GetPayloadForAddConsumerNodeCommand(NetworkCommand.AddConsumerNode addConsumerNode)
+		private object GetPayloadForAddConsumerNodeCommand(NetworkCommand.AddConsumerNode command)
 		{
 			return new AddConsumerNodeCommandTransport
 			{
-				NodeID = addConsumerNode.NodeId.Value,
-				X = addConsumerNode.Position.X,
-				Y = addConsumerNode.Position.Y,
-				Capacity = addConsumerNode.Capacity
+				NodeID = new SerializableGuid(command.NodeId.Value),
+				X = command.Position.X,
+				Y = command.Position.Y,
+				Capacity = command.Capacity
 			};
 		}
 
-		private object GetPayloadForLinkNodesCommand(NetworkCommand.LinkNodes linkNodesCommand)
+		private object GetPayloadForLinkNodesCommand(NetworkCommand.LinkNodes command)
 		{
 			return new LinkNodesCommandTransport
 			{
-				SourceID = linkNodesCommand.Source.Value,
-				SourcePortDirection = (int)linkNodesCommand.SourcePort,
-				SinkID = linkNodesCommand.Sink.Value,
-				SinkPortDirection = (int)linkNodesCommand.SinkPort,
-				Bandwidth = linkNodesCommand.Attributes.Bandwidth,
-				Latency = linkNodesCommand.Attributes.Latency
+				SourceID = new SerializableGuid(command.Source.Value),
+				SourcePortDirection = (int)command.SourcePort,
+				SinkID = new SerializableGuid(command.Sink.Value),
+				SinkPortDirection = (int)command.SinkPort,
+				Bandwidth = command.Attributes.Bandwidth,
+				Latency = command.Attributes.Latency
 			};
 		}		
 
-		private object GetPayloadForAddPacketCommand(NetworkCommand.AddPacket addPacketCommand)
+		private object GetPayloadForAddPacketCommand(NetworkCommand.AddPacket command)
 		{
 			return new AddPacketCommandTransport
 			{
-				NodeID = addPacketCommand.NodeId.Value,
-				Type = (int)addPacketCommand.Type,
-				PacketID = addPacketCommand.PackedId.Value
+				NodeID = new SerializableGuid(command.NodeId.Value),
+				Type = (int)command.Type,
+				PacketID = new SerializableGuid(command.PackedId.Value)
 			};
 		}
 
-		private object GetPayloadForIncrementPacketTypeDirectionCommand(NetworkCommand.IncrementPacketTypeDirection incrementPacketTypeDirection)
+		private object GetPayloadForIncrementPacketTypeDirectionCommand(NetworkCommand.IncrementPacketTypeDirection command)
 		{
 			return new IncrementPacketTypeDirectionCommandTransport
 			{
-				NodeID = incrementPacketTypeDirection.NodeId.Value,
-				Type = (int)incrementPacketTypeDirection.PacketType
+				NodeID = new SerializableGuid(command.NodeId.Value),
+				Type = (int)command.PacketType
 			};
 		}
 
-		private object GetPayloadForProcessNodeQueueCommand(NetworkCommand.ProcessNodeQueue processNodeQueue)
+		private object GetPayloadForProcessNodeQueueCommand(NetworkCommand.ProcessNodeQueue command)
 		{
 			return new ProcessNodeQueueCommandTransport
 			{
-				NodeID = processNodeQueue.NodeId.Value,
+				NodeID = new SerializableGuid(command.NodeId.Value),
+			};
+		}
+
+		private object GetPayloadForCompleteTransmissionCommand(NetworkCommand.CompleteTransmission command)
+		{
+			return new CompleteTransmissionCommandTransport
+			{
+				PacketID = new SerializableGuid(command.PacketId.Value),
+				LinkID = new SerializableGuid(command.LinkId.Value)
 			};
 		}
 		#endregion
