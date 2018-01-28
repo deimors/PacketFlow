@@ -41,7 +41,7 @@ namespace PacketFlow.Domain
 				.FailIf(() => !State.Nodes.ContainsKey(command.Sink), () => NetworkError.UnknownNode)
 				.FailIf(() => !State.Nodes[command.Source].Ports.IsDisconnected(command.SourcePort), () => NetworkError.PortFull)
 				.FailIf(() => !State.Nodes[command.Sink].Ports.IsDisconnected(command.SinkPort), () => NetworkError.PortFull)
-				.Record(() => new NetworkEvent.LinkAdded(new Link(newLinkId, command.Source, command.Sink)))
+				.Record(() => new NetworkEvent.LinkAdded(new Link(newLinkId, command.Source, command.Sink, command.Attributes)))
 				.Record(() => new NetworkEvent.PortAssigned(command.Source, command.SourcePort, newLinkId, ConnectionDirection.Output))
 				.Record(() => new NetworkEvent.PortAssigned(command.Sink, command.SinkPort, newLinkId, ConnectionDirection.Input))
 				.Execute();

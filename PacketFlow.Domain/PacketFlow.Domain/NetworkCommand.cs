@@ -48,18 +48,20 @@ namespace PacketFlow.Domain
 
 		public class LinkNodes : NetworkCommand
 		{
-			public LinkNodes(NodeIdentifier source, PortDirection sourcePort, NodeIdentifier sink, PortDirection sinkPort)
+			public LinkNodes(NodeIdentifier source, PortDirection sourcePort, NodeIdentifier sink, PortDirection sinkPort, LinkAttributes attributes)
 			{
 				Source = source ?? throw new System.ArgumentNullException(nameof(source));
 				SourcePort = sourcePort;
 				Sink = sink ?? throw new System.ArgumentNullException(nameof(sink));
 				SinkPort = sinkPort;
+				Attributes = attributes;
 			}
 
 			public NodeIdentifier Source { get; }
 			public PortDirection SourcePort { get; }
 			public NodeIdentifier Sink { get; }
 			public PortDirection SinkPort { get; }
+			public LinkAttributes Attributes { get; }
 		}
 
 		public class AddPacket : NetworkCommand
