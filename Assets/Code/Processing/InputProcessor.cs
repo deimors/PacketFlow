@@ -11,11 +11,12 @@ using static Assets.Code.Constants;
 using PacketFlow.Domain;
 using Assets.Code.Processing;
 
-public class InputProcessor : MonoBehaviour {
-
+public class InputProcessor : MonoBehaviour
+{ 
+	private bool _safeToSend => NetworkManagerInstance?.IsClientConnected() ?? false;
+	private int _senderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
+	private static bool _isAServer => NetworkServer.connections.Count > 0; // server has connections, client does not (https://stackoverflow.com/a/41685717)
 	public NetworkManager NetworkManagerInstance;
-
-	public ActorClientConsumer ActorClientConsumer;
 
 	// Use this for initialization
 	void Start () {
@@ -23,110 +24,106 @@ public class InputProcessor : MonoBehaviour {
 	}
 
 	#region LOCAL FUNCTIONS ARE NOT ALLOWED 
-	private NodePosition Position => new NodePosition(0.0f, 0.0f);
-	private NodeIdentifier ID => new NodeIdentifier();
-	private int Capacity => 10;
-	private PortDirection Direction => PortDirection.Top;
-	private PacketType PT => PacketType.Blue;
+	private NodePosition _position => new NodePosition(0.0f, 0.0f);
+	private NodeIdentifier _id => new NodeIdentifier();
+	private int _capacity => 10;
+	private PortDirection _direction => PortDirection.Top;
+	private PacketType _pt => PacketType.Blue;
 	#endregion
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if (!SafeToSend)
+		if (!_safeToSend)
 			return;
 
-		if (IsAServer) // Packet
+		if (_isAServer) // Packet
 		{
 			if (Input.GetKeyDown(KeyCode.G))
 			{
-				var command = new NetworkCommand.AddGatewayNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
-				ActorClientConsumer.SendCommand.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+				var command = new NetworkCommand.AddGatewayNode(_id, _position, _capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.R))
 			{
-				
+				var command = new NetworkCommand.AddRouterNode(_id, _position, _capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.C))
 			{
-				var command = new NetworkCommand.AddConsumerNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
-				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+				var command = new NetworkCommand.AddConsumerNode(_id, _position, _capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.L))
 			{
-				var command = new NetworkCommand.LinkNodes(ID, Direction, ID, Direction);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
-				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+				var command = new NetworkCommand.LinkNodes(_id, _direction, _id, _direction);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.P))
 			{
-				var command = new NetworkCommand.AddPacket(new PacketIdentifier(), PT, ID);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
-				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+				var command = new NetworkCommand.AddPacket(new PacketIdentifier(), _pt, _id);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.I))
 			{
-				var command = new NetworkCommand.IncrementPacketTypeDirection(ID, PT);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
-				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
-			}		
+				var command = new NetworkCommand.IncrementPacketTypeDirection(_id, _pt);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, ADMIN_PLAYER_TYPE, command);
+				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+			}
 		}
 		else // Hackit
 		{
 			if (Input.GetKeyDown(KeyCode.G))
 			{
-				var command = new NetworkCommand.AddGatewayNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
+				var command = new NetworkCommand.AddGatewayNode(_id, _position, _capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.R))
 			{
-				var command = new NetworkCommand.AddRouterNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
+				var command = new NetworkCommand.AddRouterNode(_id, _position, _capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.C))
 			{
-				var command = new NetworkCommand.AddConsumerNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
+				var command = new NetworkCommand.AddConsumerNode(_id, _position, _capacity);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.L))
 			{
-				var command = new NetworkCommand.LinkNodes(ID, Direction, ID, Direction);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
+				var command = new NetworkCommand.LinkNodes(_id, _direction, _id, _direction);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.P))
 			{
-				var command = new NetworkCommand.AddPacket(new PacketIdentifier(), PT, ID);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
+				var command = new NetworkCommand.AddPacket(new PacketIdentifier(), _pt, _id);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.I))
 			{
-				var command = new NetworkCommand.IncrementPacketTypeDirection(ID, PT);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
+				var command = new NetworkCommand.IncrementPacketTypeDirection(_id, _pt);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 		}
-	}
-
-	
-
-	private bool SafeToSend => NetworkManagerInstance?.IsClientConnected() ?? false;
-	private int SenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
-	private static bool IsAServer => NetworkServer.connections.Count > 0; // server has connections, client does not (https://stackoverflow.com/a/41685717)
+	}	
 }

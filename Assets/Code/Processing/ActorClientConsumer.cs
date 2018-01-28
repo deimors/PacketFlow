@@ -11,29 +11,33 @@ using static Assets.Code.Constants;
 
 namespace Assets.Code.Processing
 {
-	public class ActorClientConsumer : MonoBehaviour, IActorClient<NetworkEvent, NetworkCommand>
+	public class PresentationCommand
+	{
+		private readonly string _message;
+
+		public PresentationCommand(string message)
+		{
+			_message = message;
+		}
+
+		public override string ToString() => _message;
+	}
+	public class ActorClientConsumer : MonoBehaviour, IActorClient<NetworkEvent, PresentationCommand>
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
+		private int _senderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
 
 		public NetworkManager NetworkManagerInstance;
 
-		private ISubject<NetworkEvent> EventSubject = new Subject<NetworkEvent>();
-		public IObservable<NetworkEvent> ReceivedEvents => EventSubject;
+		private ISubject<NetworkEvent> _eventSubject = new Subject<NetworkEvent>();
+		public IObservable<NetworkEvent> ReceivedEvents => _eventSubject;
 
-		#region LOCAL FUNCTIONS ARE NOT ALLOWED 
-		private NodePosition Position => new NodePosition(0.0f, 0.0f);
-		private NodeIdentifier ID => new NodeIdentifier();
-		private int Capacity => 10;
-		private PortDirection Direction => PortDirection.Top;
-		private PacketType PT => PacketType.Blue;
-		#endregion
-
-		public void SendCommand(NetworkCommand command)
+		public void SendCommand(PresentationCommand command)
 		{
-			var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
-			NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
+			Debug.Log(command);
+			/*var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
+			NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);*/
 		}				
-
 		
 		void Update()
 		{
@@ -55,15 +59,10 @@ namespace Assets.Code.Processing
 				if (_messageQueue.TryDequeue(out message))
 				{
 					var @event = NetworkEventAndPacketFlowMessageBidirectionalMapper.Map(message);
-					EventSubject.OnNext(@event);
+					_eventSubject.OnNext(@event);
 					Debug.Log("Message received: " + message.payload);
 				}
 			}
-		}
-		
-
-		private bool SafeToSend => NetworkManagerInstance?.IsClientConnected() ?? false;
-		private int SenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
-		private static bool IsAServer => NetworkServer.connections.Count > 0; // server has connections, client does not (https://stackoverflow.com/a/41685717)
+		}		
 	}
 }

@@ -15,14 +15,16 @@ namespace Assets.Code.Processing
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
 
-		public NetworkManager NetworkManagerInstance;			
+		private readonly ISubject<NetworkCommand> _commandSubject = new Subject<NetworkCommand>();
+		public IObservable<NetworkCommand> ReceivedCommands => _commandSubject;
+
+		public NetworkManager NetworkManagerInstance;
 
 		public void SendEvent(NetworkEvent @event)
 		{
 			var eventToSendAcrossWire = NetworkEventAndPacketFlowMessageBidirectionalMapper.Map(@event);
 			NetworkServer.SendToAll(SERVER_MESSAGE_TYPE_ID, eventToSendAcrossWire);
 		}
-
 
 		void Update()
 		{
@@ -44,15 +46,9 @@ namespace Assets.Code.Processing
 				if (_messageQueue.TryDequeue(out message))
 				{
 					var command = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(message);
-					CommandSubject.OnNext(command);
+					_commandSubject.OnNext(command);
 				}
 			}
-		}
-
-		private int SenderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
-		private static bool IsAServer => NetworkServer.connections.Count > 0; // server has connections, client does not (https://stackoverflow.com/a/41685717)
-
-		private readonly ISubject<NetworkCommand> CommandSubject = new Subject<NetworkCommand>();
-		public IObservable<NetworkCommand> ReceivedCommands => CommandSubject;
+		}		
 	}
 }
