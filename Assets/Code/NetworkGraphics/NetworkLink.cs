@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class NetworkLink : MonoBehaviour
 {
+	[SerializeField]
 	private LineRenderer _lineRenderer; 
 
 	[SerializeField]
@@ -31,12 +30,7 @@ public class NetworkLink : MonoBehaviour
 	}
 	
 	private List<TransportingGameObject> _travelingGameObjects = new List<TransportingGameObject>();
-
-	void Start()
-	{
-		InitializeLineRender();
-	}
-		
+	
 	void FixedUpdate ()
 	{
 		HandleEndpointPositionChanges();
@@ -83,15 +77,7 @@ public class NetworkLink : MonoBehaviour
 	{
 		return gameObject.lifeTime / gameObject.timeToLive;
 	}
-
-	private void InitializeLineRender()
-	{
-		_lineRenderer = gameObject.AddComponent<LineRenderer>();
-		_lineRenderer.widthMultiplier = 0.2f;
-
-		_lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
-	}
-
+	
 	private void HandleColorChanges()
 	{
 		if (_previousColor != Color)

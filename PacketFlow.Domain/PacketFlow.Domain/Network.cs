@@ -182,9 +182,9 @@ namespace PacketFlow.Domain
 		private readonly Dictionary<LinkIdentifier, Link> _links = new Dictionary<LinkIdentifier, Link>();
 		private readonly Dictionary<PacketIdentifier, Packet> _packets = new Dictionary<PacketIdentifier, Packet>();
 
-		public IReadOnlyDictionary<NodeIdentifier, Node> Nodes { get; }
-		public IReadOnlyDictionary<LinkIdentifier, Link> Links { get; }
-		public IReadOnlyDictionary<PacketIdentifier, Packet> Packets { get; }
+		public IReadOnlyDictionary<NodeIdentifier, Node> Nodes => _nodes;
+		public IReadOnlyDictionary<LinkIdentifier, Link> Links => _links;
+		public IReadOnlyDictionary<PacketIdentifier, Packet> Packets => _packets;
 
 		public void ApplyEvent(NetworkEvent @event)
 			=> @event.Switch(
