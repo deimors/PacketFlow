@@ -10,10 +10,10 @@ public class NumberDisplay : MonoBehaviour
 	public float Value;
 
 	[SerializeField]
-	Color LowColor, HighColor;
+	Color LowColor = Color.white, HighColor = Color.white;
 
 	[SerializeField]
-	float LowThreshhold, HighThreshhold;
+	float LowThreshhold = 0, HighThreshhold = 0;
 
 	void Update()
 	{
