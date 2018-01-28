@@ -8,7 +8,7 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		{
 			return new PacketTypeDirectionChangedEventTransport
 			{
-				NodeID = source.NodeId.Value,
+				NodeID = new SerializableGuid(source.NodeId.Value),
 				PacketType = (int)source.PacketType,
 				PortDirection = (int)source.Port
 			};
