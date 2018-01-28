@@ -483,3 +483,4 @@ MonoBehaviour:
     type: 2}
   _packetPrefab: {fileID: 1783177557963610, guid: f8c1b7eb587bae7458ff2fc3913103f8,
     type: 2}
+  _gameplayArea: {fileID: 1862322669}
