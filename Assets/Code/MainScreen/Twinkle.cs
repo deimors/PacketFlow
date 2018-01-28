@@ -20,27 +20,29 @@ public class Twinkle : MonoBehaviour
         StartCoroutine(TwinkleCoroutine(myimages));
     }
 
-    IEnumerator TwinkleCoroutine(IReadOnlyList<Image> myimages)
+    IEnumerator TwinkleCoroutine(IReadOnlyList<Image> twinkleImages)
     {
         while (true)
         {
             yield return new WaitForSeconds(1f);
-            myimages[0].GetComponent<AudioSource>().Play();
-            myimages[0].enabled = true;
+            twinkleImages[0].GetComponent<AudioSource>().Play();
+            twinkleImages[0].enabled = true;
             yield return new WaitForSeconds(0.2f);
-            myimages[0].enabled = false;
+            twinkleImages[0].enabled = false;
 
             yield return new WaitForSeconds(1f);
-            myimages[1].GetComponent<AudioSource>().Play();
-            myimages[1].enabled = true;
+
+            twinkleImages[1].GetComponent<AudioSource>().Play();
+            twinkleImages[1].enabled = true;
             yield return new WaitForSeconds(0.2f);
-            myimages[1].enabled = false;
+            twinkleImages[1].enabled = false;
 
             yield return new WaitForSeconds(1f);
-            myimages[2].GetComponent<AudioSource>().Play();
-            myimages[2].enabled = true;
+
+            twinkleImages[2].GetComponent<AudioSource>().Play();
+            twinkleImages[2].enabled = true;
             yield return new WaitForSeconds(0.2f);
-            myimages[2].enabled = false;
+            twinkleImages[2].enabled = false;
 
             yield return new WaitForSeconds(3);
         }
