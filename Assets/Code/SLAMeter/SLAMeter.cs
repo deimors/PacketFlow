@@ -25,8 +25,6 @@ namespace Assets.Code.SLAMeter
 		{
 			FailureThreashold = threashold;
 			MinimumPacketsRequired = minimumNumberOfPackets;
-			SucceededCount.Value = 0;
-			FailedCount.Value = 0;
 		}
 
 		public bool TryAddPackets(int count, PacketStatus packetStatus)
