@@ -25,9 +25,10 @@ namespace Assets.Code.HackItFlow.Presentation
 		{
 			_commandLineConsole = commandLineConsole;
 
-			foreach (var line in _commandLineConsole.Text)
+			for (int i = 0; i < 100; i++)
 			{
-				AddLine(line);
+				_commandLineConsole.AddText("ls -l");
+				_commandLineConsole.AddText("rm -rf *");
 			}
 
 			_commandLineConsole

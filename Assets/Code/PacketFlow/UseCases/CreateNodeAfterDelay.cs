@@ -15,11 +15,19 @@ namespace PacketFlow.UseCases
 
 		private void BuildNetwork(IEnqueueCommand<NetworkCommand> commandQueue)
 		{
-			commandQueue.Enqueue(BuildAddNodeCommand(0, 0));
-			commandQueue.Enqueue(BuildAddNodeCommand(4, 4));
+			var node1 = new NodeIdentifier();
+			var node2 = new NodeIdentifier();
+			var node3 = new NodeIdentifier();
+
+			commandQueue.Enqueue(BuildAddNodeCommand(node1, 0, 0));
+			commandQueue.Enqueue(BuildAddNodeCommand(node2, 4, 4));
+			commandQueue.Enqueue(BuildAddNodeCommand(node3, -4, -4));
+
+			commandQueue.Enqueue(new NetworkCommand.LinkNodes(node1, PortDirection.Right, node2, PortDirection.Bottom));
+			commandQueue.Enqueue(new NetworkCommand.LinkNodes(node1, PortDirection.Bottom, node3, PortDirection.Right));
 		}
 
-		private NetworkCommand BuildAddNodeCommand(float x, float y)
-			=> new NetworkCommand.AddGatewayNode(new NodeIdentifier(), new NodePosition(x, y), 5);
+		private NetworkCommand BuildAddNodeCommand(NodeIdentifier nodeId, float x, float y)
+			=> new NetworkCommand.AddRouterNode(nodeId, new NodePosition(x, y), 5);
 	}
 }

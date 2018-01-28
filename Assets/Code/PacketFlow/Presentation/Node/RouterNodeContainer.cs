@@ -18,6 +18,8 @@ namespace PacketFlow.Presentation.Node
 			Container.BindInstance(this);
 
 			Container.Bind<SetNodePositionWhenNodeAdded>().AsSingle().NonLazy();
+			Container.Bind<IncrementPacketTypeDirectionWhenArrowClicked>().AsSingle().NonLazy();
+			Container.Bind<DisplayArrowDirectionWhenPacketTypeDirectionChanged>().AsSingle().NonLazy();
 		}
 	}
 }
