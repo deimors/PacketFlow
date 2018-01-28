@@ -1508,6 +1508,34 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1387810281}
+--- !u!1 &1433658291
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1433658292}
+  m_Layer: 0
+  m_Name: GamePlayArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1433658292
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1433658291}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1566067487}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1564986016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1603,6 +1631,7 @@ GameObject:
   - component: {fileID: 1566067489}
   - component: {fileID: 1566067490}
   - component: {fileID: 1566067491}
+  - component: {fileID: 1566067492}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -1663,6 +1692,7 @@ Transform:
   - {fileID: 1564986020}
   - {fileID: 1156782489}
   - {fileID: 2005187477}
+  - {fileID: 1433658292}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1711,6 +1741,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkManagerInstance: {fileID: 746314716}
+--- !u!114 &1566067492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1566067484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2adc06a796016784eadcdccdc268dc2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gatewayNodePrefab: {fileID: 1664594519938620, guid: d03b24f56dc02c049841b570a98b7f8a,
+    type: 2}
+  _routerNodePrefab: {fileID: 1664594519938620, guid: c8cd0a59f0c029f4c99da09deeb574c6,
+    type: 2}
+  _consumerNodePrefab: {fileID: 1664594519938620, guid: 3dd855f97b8565e4ea600bf93da8c9c6,
+    type: 2}
+  _linkPrefab: {fileID: 1339726271762410, guid: 422bc73a3cbe0de4bb25482ca873cc18,
+    type: 2}
+  _packetPrefab: {fileID: 1783177557963610, guid: f8c1b7eb587bae7458ff2fc3913103f8,
+    type: 2}
+  _gameplayArea: {fileID: 1433658291}
 --- !u!1 &1675779566
 GameObject:
   m_ObjectHideFlags: 0
