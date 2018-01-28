@@ -8,7 +8,7 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		{
 			return new PacketAddedEventTransport
 			{
-				PacketID = source.Packet.Id.Value,
+				PacketID = new SerializableGuid(source.Packet.Id.Value),
 				PacketType = (int)source.Packet.Type
 			};
 		}
