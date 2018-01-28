@@ -13,6 +13,11 @@ public class RouterInputDetectorAndHandler : MonoBehaviour, IArrowClickedObserva
 	private Vector3 _desiredDirection;
 	private const int RotationSpeed = 5;
 
+	private static Vector3 RightDirection = new Vector3(0, 1) - Vector3.zero;
+	private static Vector3 LeftDirection = new Vector3(0, -1) - Vector3.zero;
+	private static Vector3 TopDirection = new Vector3(-1, 0) - Vector3.zero;
+	private static Vector3 BottomDirection = new Vector3(1, 0) - Vector3.zero;
+
 	public IDisposable Subscribe(IObserver<PacketType> observer)
 	{
 		return _arrowClickedSubject.Subscribe(observer);
@@ -38,11 +43,11 @@ public class RouterInputDetectorAndHandler : MonoBehaviour, IArrowClickedObserva
 	{
 		switch (direction)
 		{
-			case PortDirection.Right: _desiredDirection = new Vector3(0, 1) - Vector3.zero; break;
-			case PortDirection.Top: _desiredDirection = new Vector3(-1, 0) - Vector3.zero; break;
-			case PortDirection.Left: _desiredDirection = new Vector3(0, -1) - Vector3.zero; break;
+			case PortDirection.Right: _desiredDirection = RightDirection; break;
+			case PortDirection.Top: _desiredDirection = TopDirection; break;
+			case PortDirection.Left: _desiredDirection = LeftDirection; break;
 			default:
-			case PortDirection.Bottom: _desiredDirection = new Vector3(1, 0) - Vector3.zero; break;
+			case PortDirection.Bottom: _desiredDirection = BottomDirection; break;
 		}
 	}
 }
