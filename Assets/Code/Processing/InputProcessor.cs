@@ -83,42 +83,42 @@ public class InputProcessor : MonoBehaviour {
 			if (Input.GetKeyDown(KeyCode.G))
 			{
 				var command = new NetworkCommand.AddGatewayNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.R))
 			{
 				var command = new NetworkCommand.AddRouterNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.C))
 			{
 				var command = new NetworkCommand.AddConsumerNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.L))
 			{
 				var command = new NetworkCommand.LinkNodes(ID, Direction, ID, Direction);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.P))
 			{
 				var command = new NetworkCommand.AddPacket(new PacketIdentifier(), PT, ID);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.I))
 			{
 				var command = new NetworkCommand.IncrementPacketTypeDirection(ID, PT);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
+				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 		}

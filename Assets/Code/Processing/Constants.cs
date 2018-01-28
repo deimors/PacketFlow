@@ -8,6 +8,7 @@ namespace Assets.Code
 	{
 		public const int HACKER_PLAYER_MESSAGE_TYPE_ID = 880;
 		public const int ADMIN_PLAYER_MESSAGE_TYPE_ID = 881;
+		public const int SERVER_MESSAGE_TYPE_ID = 888;		
 		public const int HACKER_PLAYER_TYPE = 0;
 		public const int ADMIN_PLAYER_TYPE = 1;
 		public const int ADD_NODE_TRE_PAYLOAD_TYPE = 0;
