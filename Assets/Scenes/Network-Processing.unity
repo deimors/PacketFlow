@@ -141,9 +141,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 108555545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b1e4f5d9e778904393d005f4e189b64, type: 3}
+  m_Script: {fileID: 11500000, guid: a82db3d5cd7ac2c4594cd2d7a71e7198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkManagerInstance: {fileID: 108555550}
 --- !u!114 &108555547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +153,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 108555545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4871242617192524f8174683efedc9d9, type: 3}
+  m_Script: {fileID: 11500000, guid: e63d8fe1e7626c2429ebc4823a45baf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkManagerInstance: {fileID: 108555550}

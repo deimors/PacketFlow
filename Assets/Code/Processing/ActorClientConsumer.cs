@@ -1,4 +1,5 @@
 ﻿using Assets.Code;
+using Assets.Code.Processing;
 using Assets.Code.Processing.TransportEvents.Mapping;
 using PacketFlow.Actors;
 using PacketFlow.Domain;
@@ -9,19 +10,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using static Assets.Code.Constants;
 
-namespace Assets.Code.Processing
-{
-	public class PresentationCommand
-	{
-		private readonly string _message;
-
-		public PresentationCommand(string message)
-		{
-			_message = message;
-		}
-
-		public override string ToString() => _message;
-	}
 	public class ActorClientConsumer : MonoBehaviour, IActorClient<NetworkEvent, PresentationCommand>
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
@@ -65,4 +53,3 @@ namespace Assets.Code.Processing
 			}
 		}		
 	}
-}

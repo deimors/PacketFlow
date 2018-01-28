@@ -1,4 +1,5 @@
 ﻿using Assets.Code;
+using Assets.Code.Processing;
 using Assets.Code.Processing.TransportEvents.Mapping;
 using PacketFlow.Actors;
 using PacketFlow.Domain;
@@ -9,8 +10,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using static Assets.Code.Constants;
 
-namespace Assets.Code.Processing
-{
 	public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, NetworkCommand>
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
@@ -31,7 +30,16 @@ namespace Assets.Code.Processing
 			if (!NetworkManagerInstance.IsClientConnected())
 				return;
 
-			if (!NetworkManagerInstance.client.handlers.ContainsKey(HACKER_PLAYER_MESSAGE_TYPE_ID))
+		if (!NetworkManagerInstance.client.handlers.ContainsKey(ADMIN_PLAYER_MESSAGE_TYPE_ID))
+		{
+			NetworkManagerInstance.client.RegisterHandler(ADMIN_PLAYER_MESSAGE_TYPE_ID, networkMessage =>
+			{
+				var message = networkMessage.ReadMessage<PacketFlowMessage>();
+				_messageQueue.Enqueue(message);
+			});
+		}
+
+		if (!NetworkManagerInstance.client.handlers.ContainsKey(HACKER_PLAYER_MESSAGE_TYPE_ID))
 			{
 				NetworkManagerInstance.client.RegisterHandler(HACKER_PLAYER_MESSAGE_TYPE_ID, networkMessage =>
 				{
@@ -51,4 +59,3 @@ namespace Assets.Code.Processing
 			}
 		}		
 	}
-}
