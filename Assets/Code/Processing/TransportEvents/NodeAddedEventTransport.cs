@@ -18,5 +18,10 @@ namespace Assets.Code.Processing.TransportEvents
 		public int LeftPortConnectionDirection;
 		public Guid RightPortLinkIdentifier;
 		public int RightPortConnectionDirection;
+		public int TopPortDirection;
+		public int BottomPortDirection;
+		public int LeftPortDirection;
+		public int RightPortDirection;
+		public int[] RouterState;
 	}
 }

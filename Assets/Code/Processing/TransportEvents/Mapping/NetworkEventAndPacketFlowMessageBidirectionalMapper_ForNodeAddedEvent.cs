@@ -16,7 +16,6 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 			return new NodeAddedEventTransport
 			{
 				NodeID = source.Node.Id.Value,
-				NodeType = source.Node.Type.Match(gateway => NODE_TYPE_GATEWAY, router => NODE_TYPE_ROUTER, consumer => NODE_TYPE_CONSUMER),
 				PositionX = source.Node.Position.X,
 				PositionY = source.Node.Position.Y,
 				QueueContent = source.Node.Queue.Content.Select(x => x.Value).ToArray(),
@@ -28,7 +27,11 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 				LeftPortLinkIdentifier = source.Node.Ports.GetLinkIdentifier(PortDirection.Left),
 				LeftPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Left),
 				RightPortLinkIdentifier = source.Node.Ports.GetLinkIdentifier(PortDirection.Right),
-				RightPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Right)
+				RightPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Right),
+				RouterState = source.Node.Match(
+					gateway => Enumerable.Empty<int>().ToArray(),
+					router => new[] { router.State[PacketType.Red], router.State[PacketType.Blue], router.State[PacketType.Green] }.Select(x => (int)x).ToArray(),
+					consumer => Enumerable.Empty<int>().ToArray())
 			};
 		}
 
@@ -48,12 +51,29 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 
 		private static NetworkEvent ToNetworkEvent(this NodeAddedEventTransport transport)
 		{
-			return new NetworkEvent.NodeAdded(
-				new Node(new NodeIdentifier(transport.NodeID),
-					new NodePosition(transport.PositionX, transport.PositionY),
-					transport.MakeNodeQueue(),
-					transport.MakeNodeType(),
-					transport.MakeNodePortSet()));
+			switch (transport.NodeType)
+			{
+				case NODE_TYPE_GATEWAY:
+					return new NetworkEvent.NodeAdded(new Node.Gateway(
+							new NodeIdentifier(transport.NodeID),
+							new NodePosition(transport.PositionX, transport.PositionY),
+							transport.MakeNodeQueue(),
+							transport.MakeNodePortSet()));
+				case NODE_TYPE_ROUTER:
+					return new NetworkEvent.NodeAdded(new Node.Router(
+							new NodeIdentifier(transport.NodeID),
+							new NodePosition(transport.PositionX, transport.PositionY),
+							transport.MakeNodeQueue(),
+							transport.MakeNodePortSet(),
+							transport.MakeRouterState()));
+				case NODE_TYPE_CONSUMER:
+					return new NetworkEvent.NodeAdded(new Node.Consumer(
+							new NodeIdentifier(transport.NodeID),
+							new NodePosition(transport.PositionX, transport.PositionY),
+							transport.MakeNodeQueue(),
+							transport.MakeNodePortSet()));
+				default: throw new Exception("NODE TYPE DOES'T EXIST");
+			}
 		}
 
 		#region ... details for ToNetworkEvent
@@ -62,35 +82,28 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		{
 			return new NodeQueue(ImmutableQueue.Create(transport.QueueContent.Select(x => new PacketIdentifier(x)).ToArray()), transport.QueueCapacity);
 		}
-
-		private static NodeType MakeNodeType(this NodeAddedEventTransport transport)
-		{
-			switch (transport.NodeType)
-			{
-				case (NODE_TYPE_GATEWAY): return new NodeType.Gateway();
-				case (NODE_TYPE_ROUTER): return new NodeType.Router();
-				case (NODE_TYPE_CONSUMER): return new NodeType.Consumer();
-				default:
-					throw new NotImplementedException();
-			}
-		}
-
+		
 		private static NodePortSet MakeNodePortSet(this NodeAddedEventTransport transport)
 		{
 			return new NodePortSet(new[]
 			{
-				MakeNodePort(transport.TopPortLinkIdentifier, transport.TopPortConnectionDirection),
-				MakeNodePort(transport.BottomPortLinkIdentifier, transport.BottomPortConnectionDirection),
-				MakeNodePort(transport.LeftPortLinkIdentifier, transport.LeftPortConnectionDirection),
-				MakeNodePort(transport.RightPortLinkIdentifier, transport.RightPortConnectionDirection)
+				MakeNodePort(transport.TopPortDirection, transport.TopPortLinkIdentifier, transport.TopPortConnectionDirection),
+				MakeNodePort(transport.BottomPortDirection, transport.BottomPortLinkIdentifier, transport.BottomPortConnectionDirection),
+				MakeNodePort(transport.LeftPortDirection, transport.LeftPortLinkIdentifier, transport.LeftPortConnectionDirection),
+				MakeNodePort(transport.RightPortDirection, transport.RightPortLinkIdentifier, transport.RightPortConnectionDirection)
 			});
 		}
 
-		private static NodePort MakeNodePort(Guid linkIdentifier, int connectionDirection)
+		private static NodePort MakeNodePort(int portDirection, Guid linkIdentifier, int connectionDirection)
 		{
 			return linkIdentifier == Guid.Empty
-				? (NodePort)new NodePort.Connected(new LinkIdentifier(linkIdentifier), (ConnectionDirection)connectionDirection)
-				: (NodePort)new NodePort.Disconnected();
+				? (NodePort)new NodePort.Connected((PortDirection)portDirection, new LinkIdentifier(linkIdentifier), (ConnectionDirection)connectionDirection)
+				: (NodePort)new NodePort.Disconnected((PortDirection)portDirection);
+		}
+
+		private static RouterState MakeRouterState(this NodeAddedEventTransport transport)
+		{
+			return new RouterState(transport.RouterState.Select(x => (PortDirection)x).ToArray());
 		}
 
 		#endregion
