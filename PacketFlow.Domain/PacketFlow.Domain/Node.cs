@@ -76,12 +76,15 @@ namespace PacketFlow.Domain
 			public PortDirection NextOutputPort(PacketType packetType)
 			{
 				var outputs = Ports.Outputs.ToArray();
-				var currentIndex = outputs.Where(port => port == Ports[State[packetType]]).Select((port, i) => i).FirstMaybe();
+
+				var currentIndex = outputs.Select((port, i) => new { port, i }).FirstMaybe(pair => pair.port == Ports[State[packetType]]).Select(pair => pair.i);
 				
-				return currentIndex.SelectOrElse(
-					index => outputs[index + 1 % outputs.Length].Port,
-					() => PortDirection.Top
+				var newIndex = currentIndex.SelectOrElse(
+					index => outputs[(index + 1) % outputs.Length].Port,
+					() => outputs.First().Port
 				);
+
+				return newIndex;
 			}
 		}
 
