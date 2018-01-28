@@ -37,3 +37,7 @@ sysinfo.txt
 *.orig
 
 !PacketFlow.Domain/*
+
+# Ignore binaries when building
+*_Data/
+*.exe
