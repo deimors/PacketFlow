@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Code;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Networking.NetworkSystem;
 
 public class ClientBootup : MonoBehaviour {
 
@@ -28,6 +30,7 @@ public class ClientBootup : MonoBehaviour {
 				if (!success) return;
 				Debug.Log("Attempting to start client... " + matchInfo.ToString());
 				manager.client = manager.StartClient(matchInfo);
+				manager.client.Send(Constants.SERVER_CLIENT_CONNECT, new StringMessage("yo sup"));
 			});
 		});
 	}
