@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UniRx;
 
 namespace Assets.Code.HackItFlow.HackerPacketQueue
 {
-	public interface IHackerPacketQueue
+	public interface IHackerPacketQueueItem
 	{
-		IReadOnlyReactiveCollection<IHackerPacketQueueItem> Items { get; }
+		HackerPacketQueueItemType Type { get; set; }
+
+		HackerPacketQueueItemColour Colour { get; set; }
 	}
 }

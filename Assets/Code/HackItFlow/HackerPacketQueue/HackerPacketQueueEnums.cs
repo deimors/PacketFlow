@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UniRx;
 
 namespace Assets.Code.HackItFlow.HackerPacketQueue
 {
-	public interface IHackerPacketQueue
+	public enum HackerPacketQueueItemType
 	{
-		IReadOnlyReactiveCollection<IHackerPacketQueueItem> Items { get; }
+		Type1,
+		Type2,
+		Type3
+	}
+
+	public enum HackerPacketQueueItemColour
+	{
+		Red,
+		Blue,
+		Green
 	}
 }
