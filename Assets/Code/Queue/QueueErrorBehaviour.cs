@@ -1,4 +1,5 @@
 ﻿using System;
+using PacketFlow.Domain;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +11,10 @@ public class QueueErrorBehaviour : MonoBehaviour
 	private DateTime _errorUntil;
 
 	[Inject]
-	public void Initialize(IPacketLossEvent packetLossEvent) 
+	public void Initialize(IObservable<NetworkEvent> networkEvents) 
 	{
-		packetLossEvent	// Here until it is hooked up with an event
+		networkEvents	
+			.OfType<NetworkEvent, NetworkEvent.PacketLost>()
 			.Subscribe(_ => _errorUntil = DateTime.Now.AddSeconds(2));
 	}
 
@@ -31,8 +33,4 @@ public class QueueErrorBehaviour : MonoBehaviour
 	{
 		UpdateErrorColorState();
 	}
-}
-
-public interface IPacketLossEvent : IObservable<Unit>
-{
 }
