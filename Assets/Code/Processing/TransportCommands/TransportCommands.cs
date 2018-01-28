@@ -10,7 +10,8 @@ namespace Assets.Code.Processing.TransportCommands
 		LinkNodes,
 		AddPacket,
 		IncrementPacketTypeDirection,
-		ProcessNodeQueue
+		ProcessNodeQueue,
+		CompleteTransmission
 	}
 
 	public class AddGatewayNodeCommandTransport
@@ -64,4 +65,11 @@ namespace Assets.Code.Processing.TransportCommands
 	{
 		public SerializableGuid NodeID;
 	}
+
+	public class CompleteTransmissionCommandTransport
+	{
+		public SerializableGuid PacketID;
+		public SerializableGuid LinkID;
+	}
+	
 }
