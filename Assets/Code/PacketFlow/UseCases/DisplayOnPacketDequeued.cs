@@ -13,7 +13,7 @@ namespace PacketFlow.UseCases
 		public DisplayOnPacketDequeued(NodeIdentifier nodeId, IObservable<NetworkEvent> networkEvents, PacketTypeReadModel packetTypeReadModel, IDisplayPacketEnqueue consumerPacket)
 		{
 			networkEvents
-				.OfType<NetworkEvent, NetworkEvent.PacketEnqueued>()
+				.OfType<NetworkEvent, NetworkEvent.PacketDequeued>()
 				.Where(packetDequed => packetDequed.NodeId == nodeId)
 				.Subscribe(color => consumerPacket.DequeuePacket());
 		}
