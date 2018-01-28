@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using ModestTree;
 using PacketFlow.Domain;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Assets.Code.Queue
 {
@@ -16,25 +16,22 @@ namespace Assets.Code.Queue
 		private Queue<Packet> _packetQueue;
 		private Queue<GameObject> _gameObjectQueue;
 
-		public Button AddPacket;
-
-		public Button RemovePacket;
-
 		public RectTransform ParentTransform;
 
 		public GameObject PacketCreator;
 
-		void Start()
+		[Inject]
+		public void Initialize(IObservable<NetworkEvent> networkEvents)
 		{
 			_packetQueue = new Queue<Packet>();
 			_gameObjectQueue = new Queue<GameObject>(DisplaySize);
 
-			AddPacket.onClick
-				.AsObservable()
-				.Subscribe(_ => AddPacketToQueue(TempGetPacket()));
+			networkEvents
+				.OfType<NetworkEvent, NetworkEvent.PacketAdded>()
+				.Subscribe(packetAdded => AddPacketToQueue(packetAdded.Packet));
 
-			RemovePacket.onClick
-				.AsObservable()
+			networkEvents
+				.OfType<NetworkEvent, NetworkEvent.PacketDequeued>()
 				.Subscribe(_ => RemovePacketFromQueue());
 		}
 
@@ -59,8 +56,6 @@ namespace Assets.Code.Queue
 				_gameObjectQueue.Enqueue(Create(_packetQueue.Dequeue()));
 			}
 		}
-
-		public Packet TempGetPacket() => new Packet(new PacketIdentifier(), (PacketType)(new System.Random().Next(-1,3)));
 
 		public GameObject Create(Packet packet)
 		{
