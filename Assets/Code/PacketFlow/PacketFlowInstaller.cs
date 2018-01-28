@@ -1,9 +1,7 @@
-﻿using PacketFlow.Actors;
-using PacketFlow.Domain;
+﻿using PacketFlow.Domain;
 using PacketFlow.Presentation.Link;
 using PacketFlow.Presentation.Node;
 using PacketFlow.UseCases;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -41,10 +39,7 @@ namespace PacketFlow.Presentation
 				.FromSubContainerResolve()
 				.ByNewPrefab<LinkContainer>(_linkPrefab);
 
-			Container
-				.BindInterfacesTo<ActorServerProxy<NetworkEvent, NetworkCommand>>()
-				.FromInstance(new ActorServerProxy<NetworkEvent, NetworkCommand>(new NetworkActor(Observable.EveryUpdate().AsUnitObservable()), new FakeNetworkActorServer()))
-				.AsSingle();
+			
 			/*
 			Container
 				.BindInterfacesTo<NetworkActor>()
