@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using static Assets.Code.Constants;
 using PacketFlow.Domain;
-using static Assets.Code.Processing.TransportCommands;
 using System;
+using Assets.Code.Processing.TransportCommands;
 
 namespace Assets.Code.Processing
 {
