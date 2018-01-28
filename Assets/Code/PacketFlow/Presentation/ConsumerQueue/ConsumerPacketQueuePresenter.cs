@@ -10,16 +10,15 @@ namespace Assets.Code.PacketFlow.Presentation.ConsumerQueue
 {
 	class ConsuerQueuePresenter : MonoBehaviour, IConsumerPacketQueue
 	{
-		public Queue<GameObject> ConsumerPacketQueue;
-
 		public GameObject Dequeue()
 		{
-			return ConsumerPacketQueue.Dequeue();
+			throw new NotImplementedException();
 		}
 
-		public void Enqueue(GameObject gameObject)
+		public void GetEnqueColor(GameObject gameObject)
 		{
-			ConsumerPacketQueue.Enqueue(gameObject);
+			throw new NotImplementedException();
 		}
+
 	}
 }

@@ -6,7 +6,7 @@ namespace PacketFlow.UseCases
 {
 	public interface IConsumerPacketQueue
 	{
-		void Enqueue(GameObject gameObject);
+		void GetEnqueueColor(GameObject gameObject);
 		GameObject Dequeue();
 	}
 }
