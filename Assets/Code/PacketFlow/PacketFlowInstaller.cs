@@ -25,27 +25,35 @@ namespace PacketFlow.Presentation
 		[SerializeField]
 		private GameObject _packetPrefab;
 
+		[SerializeField]
+		private GameObject _gameplayArea;
+
 		public override void InstallBindings()
 		{
 			Container.BindFactory<NodeIdentifier, GatewayNodeContainer, GatewayNodeContainer.Factory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<GatewayNodeContainer>(_gatewayNodePrefab);
+				.ByNewPrefab<GatewayNodeContainer>(_gatewayNodePrefab)
+				.UnderTransform(_gameplayArea.transform);
 
 			Container.BindFactory<NodeIdentifier, RouterNodeContainer, RouterNodeContainer.Factory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<RouterNodeContainer>(_routerNodePrefab);
+				.ByNewPrefab<RouterNodeContainer>(_routerNodePrefab)
+				.UnderTransform(_gameplayArea.transform);
 
 			Container.BindFactory<NodeIdentifier, ConsumerNodeContainer, ConsumerNodeContainer.Factory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<ConsumerNodeContainer>(_consumerNodePrefab);
+				.ByNewPrefab<ConsumerNodeContainer>(_consumerNodePrefab)
+				.UnderTransform(_gameplayArea.transform);
 
 			Container.BindFactory<LinkIdentifier, LinkContainer, LinkContainer.Factory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<LinkContainer>(_linkPrefab);
+				.ByNewPrefab<LinkContainer>(_linkPrefab)
+				.UnderTransform(_gameplayArea.transform);
 
 			Container.BindFactory<PacketIdentifier, PacketContainer, PacketContainer.Factory>()
 				.FromSubContainerResolve()
-				.ByNewPrefab<PacketContainer>(_packetPrefab);
+				.ByNewPrefab<PacketContainer>(_packetPrefab)
+				.UnderTransform(_gameplayArea.transform);
 
 			/*
 			Container
