@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Network-Processing-Client.unity
     guid: 882103cd124ae1049b8611c1aca7899d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Network-Processing-Server.unity
     guid: a40e2885738b0d840b04a33dd38df369
+  - enabled: 1
+    path: Assets/Scenes/PacketFlow.unity
+    guid: c09acc8a3792c69488095c207d6dea45
