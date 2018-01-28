@@ -10,19 +10,13 @@ namespace Assets.Code.PacketFlow.UseCases
 {
 	class UpdateQueueOnPacketEnqueued
 	{
-		private readonly PacketTypeToColorConverter packetTypeToColorConverter = new PacketTypeToColorConverter();
-
-		public UpdateQueueOnPacketEnqueued(NodeIdentifier nodeId, IObservable<NetworkEvent> networkEvents, PacketTypeReadModel packetTypeReadModel)
+		public UpdateQueueOnPacketEnqueued(NodeIdentifier nodeId, IObservable<NetworkEvent> networkEvents, PacketTypeReadModel packetTypeReadModel, IDisplayPacketEnqueue consumerPacket)
 		{
 			networkEvents
 				.OfType<NetworkEvent, NetworkEvent.PacketEnqueued>()
 				.Where(packetEnqued => packetEnqued.NodeId == nodeId)
-				.Subscribe(packetEnqued => GetPacketColorFromType(packetTypeReadModel[packetEnqued.PacketId]));
-		}
-
-		private Color GetPacketColorFromType(PacketType packetType)
-		{
-			return packetTypeToColorConverter.GetPacketTypeColour(packetType)
+				.Select(packetEnqued => packetTypeReadModel[packetEnqued.PacketId])
+				.Subscribe(color => consumerPacket.EnqueuePacket(color));
 		}
 	}
 }

@@ -2,28 +2,40 @@
 using System.Linq;
 using ModestTree;
 using PacketFlow.Domain;
+using PacketFlow.UseCases;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Code.Queue
 {
-	public class ConsumerQueue : GatewayQueue
+	public class ConsumerQueue : GatewayQueue, IDisplayPacketEnqueue
 	{
 		public const int MaxQueueSize = 5;
 		private Queue<GameObject> _gameObjectQueue;
 
-		 void Start()
+		void Start()
 		{
 			_gameObjectQueue = new Queue<GameObject>(MaxQueueSize);
 
-			AddPacket.onClick
-				.AsObservable()
-				.Subscribe(_ => AddPacketToNodeQueue(TempGetPacket()));
+			//AddPacket.onClick
+			//	.AsObservable()
+			//	.Subscribe(_ => AddPacketToNodeQueue(TempGetPacket()));
 
-			RemovePacket.onClick
-				.AsObservable()
-				.Subscribe(_ => RemovePacketFromNodeQueue());
+			//RemovePacket.onClick
+			//	.AsObservable()
+			//	.Subscribe(_ => RemovePacketFromNodeQueue());
+		}
+
+		public void EnqueuePacket(PacketType packetType)
+		{
+			AddPacketToNodeQueue(new Packet(new PacketIdentifier(), packetType));
+		}
+
+		public void DequeuePacket()
+		{
+			RemovePacketFromNodeQueue();
+
 		}
 
 		private void RemovePacketFromNodeQueue()

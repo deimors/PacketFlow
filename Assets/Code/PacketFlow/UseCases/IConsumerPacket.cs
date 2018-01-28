@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace PacketFlow.UseCases
 {
-	public interface IConsumerPacketQueue
+	public interface IDisplayPacketEnqueue
 	{
-		void GetEnqueueColor(GameObject gameObject);
-		GameObject Dequeue();
+		void EnqueuePacket(PacketType color);
+		void DequeuePacket();
 	}
 }
