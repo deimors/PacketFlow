@@ -34,4 +34,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+*.orig
+
 !PacketFlow.Domain/*

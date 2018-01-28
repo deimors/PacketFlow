@@ -5,16 +5,6 @@ using UnityEngine.UI;
 
 public class Twinkle : MonoBehaviour
 {
-    private Image _twinkle;
-    private Image _twinkle2;
-    private Image _twinkle3;
-
-    private float _timer = 1f;
-    private float _timer2 = 2f;
-    private float _timer3 = 3f;
-
-    private 
-
     // Use this for initialization
     void Start()
     {

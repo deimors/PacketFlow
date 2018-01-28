@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class RouterNodeArrowsPresenter : MonoBehaviour, IArrowClickedObservable, IDisplayArrowDirection
 {
-	public RouterInputDetector RedInputDetector;
-	public RouterInputDetector GreenInputDetector;
-	public RouterInputDetector BlueInputDetector;
+	public RouterInputDetectorAndHandler RedInputDetector;
+	public RouterInputDetectorAndHandler GreenInputDetector;
+	public RouterInputDetectorAndHandler BlueInputDetector;
 
 	private readonly ISubject<PacketType> _subject = new Subject<PacketType>();
 
@@ -30,12 +30,9 @@ public class RouterNodeArrowsPresenter : MonoBehaviour, IArrowClickedObservable,
 	{
 		switch (packetType)
 		{
-			case PacketType.Red:
-				RedInputDetector.UpdateDirectionToFace(direction);
-				break;
+			case PacketType.Red: RedInputDetector.UpdateDirectionToFace(direction); break;
 			case PacketType.Green: GreenInputDetector.UpdateDirectionToFace(direction); break;
 			case PacketType.Blue: BlueInputDetector.UpdateDirectionToFace(direction); break;
-
 		}
 	}
 }
