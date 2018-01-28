@@ -6,6 +6,8 @@
 		PacketAlreadyAdded,
 		QueueFull,
 		PortFull,
-		NodeNotRouter
+		NodeNotRouter,
+		PortDisconnected,
+		NoGatewayOutput
 	}
 }

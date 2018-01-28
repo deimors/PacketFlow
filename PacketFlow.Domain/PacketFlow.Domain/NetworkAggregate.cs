@@ -17,7 +17,8 @@ namespace PacketFlow.Domain
 				LinkNodes,
 				AddPacket,
 				SetPacketTypeDirection,
-				ProcessNodeQueue
+				ProcessNodeQueue,
+				CompleteTransmission
 			);
 
 		private Maybe<NetworkError> AddGatewayNode(NetworkCommand.AddGatewayNode command)
@@ -84,20 +85,52 @@ namespace PacketFlow.Domain
 			if (node.Queue.IsEmpty)
 				return Maybe<NetworkError>.Nothing;
 
-			var nextPacket = node.Queue.Peek();
+			var nextPacketId = node.Queue.Peek();
+			
+			return node.Ports.Outputs.FirstMaybe().SelectOrElse(
+				connected =>
+				{
+					RecordDequeueAndTransmit(node.Id, nextPacketId, connected.LinkId);
 
-			var gatewayLink = node.Ports.Outputs.First().LinkId;
-
-			Record(new NetworkEvent.PacketDequeued(node.Id));
-
-			Record(new NetworkEvent.PacketTransmissionStarted(nextPacket, gatewayLink));
-
-			return Maybe<NetworkError>.Nothing;
+					return Maybe<NetworkError>.Nothing;
+				},
+				() => NetworkError.NoGatewayOutput.ToMaybe()
+			);
 		}
 		
 		private Maybe<NetworkError> ProcessRouterNode(Node.Router node)
 		{
-			return Maybe<NetworkError>.Nothing;
+			if (node.Queue.IsEmpty)
+				return Maybe<NetworkError>.Nothing;
+
+			var nextPacketId = node.Queue.Peek();
+			var nextPacket = State.Packets[nextPacketId];
+			var portDir = node.State[nextPacket.Type];
+
+			return node.Ports[portDir].Match(
+				disconnected => NetworkError.PortDisconnected.ToMaybe(),
+				connected =>
+				{
+					RecordDequeueAndTransmit(node.Id, nextPacketId, connected.LinkId);
+
+					return Maybe<NetworkError>.Nothing;
+				}
+			);
+		}
+
+		private Maybe<NetworkError> CompleteTransmission(NetworkCommand.CompleteTransmission command)
+			=> this.BuildCommand<NetworkEvent, NetworkError>()
+				.Record(() => new NetworkEvent.PacketTransmissionFinished(command.PacketId, command.LinkId))
+				.Execute();
+
+		private bool IsLinkFull(LinkIdentifier linkId)
+			=> State.Links[linkId].IsFull;
+
+		private void RecordDequeueAndTransmit(NodeIdentifier nodeId, PacketIdentifier packetId, LinkIdentifier linkId)
+		{
+			Record(new NetworkEvent.PacketDequeued(nodeId));
+
+			Record(new NetworkEvent.PacketTransmissionStarted(packetId, linkId));
 		}
 
 		private Maybe<NetworkError> ProcessConsumerNode(Node.Consumer node)

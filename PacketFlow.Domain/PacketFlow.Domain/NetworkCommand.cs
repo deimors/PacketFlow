@@ -9,7 +9,8 @@ namespace PacketFlow.Domain
 		NetworkCommand.LinkNodes, 
 		NetworkCommand.AddPacket, 
 		NetworkCommand.IncrementPacketTypeDirection,
-		NetworkCommand.ProcessNodeQueue
+		NetworkCommand.ProcessNodeQueue,
+		NetworkCommand.CompleteTransmission
 	>
 	{
 		public class AddGatewayNode : NetworkCommand
@@ -106,6 +107,18 @@ namespace PacketFlow.Domain
 			}
 
 			public NodeIdentifier NodeId { get; }
+		}
+
+		public class CompleteTransmission : NetworkCommand
+		{
+			public CompleteTransmission(PacketIdentifier packetId, LinkIdentifier linkId)
+			{
+				PacketId = packetId ?? throw new System.ArgumentNullException(nameof(packetId));
+				LinkId = linkId ?? throw new System.ArgumentNullException(nameof(linkId));
+			}
+
+			public PacketIdentifier PacketId { get; }
+			public LinkIdentifier LinkId { get; }
 		}
 	}
 }
