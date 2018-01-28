@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 using Workshop.Core;
@@ -36,6 +37,10 @@ namespace PacketFlow.Actors
 
 		private void CommitEvents()
 		{
+			if (!UncommittedEvents.Any())
+				return;
+
+
 			_history.CommitEvents(UncommittedEvents);
 			
 			MarkCommitted();
