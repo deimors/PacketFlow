@@ -22,6 +22,7 @@ namespace PacketFlow.Presentation.Node
 			Container.Bind<DisplayArrowDirectionWhenPacketTypeDirectionChanged>().AsSingle().NonLazy();
 
 			Container.Bind<ProcessNodeQueuePeriodically>().AsSingle().NonLazy();
+			Container.Bind<InitializeRouterArrowsWhenLinkAddedAsSource>().AsSingle().NonLazy();
 		}
 	}
 }

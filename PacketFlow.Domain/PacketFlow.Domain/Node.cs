@@ -80,7 +80,7 @@ namespace PacketFlow.Domain
 				
 				return currentIndex.SelectOrElse(
 					index => outputs[index + 1 % outputs.Length].Port,
-					() => PortDirection.Top
+					() => outputs.First().Port
 				);
 			}
 		}

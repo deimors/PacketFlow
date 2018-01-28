@@ -12,8 +12,8 @@ namespace PacketFlow.UseCases
 
 		public AddPacketsPeriodically(NodeIdentifier nodeId, IEnqueueCommand<NetworkCommand> commandQueue)
 		{
-			//Observable.Interval(TimeSpan.FromSeconds(2))
-			Observable.Timer(TimeSpan.FromSeconds(2))
+			Observable.Interval(TimeSpan.FromSeconds(2))
+			//Observable.Timer(TimeSpan.FromSeconds(2))
 				.Subscribe(_ => AddPacket(nodeId, commandQueue));
 		}
 
