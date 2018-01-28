@@ -30,7 +30,7 @@ public class ClientBootup : MonoBehaviour {
 				if (!success) return;
 				Debug.Log("Attempting to start client... " + matchInfo.ToString());
 				manager.client = manager.StartClient(matchInfo);
-				manager.client.Send(Constants.SERVER_CLIENT_CONNECT, new StringMessage("yo sup"));
+				//manager.client.Send(Constants.SERVER_CLIENT_CONNECT, new StringMessage("yo sup"));
 			});
 		});
 	}

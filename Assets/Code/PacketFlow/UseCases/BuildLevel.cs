@@ -15,7 +15,7 @@ namespace PacketFlow.UseCases
 
 		private void BuildNetwork(IEnqueueCommand<NetworkCommand> commandQueue)
 		{
-			var gateway = new NodeIdentifier();
+			var gateway = new NodeIdentifier(Guid.Empty);
 			var router = new NodeIdentifier();
 			var consumer1 = new NodeIdentifier();
 			var consumer2 = new NodeIdentifier();

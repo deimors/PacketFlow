@@ -60,7 +60,7 @@ namespace Assets.Code.HackItFlow.Presentation
 				if (_queue.TryAddItem(type, colour))
 				{
 					int senderID = NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
-					var command = new NetworkCommand.AddPacket(new PacketIdentifier(), GetPacketTypeFromHackerPacketQueueItemColour(colour), new NodeIdentifier());
+					var command = new NetworkCommand.AddPacket(new PacketIdentifier(), GetPacketTypeFromHackerPacketQueueItemColour(colour), new NodeIdentifier(Guid.Empty));
 					var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(senderID, Constants.HACKER_PLAYER_TYPE, command);
 					NetworkManagerInstance?.client?.Send(Constants.HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 
