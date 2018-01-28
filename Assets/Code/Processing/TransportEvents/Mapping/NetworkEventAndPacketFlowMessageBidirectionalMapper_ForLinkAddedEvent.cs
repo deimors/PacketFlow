@@ -10,9 +10,9 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		{
 			return new LinkAddedEventTransport()
 			{
-				LinkID = source.Link.Id.Value,
-				SourceID = source.Link.Source.Value,
-				SinkID = source.Link.Sink.Value,
+				LinkID = new SerializableGuid(source.Link.Id.Value),
+				SourceID = new SerializableGuid(source.Link.Source.Value),
+				SinkID = new SerializableGuid(source.Link.Sink.Value),
 				Bandwidth = source.Link.Attributes.Bandwidth,
 				Latency = source.Link.Attributes.Latency,
 				Content = source.Link.Content.Select(x => new SerializableGuid(x.Value)).ToList()
