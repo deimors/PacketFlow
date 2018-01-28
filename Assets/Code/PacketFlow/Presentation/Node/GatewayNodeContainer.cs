@@ -21,7 +21,7 @@ namespace PacketFlow.Presentation.Node
 
 			Container.Bind<SetNodePositionWhenNodeAdded>().AsSingle().NonLazy();
 			Container.Bind<ProcessNodeQueuePeriodically>().AsSingle().WithArguments(TimeSpan.FromSeconds(.5f)).NonLazy();
-			Container.Bind<AddPacketsPeriodically>().AsSingle().NonLazy();
+			//Container.Bind<AddPacketsPeriodically>().AsSingle().NonLazy();
 		}
 	}
 }
