@@ -17,6 +17,7 @@ namespace PacketFlow.Presentation.Link
 			Container.BindInstance(this);
 
 			Container.Bind<SetNetworkLinkEndsWhenNodesLinked>().AsSingle().NonLazy();
+			Container.Bind<OnStartTransmission>().AsSingle().NonLazy();
 		}
 	}
 }

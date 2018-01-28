@@ -18,6 +18,8 @@ namespace PacketFlow.Presentation.Node
 			Container.BindInstance(this);
 
 			Container.Bind<SetNodePositionWhenNodeAdded>().AsSingle().NonLazy();
+			Container.Bind<ProcessNodeQueuePeriodically>().AsSingle().NonLazy();
+			Container.Bind<AddPacketsPeriodically>().AsSingle().NonLazy();
 		}
 	}
 }
