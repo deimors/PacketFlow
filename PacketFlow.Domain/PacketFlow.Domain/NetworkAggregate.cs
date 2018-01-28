@@ -121,6 +121,7 @@ namespace PacketFlow.Domain
 		private Maybe<NetworkError> CompleteTransmission(NetworkCommand.CompleteTransmission command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
 				.Record(() => new NetworkEvent.PacketTransmissionFinished(command.PacketId, command.LinkId))
+				.Record(() => new NetworkEvent.PacketEnqueued(command.PacketId, State.Links[command.LinkId].Sink))
 				.Execute();
 
 		private bool IsLinkFull(LinkIdentifier linkId)
