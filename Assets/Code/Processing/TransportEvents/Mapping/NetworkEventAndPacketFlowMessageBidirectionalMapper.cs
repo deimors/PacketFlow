@@ -31,17 +31,25 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 					packetTypeDirectionChanged => PACKET_TYPE_DIRECTION_CHANGED_EVENT_TYPE_ID,
 					packetTransmissionStarted => PACKET_TRANSMISSION_STARTED_EVENT_TYPE_ID,
 					packetTransmissionFinished => PACKET_TRANSMISSION_FINISHED_EVENT_TYPE_ID,
-					packedDequeued => PACKET_DEQUEUED_EVENT_TYPE_ID),
-				payload = JsonUtility.ToJson(networkEvent.Match(
-					nodeAddedEvent => nodeAddedEvent.ToNodeAddedEventTransport(),
-					linkAddedEvent => linkAddedEvent.ToLinkAddedEventTransport(),
-					packetAddedEvent => packetAddedEvent.ToPacketAddedEventTransport(),
-					packetEnqueuedEvent => packetEnqueuedEvent.ToPacketEnqueuedEventTransport(),
-					portAssignedEvent => portAssignedEvent.ToPortAssignedEventTransport(),
-					packetTypeDirectionChangedEvent => packetTypeDirectionChangedEvent.ToPacketTypeDirectionChanged(),
-					packetTransmissionStartedEvent => packetTransmissionStartedEvent.ToPacketTransmissionStartedEventTransport(),
-					packetTransmissionFinishedEvent => packetTransmissionFinishedEvent.ToPackedTransmissionFinishedEventTransport(),
-					packetDequeued => packetDequeued.ToPacketDequeuedEventTransport()))
+					packedDequeued => PACKET_DEQUEUED_EVENT_TYPE_ID,
+					packetLost => { throw new NotImplementedException(); },
+					packetConsumed => { throw new NotImplementedException(); } //TODO: Map me please!
+				),
+				payload = JsonUtility.ToJson(
+					networkEvent.Match(
+						nodeAddedEvent => nodeAddedEvent.ToNodeAddedEventTransport(),
+						linkAddedEvent => linkAddedEvent.ToLinkAddedEventTransport(),
+						packetAddedEvent => packetAddedEvent.ToPacketAddedEventTransport(),
+						packetEnqueuedEvent => packetEnqueuedEvent.ToPacketEnqueuedEventTransport(),
+						portAssignedEvent => portAssignedEvent.ToPortAssignedEventTransport(),
+						packetTypeDirectionChangedEvent => packetTypeDirectionChangedEvent.ToPacketTypeDirectionChanged(),
+						packetTransmissionStartedEvent => packetTransmissionStartedEvent.ToPacketTransmissionStartedEventTransport(),
+						packetTransmissionFinishedEvent => packetTransmissionFinishedEvent.ToPackedTransmissionFinishedEventTransport(),
+						packetDequeued => packetDequeued.ToPacketDequeuedEventTransport(),
+						packetLost => { throw new NotImplementedException(); },
+						packetConsumed => { throw new NotImplementedException(); } //TODO: Mapping!
+					)
+				)
 			};
 		}
 

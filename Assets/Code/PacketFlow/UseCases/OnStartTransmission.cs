@@ -37,7 +37,6 @@ namespace PacketFlow.UseCases
 
 		private void CompleteTransmission(PacketIdentifier packetId, LinkIdentifier linkId)
 		{
-			Debug.Log($"CompleteTransmission {packetId}");
 			commandQueue.Enqueue(new NetworkCommand.CompleteTransmission(packetId, linkId));
 		}
 	}

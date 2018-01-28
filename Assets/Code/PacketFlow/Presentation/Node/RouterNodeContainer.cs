@@ -1,5 +1,6 @@
 ﻿using PacketFlow.Domain;
 using PacketFlow.UseCases;
+using System;
 using Zenject;
 
 namespace PacketFlow.Presentation.Node
@@ -21,7 +22,7 @@ namespace PacketFlow.Presentation.Node
 			Container.Bind<IncrementPacketTypeDirectionWhenArrowClicked>().AsSingle().NonLazy();
 			Container.Bind<DisplayArrowDirectionWhenPacketTypeDirectionChanged>().AsSingle().NonLazy();
 
-			Container.Bind<ProcessNodeQueuePeriodically>().AsSingle().NonLazy();
+			Container.Bind<ProcessNodeQueuePeriodically>().AsSingle().WithArguments(TimeSpan.FromSeconds(.5f)).NonLazy();
 			Container.Bind<InitializeRouterArrowsWhenLinkAddedAsSource>().AsSingle().NonLazy();
 		}
 	}
