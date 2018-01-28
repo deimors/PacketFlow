@@ -20,6 +20,26 @@ namespace Assets.Code.HackItFlow.Presentation
 		[SerializeField]
 		private TextMeshProUGUI _textMeshProText;
 
+		private bool? _cursorVisible;
+		public bool? CursorVisible
+		{
+			get { return _cursorVisible; }
+			set
+			{
+				var oldValue = _cursorVisible ?? false;
+				var newValue = value ?? false;
+
+				_cursorVisible = value;
+
+				if (oldValue && !newValue)
+					_textMeshProText.text = _textMeshProText.text.Substring(0, _textMeshProText.text.Length - 1);
+				else if (!oldValue && newValue)
+					_textMeshProText.text += "_";
+
+				
+			}
+		}
+
 		[Inject]
 		public void Initialize(ICommandLineConsole commandLineConsole, IObservable<CommandLineTextAddedEvent> textAdded)
 		{
@@ -40,8 +60,28 @@ namespace Assets.Code.HackItFlow.Presentation
 
 			textAdded
 				.Select(e => e.Text)
-				.Subscribe(text => _textMeshProText.text += text)
+				.Subscribe(AppendText)
 				.DisposeWith(this);
+
+			Observable
+				.Interval(TimeSpan.FromMilliseconds(500))
+				.Subscribe(_ => ToggleCursor())
+				.DisposeWith(this);
+		}
+
+		private void AppendText(string text)
+		{
+			CursorVisible = null;
+
+			_textMeshProText.text += text;
+		}
+
+		private void ToggleCursor()
+		{
+			if (CursorVisible == null)
+				CursorVisible = false;
+			else
+				CursorVisible = !CursorVisible;
 		}
 	}
 }

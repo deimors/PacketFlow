@@ -48,6 +48,13 @@ namespace Assets.Code.HackItFlow.Presentation
 
 			var characters = items
 				.Select(item => item?.Colour == _colour ? '#' : ' ')
+				.Concat(Enumerable.Repeat(' ', 9 - items.Length))
+				.ToArray();
+
+			characters = characters
+				.Take(4)
+				.Concat(new[] { ' ', characters[4], ' ' })
+				.Concat(characters.Skip(5))
 				.ToArray();
 
 			_textMesh.text = new String(characters);
