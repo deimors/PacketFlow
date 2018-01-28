@@ -1,6 +1,7 @@
 ﻿using PacketFlow.Domain;
 using PacketFlow.Presentation.Link;
 using PacketFlow.Presentation.Node;
+using PacketFlow.Presentation.Packet;
 using PacketFlow.UseCases;
 using UnityEngine;
 using Zenject;
@@ -21,6 +22,9 @@ namespace PacketFlow.Presentation
 		[SerializeField]
 		private GameObject _linkPrefab;
 
+		[SerializeField]
+		private GameObject _packetPrefab;
+
 		public override void InstallBindings()
 		{
 			Container.BindFactory<NodeIdentifier, GatewayNodeContainer, GatewayNodeContainer.Factory>()
@@ -39,7 +43,10 @@ namespace PacketFlow.Presentation
 				.FromSubContainerResolve()
 				.ByNewPrefab<LinkContainer>(_linkPrefab);
 
-			
+			Container.BindFactory<PacketIdentifier, PacketContainer, PacketContainer.Factory>()
+				.FromSubContainerResolve()
+				.ByNewPrefab<PacketContainer>(_packetPrefab);
+
 			/*
 			Container
 				.BindInterfacesTo<NetworkActor>()
@@ -47,8 +54,10 @@ namespace PacketFlow.Presentation
 				.WithArguments(Observable.EveryUpdate().AsUnitObservable());
 			*/
 			Container.Bind<NodePositionReadModel>().AsSingle().NonLazy();
+			Container.Bind<LinkLatencyReadModel>().AsSingle().NonLazy();
+			Container.Bind<PacketTypeReadModel>().AsSingle().NonLazy();
 
-			Container.Bind<CreateNodeAfterDelay>().AsSingle().NonLazy();
+			Container.Bind<BuildLevel>().AsSingle().NonLazy();
 			Container.Bind<InstantiateNodeContainerWhenNodeAdded>().AsSingle().NonLazy();
 			Container.Bind<InstantiateLinkContainerWhenNodesLinked>().AsSingle().NonLazy();
 		}

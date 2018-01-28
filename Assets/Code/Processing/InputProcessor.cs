@@ -62,7 +62,7 @@ public class InputProcessor : MonoBehaviour
 
 			if (Input.GetKeyDown(KeyCode.L))
 			{
-				var command = new NetworkCommand.LinkNodes(_id, _direction, _id, _direction);
+				var command = new NetworkCommand.LinkNodes(_id, _direction, _id, _direction, new LinkAttributes(0,0));
 				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, ADMIN_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
@@ -106,7 +106,7 @@ public class InputProcessor : MonoBehaviour
 
 			if (Input.GetKeyDown(KeyCode.L))
 			{
-				var command = new NetworkCommand.LinkNodes(_id, _direction, _id, _direction);
+				var command = new NetworkCommand.LinkNodes(_id, _direction, _id, _direction, new LinkAttributes(0,0));
 				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(_senderID, HACKER_PLAYER_TYPE, command);
 				NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
 			}
