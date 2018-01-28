@@ -11,7 +11,7 @@ namespace PacketFlow.Presentation.Node
 		{
 			set
 			{
-				transform.position = _positionConverter.Convert(value);
+				transform.localPosition = _positionConverter.Convert(value);
 			}
 		}
 	}
