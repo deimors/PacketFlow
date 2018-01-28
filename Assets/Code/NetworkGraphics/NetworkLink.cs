@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class NetworkLink : MonoBehaviour
@@ -44,7 +45,7 @@ public class NetworkLink : MonoBehaviour
 		if (travelTime <= 0)
 			travelTime = float.Epsilon;
 
-		gameObject.transform.position = _previousStartPoint;
+		gameObject.transform.localPosition = _previousStartPoint;
 
 		_travelingGameObjects.Add(new TransportingGameObject()
 		{
@@ -67,10 +68,13 @@ public class NetworkLink : MonoBehaviour
 	private void HandleTravelingGameObjects(float deltaTime)
 	{
 		_travelingGameObjects.ForEach(o => o.lifeTime += deltaTime);
-				
-		_travelingGameObjects.RemoveAll(o => !o.gameObject.activeSelf || o.lifeTime > o.timeToLive);
 
-		_travelingGameObjects.ForEach(o => o.gameObject.transform.position = GetInterpolatedPostion(GetTransportingGameObjectInterpolationAmount(o)));
+		foreach (var go in _travelingGameObjects.Where(o => !o.gameObject.activeSelf || o.lifeTime > o.timeToLive))
+			Destroy(go.gameObject);
+
+		_travelingGameObjects.RemoveAll(o => !o.gameObject.activeSelf || o.lifeTime > o.timeToLive);
+		
+		_travelingGameObjects.ForEach(o => o.gameObject.transform.localPosition = GetInterpolatedPostion(GetTransportingGameObjectInterpolationAmount(o)));
 	}
 
 	private float GetTransportingGameObjectInterpolationAmount(TransportingGameObject gameObject)

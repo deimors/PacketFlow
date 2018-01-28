@@ -633,7 +633,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 6c44b5c9-8b9f-45ca-b705-44a452c64d27
   projectName: PacketFlow2
   organizationId: ryanmarcotte

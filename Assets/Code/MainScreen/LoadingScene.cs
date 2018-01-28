@@ -1,52 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LoadingScene : MonoBehaviour {
+namespace Assets.Code.MainScreen
+{
+    public class LoadingScene : MonoBehaviour {
 
-    public void HackItFlow ()
-    {
-        SceneManager.LoadScene("HackItFlow");
-    }
-
-    public void PacketFlow()
-    {
-        SceneManager.LoadScene("PacketFlow");
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown("down") || Input.GetKeyDown("up"))
+        void Update()
         {
-            if (GameObject.Find("PacketFlowArrow").GetComponent<Image>().IsActive() == true)
+            var packetFlowImage = GameObject.Find("PacketFlowArrow").GetComponent<Image>();
+            var hackItFlowImage = GameObject.Find("HackItFlowArrow").GetComponent<Image>();
+
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.UpArrow))
             {
-                GameObject.Find("PacketFlowArrow").GetComponent<Image>().enabled = false;
-                GameObject.Find("HackItFlowArrow").GetComponent<Image>().enabled = true;
+                if (packetFlowImage.IsActive())
+                {
+                    packetFlowImage.enabled = false;
+                    hackItFlowImage.enabled = true;
+                }
+                else
+                {
+                    packetFlowImage.enabled = true;
+                    hackItFlowImage.enabled = false;
+                }
             }
-            else
+
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                GameObject.Find("PacketFlowArrow").GetComponent<Image>().enabled = true;
-                GameObject.Find("HackItFlowArrow").GetComponent<Image>().enabled = false;
+                if (packetFlowImage.IsActive())
+                {
+                    PacketFlow();
+                }
+                else
+                {
+                    HackItFlow();
+                }
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        private static void HackItFlow()
         {
-            if (GameObject.Find("PacketFlowArrow").GetComponent<Image>().IsActive() == true)
-            {
-                PacketFlow();
-            }
-            else
-            {
-                HackItFlow();
-            }
+            SceneManager.LoadScene("HackItFlow");
         }
-    }
 
-    public void ArrowPosition()
-    {
-        
+        private static void PacketFlow()
+        {
+            SceneManager.LoadScene("PacketFlow");
+        }
     }
 }

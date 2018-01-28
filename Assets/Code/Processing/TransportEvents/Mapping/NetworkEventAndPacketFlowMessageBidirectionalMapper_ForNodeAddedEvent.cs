@@ -15,18 +15,18 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		{
 			return new NodeAddedEventTransport
 			{
-				NodeID = source.Node.Id.Value,
+				NodeID = new SerializableGuid(source.Node.Id.Value),
 				PositionX = source.Node.Position.X,
 				PositionY = source.Node.Position.Y,
 				QueueContent = source.Node.Queue.Content.Select(x => new SerializableGuid(x.Value)).ToList(),
 				QueueCapacity = source.Node.Queue.Capacity,
-				TopPortLinkIdentifier = source.Node.Ports.GetLinkIdentifier(PortDirection.Top),
+				TopPortLinkIdentifier = new SerializableGuid(source.Node.Ports.GetLinkIdentifier(PortDirection.Top)),
 				TopPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Top),
-				BottomPortLinkIdentifier = source.Node.Ports.GetLinkIdentifier(PortDirection.Bottom),
+				BottomPortLinkIdentifier = new SerializableGuid(source.Node.Ports.GetLinkIdentifier(PortDirection.Bottom)),
 				BottomPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Bottom),
-				LeftPortLinkIdentifier = source.Node.Ports.GetLinkIdentifier(PortDirection.Left),
+				LeftPortLinkIdentifier = new SerializableGuid(source.Node.Ports.GetLinkIdentifier(PortDirection.Left)),
 				LeftPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Left),
-				RightPortLinkIdentifier = source.Node.Ports.GetLinkIdentifier(PortDirection.Right),
+				RightPortLinkIdentifier = new SerializableGuid(source.Node.Ports.GetLinkIdentifier(PortDirection.Right)),
 				RightPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Right),
 				RouterState = source.Node.Match(
 					gateway => Enumerable.Empty<int>().ToArray(),

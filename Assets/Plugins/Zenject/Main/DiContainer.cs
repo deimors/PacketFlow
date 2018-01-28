@@ -1265,7 +1265,7 @@ namespace Zenject
                 else if (gameObjectBindInfo.Rotation.HasValue)
                 {
                     gameObj = (GameObject)GameObject.Instantiate(
-                        prefabAsGameObject, prefabAsGameObject.transform.position, gameObjectBindInfo.Rotation.Value, transformParent);
+                        prefabAsGameObject, prefabAsGameObject.transform.localPosition, gameObjectBindInfo.Rotation.Value, transformParent);
                 }
                 else
                 {

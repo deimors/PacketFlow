@@ -8,9 +8,9 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		{
 			return new PortAssignedEventTransport
 			{
-				NodeID = source.NodeId.Value,
+				NodeID = new SerializableGuid(source.NodeId.Value),
 				PortDirection = (int)source.Port,
-				LinkID = source.LinkId.Value,
+				LinkID = new SerializableGuid(source.LinkId.Value),
 				ConnectionDirection = (int)source.Direction
 			};
 		}

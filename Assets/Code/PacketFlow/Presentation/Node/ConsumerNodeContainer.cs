@@ -1,5 +1,6 @@
 ﻿using PacketFlow.Domain;
 using PacketFlow.UseCases;
+using System;
 using Zenject;
 
 namespace PacketFlow.Presentation.Node
@@ -18,6 +19,7 @@ namespace PacketFlow.Presentation.Node
 			Container.BindInstance(this);
 
 			Container.Bind<SetNodePositionWhenNodeAdded>().AsSingle().NonLazy();
+			Container.Bind<ProcessNodeQueuePeriodically>().AsSingle().WithArguments(TimeSpan.FromSeconds(1f)).NonLazy();
 		}
 	}
 }
