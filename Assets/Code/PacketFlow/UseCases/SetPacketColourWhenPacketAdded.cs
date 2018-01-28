@@ -1,4 +1,5 @@
-﻿using PacketFlow.Domain;
+﻿using Assets.Code.PacketFlow.UseCases;
+using PacketFlow.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace PacketFlow.UseCases
 {
 	public class SetPacketColourWhenPacketAdded
 	{
+		private readonly PacketTypeToColorConverter packetTypeToColorConverter = new PacketTypeToColorConverter();
+
 		public SetPacketColourWhenPacketAdded(PacketIdentifier packetId, IObservable<NetworkEvent> networkEvents, IDisplayPacketColour displayColour)
 		{
 			networkEvents
@@ -21,13 +24,7 @@ namespace PacketFlow.UseCases
 
 		private Color GetPacketTypeColour(PacketType type)
 		{
-			switch (type)
-			{
-				case PacketType.Red: return Color.red;
-				case PacketType.Blue: return Color.blue;
-				case PacketType.Green: return Color.green;
-				default: return Color.grey;
-			}
+			return packetTypeToColorConverter.GetPacketTypeColour(type);
 		}
 	}
 
