@@ -1,8 +1,7 @@
 ﻿namespace Assets.Code.Processing.TransportEvents
 {
-	public class PacketTransmissionStartedEventTransport
+	public class PacketConsumedEventTransport
 	{
 		public SerializableGuid PacketID;
-		public SerializableGuid LinkID;
 	}
 }
