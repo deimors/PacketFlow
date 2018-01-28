@@ -8,32 +8,25 @@ using UnityEngine;
 
 public class RouterInputDetector : MonoBehaviour, IArrowClickedObservable
 {
-
 	public PacketType PacketType;
 	private readonly ISubject<PacketType> _arrowClickedSubject = new Subject<PacketType>();
+	private Vector3 _desiredDirection;
+	private const int RotationSpeed = 5;
+
+	public IDisposable Subscribe(IObserver<PacketType> observer)
+	{
+		return _arrowClickedSubject.Subscribe(observer);
+	}
 
 	private void OnMouseDown()
 	{
 		bool isLeftMouseClicked = Input.GetKeyDown(KeyCode.Mouse0);
-
 		if (isLeftMouseClicked)
 		{
-			//Rotate();
-			Debug.Log("Clicked");
 			_arrowClickedSubject.OnNext(PacketType);
 		}
 	}
 
-	//private void Rotate()
-	//{
-	//	transform.Rotate(new Vector3(0, 0, 90));
-	//}
-
-
-	private Vector3 _desiredDirection;
-	private const int RotationSpeed = 5;
-
-	// Update is called once per frame
 	void Update()
 	{
 		float angle = Mathf.Atan2(_desiredDirection.y, _desiredDirection.x) * Mathf.Rad2Deg;
@@ -51,10 +44,5 @@ public class RouterInputDetector : MonoBehaviour, IArrowClickedObservable
 			default:
 			case PortDirection.Bottom: _desiredDirection = new Vector3(1, 0) - Vector3.zero; break;
 		}
-	}
-
-	public IDisposable Subscribe(IObserver<PacketType> observer)
-	{
-		return _arrowClickedSubject.Subscribe(observer);
 	}
 }
