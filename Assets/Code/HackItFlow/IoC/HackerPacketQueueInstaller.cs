@@ -12,6 +12,7 @@ namespace Assets.Code.HackItFlow.IoC
 	{
 		public override void InstallBindings()
 		{
+			Container.BindInterfacesAndSelfTo<HackerPacketQueue.HackerPacketQueue>().AsSingle();
 		}
 	}
 }
