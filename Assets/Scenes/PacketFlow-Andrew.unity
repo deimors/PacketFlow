@@ -228,6 +228,8 @@ MonoBehaviour:
     type: 2}
   _consumerNodePrefab: {fileID: 1664594519938620, guid: 3dd855f97b8565e4ea600bf93da8c9c6,
     type: 2}
+  _linkPrefab: {fileID: 1339726271762410, guid: 422bc73a3cbe0de4bb25482ca873cc18,
+    type: 2}
 --- !u!114 &1812020595
 MonoBehaviour:
   m_ObjectHideFlags: 0
