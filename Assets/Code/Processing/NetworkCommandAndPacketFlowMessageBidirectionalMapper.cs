@@ -19,14 +19,16 @@ namespace Assets.Code.Processing
 					acn => (int)TransportCommandPayloadType.AddConsumerNode,
 					ln => (int)TransportCommandPayloadType.LinkNodes,
 					ap => (int)TransportCommandPayloadType.AddPacket,
-					iptd => (int)TransportCommandPayloadType.IncrementPacketTypeDirection),
+					iptd => (int)TransportCommandPayloadType.IncrementPacketTypeDirection,
+					pnq => (int)TransportCommandPayloadType.ProcessNodeQueue),
 				payload = JsonUtility.ToJson(command.Match(
 					agn => GetPayloadForAddGatewayNodeCommand(agn),
 					arn => GetPayloadForAddRouterNodeCommand(arn),
 					acn => GetPayloadForAddConsumerNodeCommand(acn),
 					ln => GetPayloadForLinkNodesCommand(ln),
 					ap => GetPayloadForAddPacketCommand(ap),
-					iptd => GetPayloadForIncrementPacketTypeDirectionCommand(iptd)))
+					iptd => GetPayloadForIncrementPacketTypeDirectionCommand(iptd),
+					pnq => GetPayloadForProcessNodeQueueCommand(pnq)))
 			};
 		}
 
@@ -71,7 +73,9 @@ namespace Assets.Code.Processing
 				SourceID = linkNodesCommand.Source.Value,
 				SourcePortDirection = (int)linkNodesCommand.SourcePort,
 				SinkID = linkNodesCommand.Sink.Value,
-				SinkPortDirection = (int)linkNodesCommand.SinkPort				
+				SinkPortDirection = (int)linkNodesCommand.SinkPort,
+				Bandwidth = linkNodesCommand.Attributes.Bandwidth,
+				Latency = linkNodesCommand.Attributes.Latency
 			};
 		}		
 
@@ -93,6 +97,14 @@ namespace Assets.Code.Processing
 				Type = (int)incrementPacketTypeDirection.PacketType
 			};
 		}
+
+		private object GetPayloadForProcessNodeQueueCommand(NetworkCommand.ProcessNodeQueue processNodeQueue)
+		{
+			return new ProcessNodeQueueCommandTransport
+			{
+				NodeID = processNodeQueue.NodeId.Value,
+			};
+		}
 		#endregion
 
 		public NetworkCommand Map(PacketFlowMessage message)
@@ -105,6 +117,7 @@ namespace Assets.Code.Processing
 				case TransportCommandPayloadType.LinkNodes:						return GetCommandForLinkNodesPayload(message.payload);
 				case TransportCommandPayloadType.AddPacket:						return GetCommandForAddPacketPayload(message.payload);
 				case TransportCommandPayloadType.IncrementPacketTypeDirection:	return GetCommandForIncrementPacketTypeDirectionPayload(message.payload);
+				case TransportCommandPayloadType.ProcessNodeQueue:				return GetCommandForProcessNodeQueuePayload(message.payload);
 				default:														throw new System.Exception("Taylor messed up a mapper... maybe. Or someone else made a breaking change. Someone.");
 			}
 		}
@@ -151,7 +164,8 @@ namespace Assets.Code.Processing
 					new NodeIdentifier(transport.SourceID),
 					(PortDirection)transport.SourcePortDirection,
 					new NodeIdentifier(transport.SinkID),
-					(PortDirection)transport.SinkPortDirection
+					(PortDirection)transport.SinkPortDirection,
+					new LinkAttributes(transport.Bandwidth, transport.Latency)
 				);
 		}
 
@@ -173,6 +187,15 @@ namespace Assets.Code.Processing
 				(
 					new NodeIdentifier(transport.NodeID),
 					(PacketType)transport.Type
+				);
+		}
+
+		private NetworkCommand.ProcessNodeQueue GetCommandForProcessNodeQueuePayload(string payload)
+		{
+			var transport = JsonUtility.FromJson<ProcessNodeQueueCommandTransport>(payload);
+			return new NetworkCommand.ProcessNodeQueue
+				(
+					new NodeIdentifier(transport.NodeID)
 				);
 		}
 		#endregion
