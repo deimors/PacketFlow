@@ -11,6 +11,7 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		private const int PACKET_ADDED_EVENT_TYPE_ID = 3;
 		private const int PACKET_ENQUEUED_EVENT_TYPE_ID = 4;
 		private const int PORT_ASSIGNED_EVENT_TYPE_ID = 5;
+		private const int PACKET_TYPE_DIRECTION_CHANGED = 6;
 
 		public static PacketFlowMessage Map(NetworkEvent networkEvent)
 		{
@@ -23,13 +24,15 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 					linkAddedEvent => LINK_ADDED_EVENT_TYPE_ID,
 					packetAddedEvent => PACKET_ADDED_EVENT_TYPE_ID,
 					packetEnqueuedEvent => PACKET_ENQUEUED_EVENT_TYPE_ID,
-					portAssignedEvent => PORT_ASSIGNED_EVENT_TYPE_ID),
+					portAssignedEvent => PORT_ASSIGNED_EVENT_TYPE_ID,
+					packetTypeDirectionChanged => PACKET_TYPE_DIRECTION_CHANGED),
 				payload = JsonUtility.ToJson(networkEvent.Match(
 					nodeAddedEvent => nodeAddedEvent.ToNodeAddedEventTransport(),
 					linkAddedEvent => linkAddedEvent.ToLinkAddedEventTransport(),
 					packetAddedEvent => packetAddedEvent.ToPacketAddedEventTransport(),
 					packetEnqueuedEvent => packetEnqueuedEvent.ToPacketEnqueuedEventTransport(),
-					portAssignedEvent => portAssignedEvent.ToPortAssignedEventTransport()))
+					portAssignedEvent => portAssignedEvent.ToPortAssignedEventTransport(),
+					packetTypeDirectionChangedEvent => packetTypeDirectionChangedEvent.ToPacketTypeDirectionChanged()))
 			};
 		}
 
@@ -47,6 +50,8 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 					return JsonUtility.FromJson<PacketEnqueuedEventTransport>(message.payload).ToNetworkEvent();
 				case (PORT_ASSIGNED_EVENT_TYPE_ID):
 					return JsonUtility.FromJson<PortAssignedEventTransport>(message.payload).ToNetworkEvent();
+				case (PACKET_TYPE_DIRECTION_CHANGED):
+					return JsonUtility.FromJson<PacketTypeDirectionChangedEventTransport>(message.payload).ToNetworkEvent();
 				default:
 					throw new NotImplementedException();
 			}

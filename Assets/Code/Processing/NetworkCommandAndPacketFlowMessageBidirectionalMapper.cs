@@ -105,7 +105,7 @@ namespace Assets.Code.Processing
 				case TransportCommandPayloadType.LinkNodes:						return GetCommandForLinkNodesPayload(message.payload);
 				case TransportCommandPayloadType.AddPacket:						return GetCommandForAddPacketPayload(message.payload);
 				case TransportCommandPayloadType.IncrementPacketTypeDirection:	return GetCommandForIncrementPacketTypeDirectionPayload(message.payload);
-				default:														return null;
+				default:														throw new System.Exception("Taylor messed up a mapper... maybe. Or someone else made a breaking change. Someone.");
 			}
 		}
 
