@@ -18,10 +18,25 @@ public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, Net
 	public NetworkManager NetworkManagerInstance;
 	public IObservable<NetworkCommand> ReceivedCommands => _commandSubject;
 
+	private readonly ConcurrentQueue<NetworkEvent> _history = new ConcurrentQueue<NetworkEvent>();
+
 	public void SendEvent(NetworkEvent @event)
 	{
 		var eventToSendAcrossWire = NetworkEventAndPacketFlowMessageBidirectionalMapper.Map(@event);
 		NetworkServer.SendToAll(SERVER_MESSAGE_TYPE_ID, eventToSendAcrossWire);
+
+		_history.Enqueue(@event);
+	}
+
+	private void OnClientConnected()
+	{
+		NetworkEvent historyEvent;
+
+		while (_history.TryDequeue(out historyEvent))
+		{
+			var eventToSendAcrossWire = NetworkEventAndPacketFlowMessageBidirectionalMapper.Map(historyEvent);
+			NetworkServer.SendToAll(SERVER_MESSAGE_TYPE_ID, eventToSendAcrossWire);
+		}
 	}
 
 	void Start()
