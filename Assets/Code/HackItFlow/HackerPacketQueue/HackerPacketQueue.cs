@@ -15,6 +15,33 @@ namespace Assets.Code.HackItFlow.HackerPacketQueue
 
 		public IReadOnlyReactiveCollection<IHackerPacketQueueItem> Items => _items;
 
+		public HackerPacketQueue()
+		{
+			Observable
+				.Interval(TimeSpan.FromSeconds(1))
+				.Subscribe(_ => UpdateQueue());
+
+			UpdateQueue();
+		}
+
+		private void UpdateQueue()
+		{
+			if (_items.Count >= 8)
+			{
+				_items.RemoveAt(_items.Count - 1);
+
+			}
+
+			while (_items.Count < 8)
+			{
+				_items.Insert(0, new HackerPacketQueueItem()
+				{
+					Colour = (HackerPacketQueueItemColour)UnityEngine.Random.Range(0, 3),
+					Type = HackerPacketQueueItemType.Type1
+				});
+			}
+		}
+
 		public bool TryAddItem(HackerPacketQueueItemType type, HackerPacketQueueItemColour colour)
 		{
 			if (_items.Count >= MAX_QUEUE_SIZE)

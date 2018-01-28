@@ -10,5 +10,7 @@ namespace Assets.Code.HackItFlow.HackerPacketQueue
 	public interface IHackerPacketQueue
 	{
 		IReadOnlyReactiveCollection<IHackerPacketQueueItem> Items { get; }
+
+		bool TryAddItem(HackerPacketQueueItemType type, HackerPacketQueueItemColour colour);
 	}
 }
