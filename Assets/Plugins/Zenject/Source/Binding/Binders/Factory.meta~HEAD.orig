@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+<<<<<<< HEAD
+guid: 05865bac23e8648449e88ba6e9f5ae96
+folderAsset: yes
+timeCreated: 1517092107
+=======
+guid: ee4cad439d0803945b5621dac277f563
+folderAsset: yes
+timeCreated: 1517085589
+>>>>>>> 512502a... metas and removing obsolete constants
+licenseType: Free
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

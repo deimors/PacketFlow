@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+<<<<<<< HEAD
+guid: 92e3efbc300f2754987ce0331260dbdc
+timeCreated: 1517093825
+=======
+guid: 5dc2355cea82b4e4aa35d2b9d9516f16
+timeCreated: 1517093821
+>>>>>>> 512502a... metas and removing obsolete constants
+licenseType: Free
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
