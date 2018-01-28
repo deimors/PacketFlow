@@ -2,7 +2,6 @@
 using PacketFlow.Domain;
 using System;
 using UniRx;
-using UnityEngine;
 
 namespace PacketFlow.UseCases
 {
@@ -12,14 +11,12 @@ namespace PacketFlow.UseCases
 
 		public AddPacketsPeriodically(NodeIdentifier nodeId, IEnqueueCommand<NetworkCommand> commandQueue)
 		{
-			Observable.Interval(TimeSpan.FromSeconds(2))
-			//Observable.Timer(TimeSpan.FromSeconds(2))
+			Observable.Interval(TimeSpan.FromSeconds(.1f))
 				.Subscribe(_ => AddPacket(nodeId, commandQueue));
 		}
 
 		private void AddPacket(NodeIdentifier nodeId, IEnqueueCommand<NetworkCommand> commandQueue)
 		{
-			Debug.Log("AddPacket");
 			commandQueue.Enqueue(new NetworkCommand.AddPacket(new PacketIdentifier(), RandomPacketType, nodeId));
 		}
 

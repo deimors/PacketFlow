@@ -11,7 +11,9 @@ namespace PacketFlow.Domain
 		NetworkEvent.PacketTypeDirectionChanged,
 		NetworkEvent.PacketTransmissionStarted,
 		NetworkEvent.PacketTransmissionFinished,
-		NetworkEvent.PacketDequeued
+		NetworkEvent.PacketDequeued,
+		NetworkEvent.PacketLost,
+		NetworkEvent.PacketConsumed
 	>
 	{
 		public class NodeAdded : NetworkEvent
@@ -118,6 +120,26 @@ namespace PacketFlow.Domain
 			}
 
 			public NodeIdentifier NodeId { get; }
+		}
+
+		public class PacketLost : NetworkEvent
+		{
+			public PacketLost(PacketIdentifier packetId)
+			{
+				PacketId = packetId ?? throw new System.ArgumentNullException(nameof(packetId));
+			}
+
+			public PacketIdentifier PacketId { get; }
+		}
+
+		public class PacketConsumed : NetworkEvent
+		{
+			public PacketConsumed(PacketIdentifier packetId)
+			{
+				PacketId = packetId ?? throw new System.ArgumentNullException(nameof(packetId));
+			}
+
+			public PacketIdentifier PacketId { get; }
 		}
 	}
 }

@@ -68,6 +68,8 @@ namespace PacketFlow.Presentation
 			Container.Bind<BuildLevel>().AsSingle().NonLazy();
 			Container.Bind<InstantiateNodeContainerWhenNodeAdded>().AsSingle().NonLazy();
 			Container.Bind<InstantiateLinkContainerWhenNodesLinked>().AsSingle().NonLazy();
+
+			Container.Bind<LogPacketLossAndConsume>().AsSingle().NonLazy();
 		}
 	}
 }

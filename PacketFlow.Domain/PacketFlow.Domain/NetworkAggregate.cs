@@ -55,9 +55,10 @@ namespace PacketFlow.Domain
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
 				.FailIf(() => State.Packets.ContainsKey(command.PackedId), () => NetworkError.PacketAlreadyAdded)
 				.FailIf(() => !State.Nodes.ContainsKey(command.NodeId), () => NetworkError.UnknownNode)
-				.FailIf(() => State.Nodes[command.NodeId].Queue.IsFull, () => NetworkError.QueueFull)
-				.Record(() => new NetworkEvent.PacketAdded(new Packet(command.PackedId, command.Type)))
-				.Record(() => new NetworkEvent.PacketEnqueued(command.PackedId, command.NodeId))
+			//	.FailIf(() => State.Nodes[command.NodeId].Queue.IsFull, () => NetworkError.QueueFull)
+				.RecordIf(() => State.Nodes[command.NodeId].Queue.IsFull, () => new NetworkEvent.PacketLost(command.PackedId))
+				.RecordIf(() => !State.Nodes[command.NodeId].Queue.IsFull, () => new NetworkEvent.PacketAdded(new Packet(command.PackedId, command.Type)))
+				.RecordIf(() => !State.Nodes[command.NodeId].Queue.IsFull, () => new NetworkEvent.PacketEnqueued(command.PackedId, command.NodeId))
 				.Execute();
 
 		private Maybe<NetworkError> SetPacketTypeDirection(NetworkCommand.IncrementPacketTypeDirection command)
@@ -76,7 +77,7 @@ namespace PacketFlow.Domain
 				.Match(
 					ProcessGatewayNode, 
 					ProcessRouterNode,
-					consumerNode => Maybe<NetworkError>.Nothing
+					ProcessConsumerNode
 				);
 		}
 
@@ -121,7 +122,8 @@ namespace PacketFlow.Domain
 		private Maybe<NetworkError> CompleteTransmission(NetworkCommand.CompleteTransmission command)
 			=> this.BuildCommand<NetworkEvent, NetworkError>()
 				.Record(() => new NetworkEvent.PacketTransmissionFinished(command.PacketId, command.LinkId))
-				.Record(() => new NetworkEvent.PacketEnqueued(command.PacketId, State.Links[command.LinkId].Sink))
+				.RecordIf(() => State.Nodes[State.Links[command.LinkId].Sink].Queue.IsFull, () => new NetworkEvent.PacketLost(command.PacketId))
+				.RecordIf(() => !State.Nodes[State.Links[command.LinkId].Sink].Queue.IsFull, () => new NetworkEvent.PacketEnqueued(command.PacketId, State.Links[command.LinkId].Sink))
 				.Execute();
 
 		private bool IsLinkFull(LinkIdentifier linkId)
@@ -136,6 +138,15 @@ namespace PacketFlow.Domain
 
 		private Maybe<NetworkError> ProcessConsumerNode(Node.Consumer node)
 		{
+			if (node.Queue.IsEmpty)
+				return Maybe<NetworkError>.Nothing;
+
+			var nextPacketId = node.Queue.Peek();
+
+			Record(new NetworkEvent.PacketDequeued(node.Id));
+
+			Record(new NetworkEvent.PacketConsumed(nextPacketId));
+
 			return Maybe<NetworkError>.Nothing;
 		}
 	}

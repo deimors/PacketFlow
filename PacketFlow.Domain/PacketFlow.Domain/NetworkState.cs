@@ -23,7 +23,9 @@ namespace PacketFlow.Domain
 				packetTypeDirectionChanged => ChangePacketTypeDirection(packetTypeDirectionChanged),
 				packetTransmissionStarted => AddPacketToLinkContent(packetTransmissionStarted),
 				packetTransmissionFinished => RemovePacketFromLinkContent(packetTransmissionFinished),
-				packetDequeued => DequeuePacket(packetDequeued.NodeId)
+				packetDequeued => DequeuePacket(packetDequeued.NodeId),
+				packetLost => { },
+				packetConsumed => { }
 			);
 
 		private void EnqueuePacked(PacketIdentifier packetId, NodeIdentifier nodeId)
