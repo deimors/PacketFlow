@@ -18,30 +18,41 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 
 		private DateTime _nextText;
 
-		private void AddToTextCollection(string firstLine, params string[] subsequentLines)
+		public CommandLineConsole()
 		{
-			_text.Add($"/usr/c00l > {firstLine}");
+			_text.Add("/usr/zeroc00l > ");
+		}
 
-			foreach (var line in subsequentLines)
-			{
-				_text.Add(line);
-			}
+		private void AddToTextCollection(string line)
+		{
+			_text[_text.Count - 1] += line;
+			_text.Add("");
 		}
 
 		public void AddText(string firstLine, params string[] subsequentLines)
 		{
-			_nextText = _nextText.AddMilliseconds(UnityEngine.Random.Range(50, 200));
+			AddText(firstLine);
+
+			foreach (var line in subsequentLines ?? Enumerable.Empty<string>())
+				AddText(line);
+
+			AddText("/usr/zeroc00l > ");
+		}
+
+		private void AddText(string line)
+		{
+			_nextText = _nextText.AddMilliseconds(UnityEngine.Random.Range(30, 200));
 
 			var deltaTime = _nextText - DateTime.Now;
 
 			if (deltaTime < TimeSpan.Zero)
 			{
-				AddToTextCollection(firstLine, subsequentLines);
+				AddToTextCollection(line);
 				_nextText = DateTime.Now;
 			}
 			else
 			{
-				Observable.Timer(deltaTime).Subscribe(_ => AddToTextCollection(firstLine));
+				Observable.Timer(deltaTime).Subscribe(_ => AddToTextCollection(line));
 			}
 		}
 	}
