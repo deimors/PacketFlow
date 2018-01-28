@@ -10,11 +10,11 @@ namespace PacketFlow.UseCases
 {
 	public class DisplayArrowDirectionWhenPacketTypeDirectionChanged
 	{
-		public DisplayArrowDirectionWhenPacketTypeDirectionChanged(IObservable<NetworkEvent> networkEvents, NodeIdentifier nodeId, IDisplayArrowDirection display)
+		public DisplayArrowDirectionWhenPacketTypeDirectionChanged(IObservable<NetworkEvent> networkEvents, NodeIdentifier nodeId, IDisplayArrowDirection arrowDirection)
 		{
 			networkEvents.OfType<NetworkEvent, NetworkEvent.PacketTypeDirectionChanged>()
 				.Where(directionChanged => directionChanged.NodeId.Equals(nodeId))
-				.Subscribe(directionChanged => display.Display(directionChanged.PacketType, directionChanged.Port));
+				.Subscribe(directionChanged => arrowDirection.Display(directionChanged.PacketType, directionChanged.Port));
 		}
 	}
 }

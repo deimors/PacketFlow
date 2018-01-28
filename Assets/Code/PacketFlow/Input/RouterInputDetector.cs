@@ -24,34 +24,34 @@ public class RouterInputDetector : MonoBehaviour, IArrowClickedObservable
 		}
 	}
 
-	private void Rotate()
+	//private void Rotate()
+	//{
+	//	transform.Rotate(new Vector3(0, 0, 90));
+	//}
+
+
+	private Vector3 _desiredDirection;
+	private const int RotationSpeed = 5;
+
+	// Update is called once per frame
+	void Update()
 	{
-		transform.Rotate(new Vector3(0, 0, 90));
+		float angle = Mathf.Atan2(_desiredDirection.y, _desiredDirection.x) * Mathf.Rad2Deg;
+		Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+		transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * RotationSpeed);
 	}
-	
 
-	//private Vector3 _desiredDirection;
-	//private const int RotationSpeed = 5;
-
-	//// Update is called once per frame
-	//void Update()
-	//{
-	//	float angle = Mathf.Atan2(_desiredDirection.y, _desiredDirection.x) * Mathf.Rad2Deg;
-	//	Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-	//	transform.rotation = Quaternion.Slerp(transform.rotation, q, Time.deltaTime * RotationSpeed);
-	//}
-
-	//private void UpdateDirectionToFace(PortDirection direction)
-	//{
-	//	switch (direction)
-	//	{
-	//		case PortDirection.Right: _desiredDirection = new Vector3(0, 1) - Vector3.zero; break;
-	//		case PortDirection.Top: _desiredDirection = new Vector3(-1, 0) - Vector3.zero; break;
-	//		case PortDirection.Left: _desiredDirection = new Vector3(0, -1) - Vector3.zero; break;
-	//		default:
-	//		case PortDirection.Bottom: _desiredDirection = new Vector3(1, 0) - Vector3.zero; break;
-	//	}
-	//}
+	public void UpdateDirectionToFace(PortDirection direction)
+	{
+		switch (direction)
+		{
+			case PortDirection.Right: _desiredDirection = new Vector3(0, 1) - Vector3.zero; break;
+			case PortDirection.Top: _desiredDirection = new Vector3(-1, 0) - Vector3.zero; break;
+			case PortDirection.Left: _desiredDirection = new Vector3(0, -1) - Vector3.zero; break;
+			default:
+			case PortDirection.Bottom: _desiredDirection = new Vector3(1, 0) - Vector3.zero; break;
+		}
+	}
 
 	public IDisposable Subscribe(IObserver<PacketType> observer)
 	{

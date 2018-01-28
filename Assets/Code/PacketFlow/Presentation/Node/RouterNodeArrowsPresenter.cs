@@ -6,22 +6,36 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-public class RouterNodeArrowsPresenter : MonoBehaviour, IArrowClickedObservable
+public class RouterNodeArrowsPresenter : MonoBehaviour, IArrowClickedObservable, IDisplayArrowDirection
 {
-	public RouterInputDetector[] ArrowInputDetectors;
+	public RouterInputDetector RedInputDetector;
+	public RouterInputDetector GreenInputDetector;
+	public RouterInputDetector BlueInputDetector;
 
 	private readonly ISubject<PacketType> _subject = new Subject<PacketType>();
 
 	void Start()
 	{
-		foreach (var arrow in ArrowInputDetectors)
-		{
-			arrow.Subscribe(_subject);
-		}
+		RedInputDetector.Subscribe(_subject);
+		GreenInputDetector.Subscribe(_subject);
+		BlueInputDetector.Subscribe(_subject);
 	}
 		
 	public IDisposable Subscribe(IObserver<PacketType> observer)
 	{
 		return _subject.Subscribe(observer);
+	}
+
+	public void Display(PacketType packetType, PortDirection direction)
+	{
+		switch (packetType)
+		{
+			case PacketType.Red:
+				RedInputDetector.UpdateDirectionToFace(direction);
+				break;
+			case PacketType.Green: GreenInputDetector.UpdateDirectionToFace(direction); break;
+			case PacketType.Blue: BlueInputDetector.UpdateDirectionToFace(direction); break;
+
+		}
 	}
 }

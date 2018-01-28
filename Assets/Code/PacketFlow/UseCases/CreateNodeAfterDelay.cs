@@ -28,6 +28,6 @@ namespace PacketFlow.UseCases
 		}
 
 		private NetworkCommand BuildAddNodeCommand(NodeIdentifier nodeId, float x, float y)
-			=> new NetworkCommand.AddGatewayNode(nodeId, new NodePosition(x, y), 5);
+			=> new NetworkCommand.AddRouterNode(nodeId, new NodePosition(x, y), 5);
 	}
 }
