@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d370ec7251378489de49cb1144490b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lineRenderer: {fileID: 0}
+  _lineRenderer: {fileID: 120065102973466308}
   StartPoint: {x: 0, y: 0}
   EndPoint: {x: 0, y: 0}
   Color: {r: 1, g: 1, b: 1, a: 1}
