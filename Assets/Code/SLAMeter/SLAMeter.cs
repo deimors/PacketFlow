@@ -9,11 +9,11 @@ namespace Assets.Code.SLAMeter
 {
 	public class SLAMeter : ISLAMeter
 	{
-		public ReactiveProperty<int> SucceededCount { get; private set; }
+		public ReactiveProperty<int> SucceededCount { get; } = new ReactiveProperty<int>();
 
 		IReadOnlyReactiveProperty<int> ISLAMeter.SucceededCount => SucceededCount;
 
-		public ReactiveProperty<int> FailedCount { get; private set; }
+		public ReactiveProperty<int> FailedCount { get; } = new ReactiveProperty<int>();
 
 		IReadOnlyReactiveProperty<int> ISLAMeter.FailedCount => FailedCount;
 
@@ -25,6 +25,8 @@ namespace Assets.Code.SLAMeter
 		{
 			FailureThreashold = threashold;
 			MinimumPacketsRequired = minimumNumberOfPackets;
+			SucceededCount.Value = 0;
+			FailedCount.Value = 0;
 		}
 
 		public bool TryAddPackets(int count, PacketStatus packetStatus)
