@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class RouterNodeArrowsPresenter : MonoBehaviour, IArrowClickedObservable, IDisplayArrowDirection
 {
-	public RouterInputDetector RedInputDetector;
-	public RouterInputDetector GreenInputDetector;
-	public RouterInputDetector BlueInputDetector;
+	public RouterInputDetectorAndHandler RedInputDetector;
+	public RouterInputDetectorAndHandler GreenInputDetector;
+	public RouterInputDetectorAndHandler BlueInputDetector;
 
 	private readonly ISubject<PacketType> _subject = new Subject<PacketType>();
 

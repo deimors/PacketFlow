@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-public class RouterInputDetector : MonoBehaviour, IArrowClickedObservable
+public class RouterInputDetectorAndHandler : MonoBehaviour, IArrowClickedObservable
 {
 	public PacketType PacketType;
 	private readonly ISubject<PacketType> _arrowClickedSubject = new Subject<PacketType>();
@@ -20,8 +20,8 @@ public class RouterInputDetector : MonoBehaviour, IArrowClickedObservable
 
 	private void OnMouseDown()
 	{
-		bool isLeftMouseClicked = Input.GetKeyDown(KeyCode.Mouse0);
-		if (isLeftMouseClicked)
+		bool isLeftMouseButtonClicked = Input.GetKeyDown(KeyCode.Mouse0);
+		if (isLeftMouseButtonClicked)
 		{
 			_arrowClickedSubject.OnNext(PacketType);
 		}
