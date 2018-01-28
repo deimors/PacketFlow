@@ -2,7 +2,15 @@
 
 namespace PacketFlow.Domain
 {
-	public abstract class NetworkCommand : OneOfBase<NetworkCommand.AddGatewayNode, NetworkCommand.AddRouterNode, NetworkCommand.AddConsumerNode, NetworkCommand.LinkNodes, NetworkCommand.AddPacket, NetworkCommand.IncrementPacketTypeDirection>
+	public abstract class NetworkCommand : OneOfBase<
+		NetworkCommand.AddGatewayNode, 
+		NetworkCommand.AddRouterNode, 
+		NetworkCommand.AddConsumerNode, 
+		NetworkCommand.LinkNodes, 
+		NetworkCommand.AddPacket, 
+		NetworkCommand.IncrementPacketTypeDirection,
+		NetworkCommand.ProcessNodeQueue
+	>
 	{
 		public class AddGatewayNode : NetworkCommand
 		{
@@ -88,6 +96,16 @@ namespace PacketFlow.Domain
 
 			public NodeIdentifier NodeId { get; }
 			public PacketType PacketType { get; }
+		}
+
+		public class ProcessNodeQueue : NetworkCommand
+		{
+			public ProcessNodeQueue(NodeIdentifier nodeId)
+			{
+				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
+			}
+
+			public NodeIdentifier NodeId { get; }
 		}
 	}
 }

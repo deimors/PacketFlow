@@ -19,7 +19,15 @@ namespace PacketFlow.Domain
 
 		public bool IsFull => Content.Count() == Capacity;
 
+		public bool IsEmpty => !Content.Any();
+
 		public NodeQueue Enqueue(PacketIdentifier packetId)
 			=> new NodeQueue(Content.Enqueue(packetId), Capacity);
+
+		public NodeQueue Dequeue()
+			=> new NodeQueue(Content.Dequeue(out var packetId), Capacity);
+
+		public PacketIdentifier Peek()
+			=> Content.Peek();
 	}
 }

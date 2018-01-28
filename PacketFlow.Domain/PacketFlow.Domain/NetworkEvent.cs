@@ -10,7 +10,8 @@ namespace PacketFlow.Domain
 		NetworkEvent.PortAssigned,
 		NetworkEvent.PacketTypeDirectionChanged,
 		NetworkEvent.PacketTransmissionStarted,
-		NetworkEvent.PacketTransmissionFinished
+		NetworkEvent.PacketTransmissionFinished,
+		NetworkEvent.PacketDequeued
 	>
 	{
 		public class NodeAdded : NetworkEvent
@@ -107,6 +108,16 @@ namespace PacketFlow.Domain
 
 			public PacketIdentifier PacketId { get; }
 			public LinkIdentifier LinkId { get; }
+		}
+
+		public class PacketDequeued : NetworkEvent
+		{
+			public PacketDequeued(NodeIdentifier nodeId)
+			{
+				NodeId = nodeId ?? throw new System.ArgumentNullException(nameof(nodeId));
+			}
+
+			public NodeIdentifier NodeId { get; }
 		}
 	}
 }

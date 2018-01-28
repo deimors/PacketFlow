@@ -1,5 +1,6 @@
 ﻿using Functional.Maybe;
 using System.Collections.Immutable;
+using System.Linq;
 using Workshop.Core;
 
 namespace PacketFlow.Domain
@@ -15,7 +16,8 @@ namespace PacketFlow.Domain
 				AddConsumerNode,
 				LinkNodes,
 				AddPacket,
-				SetPacketTypeDirection
+				SetPacketTypeDirection,
+				ProcessNodeQueue
 			);
 
 		private Maybe<NetworkError> AddGatewayNode(NetworkCommand.AddGatewayNode command)
@@ -63,5 +65,44 @@ namespace PacketFlow.Domain
 				.FailIf(() => !(State.Nodes[command.NodeId] is Node.Router), () => NetworkError.NodeNotRouter)
 				.Record(() => new NetworkEvent.PacketTypeDirectionChanged(command.NodeId, command.PacketType, (State.Nodes[command.NodeId] as Node.Router).NextOutputPort(command.PacketType)))
 				.Execute();
+
+		private Maybe<NetworkError> ProcessNodeQueue(NetworkCommand.ProcessNodeQueue command)
+		{
+			if (!State.Nodes.ContainsKey(command.NodeId))
+				return NetworkError.UnknownNode.ToMaybe();
+
+			return State.Nodes[command.NodeId]
+				.Match(
+					ProcessGatewayNode, 
+					ProcessRouterNode,
+					consumerNode => Maybe<NetworkError>.Nothing
+				);
+		}
+
+		private Maybe<NetworkError> ProcessGatewayNode(Node.Gateway node)
+		{
+			if (!node.Queue.IsEmpty)
+				return Maybe<NetworkError>.Nothing;
+
+			var nextPacket = node.Queue.Peek();
+
+			var gatewayLink = node.Ports.Outputs.First().LinkId;
+
+			Record(new NetworkEvent.PacketDequeued(node.Id));
+
+			Record(new NetworkEvent.PacketTransmissionStarted(nextPacket, gatewayLink));
+
+			return Maybe<NetworkError>.Nothing;
+		}
+		
+		private Maybe<NetworkError> ProcessRouterNode(Node.Router node)
+		{
+			return Maybe<NetworkError>.Nothing;
+		}
+
+		private Maybe<NetworkError> ProcessConsumerNode(Node.Consumer node)
+		{
+			return Maybe<NetworkError>.Nothing;
+		}
 	}
 }

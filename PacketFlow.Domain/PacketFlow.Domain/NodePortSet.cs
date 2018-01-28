@@ -27,11 +27,11 @@ namespace PacketFlow.Domain
 			}
 		}
 
-		public IEnumerable<NodePort> Inputs
-			=> _ports.Where(port => port.Match(_ => false, connected => connected.Direction == ConnectionDirection.Input));
+		public IEnumerable<NodePort.Connected> Inputs
+			=> _ports.Where(port => port.Match(_ => false, connected => connected.Direction == ConnectionDirection.Input)).OfType<NodePort.Connected>();
 
-		public IEnumerable<NodePort> Outputs
-			=> _ports.Where(port => port.Match(_ => false, connected => connected.Direction == ConnectionDirection.Output));
+		public IEnumerable<NodePort.Connected> Outputs
+			=> _ports.Where(port => port.Match(_ => false, connected => connected.Direction == ConnectionDirection.Output)).OfType<NodePort.Connected>();
 
 		public bool IsDisconnected(PortDirection direction)
 			=> _ports[(int)direction] is NodePort.Disconnected;

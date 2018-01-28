@@ -22,7 +22,8 @@ namespace PacketFlow.Domain
 				portAssigned => AssignPort(portAssigned),
 				packetTypeDirectionChanged => ChangePacketTypeDirection(packetTypeDirectionChanged),
 				packetTransmissionStarted => AddPacketToLinkContent(packetTransmissionStarted),
-				packetTransmissionFinished => RemovePacketFromLinkContent(packetTransmissionFinished)
+				packetTransmissionFinished => RemovePacketFromLinkContent(packetTransmissionFinished),
+				packetDequeued => DequeuePacket(packetDequeued.NodeId)
 			);
 
 		private void EnqueuePacked(PacketIdentifier packetId, NodeIdentifier nodeId)
@@ -30,6 +31,13 @@ namespace PacketFlow.Domain
 			var node = _nodes[nodeId];
 
 			_nodes[node.Id] = node.With(queue: q => q.Enqueue(packetId));
+		}
+
+		private void DequeuePacket(NodeIdentifier nodeId)
+		{
+			var node = _nodes[nodeId];
+
+			_nodes[node.Id] = node.With(queue: q => q.Dequeue());
 		}
 
 		private void AssignPort(NetworkEvent.PortAssigned @event)
