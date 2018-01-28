@@ -52,11 +52,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionDirection.cs" />
     <Compile Include="Link.cs" />
-    <Compile Include="Network.cs" />
+    <Compile Include="LinkIdentifier.cs" />
+    <Compile Include="NetworkAggregate.cs" />
+    <Compile Include="NetworkCommand.cs" />
+    <Compile Include="NetworkError.cs" />
+    <Compile Include="NetworkEvent.cs" />
+    <Compile Include="NetworkState.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="NodeIdentifier.cs" />
+    <Compile Include="NodePort.cs" />
+    <Compile Include="NodePortSet.cs" />
+    <Compile Include="NodePosition.cs" />
+    <Compile Include="NodeQueue.cs" />
     <Compile Include="Packet.cs" />
+    <Compile Include="PortDirection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouterState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
