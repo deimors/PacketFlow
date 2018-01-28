@@ -117,6 +117,9 @@ namespace PacketFlow.Domain
 			);
 		}
 
+		private bool IsLinkFull(LinkIdentifier linkId)
+			=> State.Links[linkId].IsFull;
+
 		private void RecordDequeueAndTransmit(NodeIdentifier nodeId, PacketIdentifier packetId, LinkIdentifier linkId)
 		{
 			Record(new NetworkEvent.PacketDequeued(nodeId));

@@ -11,6 +11,8 @@ namespace PacketFlow.Domain
 		public LinkAttributes Attributes { get; }
 		public ImmutableList<PacketIdentifier> Content { get; }
 
+		public bool IsFull => Content.Count == Attributes.Bandwidth;
+
 		public Link(LinkIdentifier id, NodeIdentifier source, NodeIdentifier sink, LinkAttributes attributes, ImmutableList<PacketIdentifier> content)
 		{
 			Id = id ?? throw new ArgumentNullException(nameof(id));
