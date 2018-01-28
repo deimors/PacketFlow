@@ -17,7 +17,8 @@ namespace PacketFlow.Domain
 				LinkNodes,
 				AddPacket,
 				SetPacketTypeDirection,
-				ProcessNodeQueue
+				ProcessNodeQueue,
+				CompleteTransmission
 			);
 
 		private Maybe<NetworkError> AddGatewayNode(NetworkCommand.AddGatewayNode command)
@@ -116,6 +117,11 @@ namespace PacketFlow.Domain
 				}
 			);
 		}
+
+		private Maybe<NetworkError> CompleteTransmission(NetworkCommand.CompleteTransmission command)
+			=> this.BuildCommand<NetworkEvent, NetworkError>()
+				.Record(() => new NetworkEvent.PacketTransmissionFinished(command.PacketId, command.LinkId))
+				.Execute();
 
 		private bool IsLinkFull(LinkIdentifier linkId)
 			=> State.Links[linkId].IsFull;

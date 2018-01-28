@@ -2,6 +2,7 @@
 using static Assets.Code.Constants;
 using PacketFlow.Domain;
 using static Assets.Code.Processing.TransportCommands;
+using System;
 
 namespace Assets.Code.Processing
 {
@@ -20,15 +21,21 @@ namespace Assets.Code.Processing
 					ln => (int)TransportCommandPayloadType.LinkNodes,
 					ap => (int)TransportCommandPayloadType.AddPacket,
 					iptd => (int)TransportCommandPayloadType.IncrementPacketTypeDirection,
-					pnq => (int)TransportCommandPayloadType.ProcessNodeQueue),
-				payload = JsonUtility.ToJson(command.Match(
-					agn => GetPayloadForAddGatewayNodeCommand(agn),
-					arn => GetPayloadForAddRouterNodeCommand(arn),
-					acn => GetPayloadForAddConsumerNodeCommand(acn),
-					ln => GetPayloadForLinkNodesCommand(ln),
-					ap => GetPayloadForAddPacketCommand(ap),
-					iptd => GetPayloadForIncrementPacketTypeDirectionCommand(iptd),
-					pnq => GetPayloadForProcessNodeQueueCommand(pnq)))
+					pnq => (int)TransportCommandPayloadType.ProcessNodeQueue,
+					ct => { throw new NotImplementedException(); } // TODO: Taylor
+				),
+				payload = JsonUtility.ToJson(
+						command.Match(
+						agn => GetPayloadForAddGatewayNodeCommand(agn),
+						arn => GetPayloadForAddRouterNodeCommand(arn),
+						acn => GetPayloadForAddConsumerNodeCommand(acn),
+						ln => GetPayloadForLinkNodesCommand(ln),
+						ap => GetPayloadForAddPacketCommand(ap),
+						iptd => GetPayloadForIncrementPacketTypeDirectionCommand(iptd),
+						pnq => GetPayloadForProcessNodeQueueCommand(pnq),
+						ct => { throw new NotImplementedException(); } // TODO: Taylor
+					)
+				)
 			};
 		}
 
