@@ -12,32 +12,45 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 	{
 		private const int MAX_LINES_OF_TEXT = 20;
 
-		private ReactiveCollection<string> _text = new ReactiveCollection<string>();
-
-		public IReadOnlyReactiveCollection<string> Text => _text;
+		private IObserver<CommandLineTextAddedEvent> _textObserver;
 
 		private DateTime _nextText;
 
-		private void AddToTextCollection(string text)
+		public CommandLineConsole(IObserver<CommandLineTextAddedEvent> textObserver)
 		{
-			_text.Add($"/usr/c00l > {text}");
+			_textObserver = textObserver;
+
+			SendText("/usr/zeroc00l > ");
 		}
 
-		public void AddText(string text)
+		public void AddText(string firstLine, params string[] subsequentLines)
 		{
-			_nextText = _nextText.AddMilliseconds(UnityEngine.Random.Range(50, 300));
+			AddText(firstLine + Environment.NewLine);
+
+			foreach (var line in subsequentLines ?? Enumerable.Empty<string>())
+				AddText(line + Environment.NewLine);
+
+			AddText("/usr/zeroc00l > ");
+		}
+
+		private void AddText(string line)
+		{
+			_nextText = _nextText.AddMilliseconds(UnityEngine.Random.Range(50, 200));
 
 			var deltaTime = _nextText - DateTime.Now;
 
 			if (deltaTime < TimeSpan.Zero)
 			{
-				AddToTextCollection(text);
+				SendText(line);
 				_nextText = DateTime.Now;
 			}
 			else
 			{
-				Observable.Timer(deltaTime).Subscribe(_ => AddToTextCollection(text));
+				Observable.Timer(deltaTime).Subscribe(_ => SendText(line));
 			}
 		}
+
+		private void SendText(string text)
+			=> _textObserver.OnNext(new CommandLineTextAddedEvent(text));
 	}
 }

@@ -21,32 +21,27 @@ namespace Assets.Code.HackItFlow.Presentation
 		private TextMeshProUGUI _textMeshProText;
 
 		[Inject]
-		public void Initialize(ICommandLineConsole commandLineConsole)
+		public void Initialize(ICommandLineConsole commandLineConsole, IObservable<CommandLineTextAddedEvent> textAdded)
 		{
 			_commandLineConsole = commandLineConsole;
 
-			for (int i = 0; i < 100; i++)
-			{
-				_commandLineConsole.AddText("ls -l");
-				_commandLineConsole.AddText("rm -rf *");
-			}
+			// Seed initial ASCII art
+			_commandLineConsole.AddText(
+				"initialize",
+				"",
+				"   ROFL:ROFL:ROFL:ROFL",
+				"         ___^___ _",
+				" L    __/      [] \\  ",
+				"LOL===__           \\ ",
+				" L      \\___ ___ ___]",
+				"              I   I",
+				"          ----------/",
+				"");
 
-			_commandLineConsole
-				.Text
-				.ObserveAdd()
-				.Select(e => e.Value)
-				.Subscribe(AddLine)
+			textAdded
+				.Select(e => e.Text)
+				.Subscribe(text => _textMeshProText.text += text)
 				.DisposeWith(this);
-		}
-
-		private void AddLine(string line)
-		{
-			if (_textMeshProText.text.Length > 0)
-			{
-				_textMeshProText.text += Environment.NewLine;
-			}
-
-			_textMeshProText.text += line;
 		}
 	}
 }
