@@ -27,8 +27,15 @@ namespace Assets.Code.HackItFlow.Presentation
 
 			// Seed initial ASCII art
 			_commandLineConsole.AddText(
-				"Initializing...",
-				"Art goes here");
+				"initialize",
+				"",
+				"   ROFL:ROFL:ROFL:ROFL",
+				"         ___^___ _",
+				" L    __/      [] \\  ",
+				"LOL===__           \\ ",
+				" L      \\___ ___ ___]",
+				"              I   I",
+				"          ----------/");
 
 			_commandLineConsole
 				.Text
