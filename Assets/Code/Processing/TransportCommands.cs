@@ -11,7 +11,8 @@ namespace Assets.Code.Processing
 			AddConsumerNode,
 			LinkNodes,
 			AddPacket,
-			IncrementPacketTypeDirection
+			IncrementPacketTypeDirection,
+			ProcessNodeQueue
 		}
 
 		public class AddGatewayNodeCommandTransport
@@ -44,6 +45,8 @@ namespace Assets.Code.Processing
 			public int SourcePortDirection;
 			public SerializableGuid SinkID;
 			public int SinkPortDirection;
+			public int Bandwidth;
+			public float Latency;
 		}
 
 		public class AddPacketCommandTransport
@@ -57,6 +60,11 @@ namespace Assets.Code.Processing
 		{
 			public SerializableGuid NodeID;
 			public int Type;
+		}
+
+		public class ProcessNodeQueueCommandTransport
+		{
+			public SerializableGuid NodeID;
 		}
 	}
 }
