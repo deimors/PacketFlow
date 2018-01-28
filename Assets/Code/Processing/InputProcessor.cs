@@ -15,12 +15,14 @@ public class InputProcessor : MonoBehaviour {
 
 	public NetworkManager NetworkManagerInstance;
 
+	public ActorClientConsumer ActorClientConsumer;
+
 	// Use this for initialization
 	void Start () {
 		
 	}
 
-	#region LOCAL FUNCTIONS ARE NOT ALLOWED :(
+	#region LOCAL FUNCTIONS ARE NOT ALLOWED 
 	private NodePosition Position => new NodePosition(0.0f, 0.0f);
 	private NodeIdentifier ID => new NodeIdentifier();
 	private int Capacity => 10;
@@ -40,14 +42,12 @@ public class InputProcessor : MonoBehaviour {
 			{
 				var command = new NetworkCommand.AddGatewayNode(ID, Position, Capacity);
 				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
-				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+				ActorClientConsumer.SendCommand.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
 			}
 
 			if (Input.GetKeyDown(KeyCode.R))
 			{
-				var command = new NetworkCommand.AddRouterNode(ID, Position, Capacity);
-				var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, ADMIN_PLAYER_TYPE, command);
-				NetworkServer.SendToAll(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);
+				
 			}
 
 			if (Input.GetKeyDown(KeyCode.C))

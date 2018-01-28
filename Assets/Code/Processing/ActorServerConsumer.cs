@@ -14,7 +14,6 @@ namespace Assets.Code.Processing
 	public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, NetworkCommand>
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
-		private readonly ClientEventDispatcher _eventDispatcher = new ClientEventDispatcher();
 
 		public NetworkManager NetworkManagerInstance;			
 

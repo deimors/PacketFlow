@@ -14,21 +14,24 @@ namespace Assets.Code.Processing
 	public class ActorClientConsumer : MonoBehaviour, IActorClient<NetworkEvent, NetworkCommand>
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
-		private readonly ClientEventDispatcher _eventDispatcher = new ClientEventDispatcher();
 
 		public NetworkManager NetworkManagerInstance;
 
 		private ISubject<NetworkEvent> EventSubject = new Subject<NetworkEvent>();
 		public IObservable<NetworkEvent> ReceivedEvents => EventSubject;
 
+		#region LOCAL FUNCTIONS ARE NOT ALLOWED 
+		private NodePosition Position => new NodePosition(0.0f, 0.0f);
+		private NodeIdentifier ID => new NodeIdentifier();
+		private int Capacity => 10;
+		private PortDirection Direction => PortDirection.Top;
+		private PacketType PT => PacketType.Blue;
+		#endregion
+
 		public void SendCommand(NetworkCommand command)
 		{
-			/*if (!SafeToSend)
-				return;
-
 			var message = new NetworkCommandAndPacketFlowMessageBidirectionalMapper().Map(SenderID, HACKER_PLAYER_TYPE, command);
 			NetworkManagerInstance.client.Send(HACKER_PLAYER_MESSAGE_TYPE_ID, message);
-			NetworkManagerInstance.client.Send(ADMIN_PLAYER_MESSAGE_TYPE_ID, message);	*/		
 		}				
 
 		
