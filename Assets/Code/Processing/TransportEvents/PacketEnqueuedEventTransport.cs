@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Assets.Code.Processing.TransportEvents
+﻿namespace Assets.Code.Processing.TransportEvents
 {
 	public class PacketEnqueuedEventTransport
 	{

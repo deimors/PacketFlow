@@ -15,6 +15,9 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 		private const int PACKET_TRANSMISSION_STARTED_EVENT_TYPE_ID = 7;
 		private const int PACKET_TRANSMISSION_FINISHED_EVENT_TYPE_ID = 8;
 		private const int PACKET_DEQUEUED_EVENT_TYPE_ID = 9;
+		private const int PACKET_LOST_EVENT_TYPE_ID = 10;
+		private const int PACKET_CONSUMED_EVENT_TYPE_ID = 11;
+
 
 		public static PacketFlowMessage Map(NetworkEvent networkEvent)
 		{
@@ -32,8 +35,8 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 					packetTransmissionStarted => PACKET_TRANSMISSION_STARTED_EVENT_TYPE_ID,
 					packetTransmissionFinished => PACKET_TRANSMISSION_FINISHED_EVENT_TYPE_ID,
 					packedDequeued => PACKET_DEQUEUED_EVENT_TYPE_ID,
-					packetLost => { throw new NotImplementedException(); },
-					packetConsumed => { throw new NotImplementedException(); } //TODO: Map me please!
+					packetLost => PACKET_LOST_EVENT_TYPE_ID,
+					packetConsumed => PACKET_CONSUMED_EVENT_TYPE_ID
 				),
 				payload = JsonUtility.ToJson(
 					networkEvent.Match(
