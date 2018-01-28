@@ -21,7 +21,7 @@ namespace Assets.Code.Queue
 		public GameObject PacketCreator;
 
 		[Inject]
-		public void Initialize(IObservable<NetworkEvent> networkEvents)
+		public void Initialize(IObservable<NetworkEvent> networkEvents, NodeIdentifier nodeIdentifier)
 		{
 			_packetQueue = new Queue<Packet>();
 			_gameObjectQueue = new Queue<GameObject>(DisplaySize);
@@ -32,6 +32,7 @@ namespace Assets.Code.Queue
 
 			networkEvents
 				.OfType<NetworkEvent, NetworkEvent.PacketDequeued>()
+				.Where(packetDequeued => packetDequeued.NodeId == nodeIdentifier)
 				.Subscribe(_ => RemovePacketFromQueue());
 		}
 

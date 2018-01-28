@@ -1,6 +1,7 @@
 ﻿using PacketFlow.Domain;
 using PacketFlow.UseCases;
 using System;
+using Assets.Code.Queue;
 using Zenject;
 
 namespace PacketFlow.Presentation.Node
