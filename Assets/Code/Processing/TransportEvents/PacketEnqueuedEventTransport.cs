@@ -4,7 +4,7 @@ namespace Assets.Code.Processing.TransportEvents
 {
 	public class PacketEnqueuedEventTransport
 	{
-		public Guid NodeID;
-		public Guid PacketID;
+		public SerializableGuid NodeID;
+		public SerializableGuid PacketID;
 	}
 }

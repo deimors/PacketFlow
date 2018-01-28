@@ -18,7 +18,7 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 				NodeID = source.Node.Id.Value,
 				PositionX = source.Node.Position.X,
 				PositionY = source.Node.Position.Y,
-				QueueContent = source.Node.Queue.Content.Select(x => x.Value).ToArray(),
+				QueueContent = source.Node.Queue.Content.Select(x => new SerializableGuid(x.Value)).ToList(),
 				QueueCapacity = source.Node.Queue.Capacity,
 				TopPortLinkIdentifier = source.Node.Ports.GetLinkIdentifier(PortDirection.Top),
 				TopPortConnectionDirection = source.Node.Ports.GetLinkDirection(PortDirection.Top),

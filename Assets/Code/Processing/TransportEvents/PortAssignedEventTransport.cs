@@ -4,9 +4,9 @@ namespace Assets.Code.Processing.TransportEvents
 {
 	public class PortAssignedEventTransport
 	{
-		public Guid NodeID;
+		public SerializableGuid NodeID;
 		public int PortDirection;
-		public Guid LinkID;
+		public SerializableGuid LinkID;
 		public int ConnectionDirection;
 	}
 }

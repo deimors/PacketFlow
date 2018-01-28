@@ -4,7 +4,7 @@ namespace Assets.Code.Processing.TransportEvents
 {
 	public class PacketAddedEventTransport
 	{
-		public Guid PacketID;
+		public SerializableGuid PacketID;
 		public int PacketType;
 	}
 }

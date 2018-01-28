@@ -16,7 +16,7 @@ namespace Assets.Code.Processing
 
 		public class AddGatewayNodeCommandTransport
 		{
-			public Guid NodeID;
+			public SerializableGuid NodeID;
 			public float X;
 			public float Y;
 			public int Capacity;
@@ -24,7 +24,7 @@ namespace Assets.Code.Processing
 
 		public class AddRouterNodeCommandTransport
 		{
-			public Guid NodeID;
+			public SerializableGuid NodeID;
 			public float X;
 			public float Y;
 			public int Capacity;
@@ -32,7 +32,7 @@ namespace Assets.Code.Processing
 
 		public class AddConsumerNodeCommandTransport
 		{
-			public Guid NodeID;
+			public SerializableGuid NodeID;
 			public float X;
 			public float Y;
 			public int Capacity;
@@ -40,22 +40,22 @@ namespace Assets.Code.Processing
 
 		public class LinkNodesCommandTransport
 		{
-			public Guid SourceID;
+			public SerializableGuid SourceID;
 			public int SourcePortDirection;
-			public Guid SinkID;
+			public SerializableGuid SinkID;
 			public int SinkPortDirection;
 		}
 
 		public class AddPacketCommandTransport
 		{
-			public Guid PacketID;
+			public SerializableGuid PacketID;
 			public int Type;
-			public Guid NodeID;
+			public SerializableGuid NodeID;
 		}
 
 		public class IncrementPacketTypeDirectionCommandTransport
 		{
-			public Guid NodeID;
+			public SerializableGuid NodeID;
 			public int Type;
 		}
 	}

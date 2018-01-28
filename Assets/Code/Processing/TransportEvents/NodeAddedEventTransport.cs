@@ -1,22 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Assets.Code.Processing.TransportEvents
 {
 	public class NodeAddedEventTransport
 	{
-		public Guid NodeID;
+		public SerializableGuid NodeID;
 		public int NodeType;
 		public float PositionX;
 		public float PositionY;
-		public Guid[] QueueContent;
+		public List<SerializableGuid> QueueContent;
 		public int QueueCapacity;
-		public Guid TopPortLinkIdentifier;
+		public SerializableGuid TopPortLinkIdentifier;
 		public int TopPortConnectionDirection;
-		public Guid BottomPortLinkIdentifier;
+		public SerializableGuid BottomPortLinkIdentifier;
 		public int BottomPortConnectionDirection;
-		public Guid LeftPortLinkIdentifier;
+		public SerializableGuid LeftPortLinkIdentifier;
 		public int LeftPortConnectionDirection;
-		public Guid RightPortLinkIdentifier;
+		public SerializableGuid RightPortLinkIdentifier;
 		public int RightPortConnectionDirection;
 		public int TopPortDirection;
 		public int BottomPortDirection;

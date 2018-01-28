@@ -8,7 +8,7 @@ namespace Assets.Code.Processing.TransportEvents
 {
 	public class PacketTypeDirectionChangedEventTransport
 	{
-			public Guid NodeID;
+			public SerializableGuid NodeID;
 			public int PacketType;
 			public int PortDirection;
 	}
