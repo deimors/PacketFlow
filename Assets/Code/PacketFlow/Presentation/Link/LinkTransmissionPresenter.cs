@@ -1,6 +1,8 @@
 ﻿using PacketFlow.Domain;
+using PacketFlow.Presentation.Packet;
 using PacketFlow.UseCases;
 using UnityEngine;
+using Zenject;
 
 namespace PacketFlow.Presentation.Link
 {
@@ -9,12 +11,12 @@ namespace PacketFlow.Presentation.Link
 		[SerializeField]
 		private NetworkLink _link;
 
-		[SerializeField]
-		private GameObject _prefab;
+		[Inject]
+		public PacketContainer.Factory PacketFactory { get; set; }
 
-		public void Display(PacketType type, float time)
+		public void Display(PacketIdentifier packetId, float time)
 		{
-			_link.AddGameObject(Instantiate(_prefab), time);
+			_link.AddGameObject(PacketFactory.Create(packetId).gameObject, time);
 		}
 	}
 }

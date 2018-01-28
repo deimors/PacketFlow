@@ -4,6 +4,6 @@ namespace PacketFlow.UseCases
 {
 	public interface IDisplayPacketTransmission
 	{
-		void Display(PacketType type, float time);
+		void Display(PacketIdentifier packetId, float time);
 	}
 }
