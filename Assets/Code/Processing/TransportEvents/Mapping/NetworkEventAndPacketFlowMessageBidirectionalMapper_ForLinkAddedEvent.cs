@@ -6,20 +6,21 @@ namespace Assets.Code.Processing.TransportEvents.Mapping
 	{
 		private static object ToLinkAddedEventTransport(this NetworkEvent.LinkAdded source)
 		{
-			return new LinkAddedEventTransport();
+			return new LinkAddedEventTransport()
+			{
+				LinkID = source.Link.Id.Value,
+				SourceID = source.Link.Source.Value,
+				SinkID = source.Link.Sink.Value
+			};
 		}
-
-		#region ... details for ToLinkAddedEventTransport
-
-		#endregion
 
 		private static NetworkEvent ToNetworkEvent(this LinkAddedEventTransport transport)
 		{
-			return null;
+			return new NetworkEvent.LinkAdded(
+				new Link(
+					new LinkIdentifier(transport.LinkID), 
+					new NodeIdentifier(transport.SourceID), 
+					new NodeIdentifier(transport.SinkID)));
 		}
-
-		#region ... details for ToNetworkEvent
-
-		#endregion
 	}
 }
