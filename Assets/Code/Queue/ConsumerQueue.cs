@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ModestTree;
 using PacketFlow.Domain;
@@ -12,42 +13,21 @@ namespace Assets.Code.Queue
 	public class ConsumerQueue : GatewayQueue, IDisplayPacketEnqueue
 	{
 		public const int MaxQueueSize = 5;
-		private Queue<GameObject> _gameObjectQueue;
-
-		void Start()
+		
+		protected override void InitializeEventListeners(IObservable<NetworkEvent> networkEvents)
 		{
-			_gameObjectQueue = new Queue<GameObject>(MaxQueueSize);
-
-			//AddPacket.onClick
-			//	.AsObservable()
-			//	.Subscribe(_ => AddPacketToNodeQueue(TempGetPacket()));
-
-			//RemovePacket.onClick
-			//	.AsObservable()
-			//	.Subscribe(_ => RemovePacketFromNodeQueue());
+			
 		}
 
 		public void EnqueuePacket(PacketType packetType)
 		{
-			AddPacketToNodeQueue(new Packet(new PacketIdentifier(), packetType));
+			AddPacketToQueue(new Packet(new PacketIdentifier(), packetType));
 		}
 
 		public void DequeuePacket()
 		{
-			RemovePacketFromNodeQueue();
+			RemovePacketFromQueue();
 
-		}
-
-		private void RemovePacketFromNodeQueue()
-		{
-			if (!_gameObjectQueue.IsEmpty())
-				Destroy(_gameObjectQueue.Dequeue());
-		}
-
-		private void AddPacketToNodeQueue(Packet packet)
-		{
-			if (_gameObjectQueue.Count < MaxQueueSize)
-				_gameObjectQueue.Enqueue(Create(packet));
 		}
 	}
 }

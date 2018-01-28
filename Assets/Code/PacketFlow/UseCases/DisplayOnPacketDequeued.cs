@@ -6,11 +6,11 @@ using UniRx;
 using UnityEngine;
 
 
-namespace Assets.Code.PacketFlow.UseCases
+namespace PacketFlow.UseCases
 {
-	class UpdateQueueOnPacketDequeued
+	public class DisplayOnPacketDequeued
 	{
-		public UpdateQueueOnPacketDequeued(NodeIdentifier nodeId, IObservable<NetworkEvent> networkEvents, PacketTypeReadModel packetTypeReadModel, IDisplayPacketEnqueue consumerPacket)
+		public DisplayOnPacketDequeued(NodeIdentifier nodeId, IObservable<NetworkEvent> networkEvents, PacketTypeReadModel packetTypeReadModel, IDisplayPacketEnqueue consumerPacket)
 		{
 			networkEvents
 				.OfType<NetworkEvent, NetworkEvent.PacketEnqueued>()

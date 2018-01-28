@@ -26,6 +26,11 @@ namespace Assets.Code.Queue
 			_packetQueue = new Queue<Packet>();
 			_gameObjectQueue = new Queue<GameObject>(DisplaySize);
 
+			InitializeEventListeners(networkEvents);
+		}
+
+		protected virtual void InitializeEventListeners(IObservable<NetworkEvent> networkEvents)
+		{
 			networkEvents
 				.OfType<NetworkEvent, NetworkEvent.PacketAdded>()
 				.Subscribe(packetAdded => AddPacketToQueue(packetAdded.Packet));
@@ -36,7 +41,7 @@ namespace Assets.Code.Queue
 				.Subscribe(_ => RemovePacketFromQueue());
 		}
 
-		private void RemovePacketFromQueue()
+		protected void RemovePacketFromQueue()
 		{
 			if (!_gameObjectQueue.IsEmpty())
 				Destroy(_gameObjectQueue.Dequeue());
@@ -44,7 +49,7 @@ namespace Assets.Code.Queue
 			UpdateGameObjectQueue();
 		}
 
-		private void AddPacketToQueue(Packet packet)
+		protected void AddPacketToQueue(Packet packet)
 		{
 			_packetQueue.Enqueue(packet);
 			UpdateGameObjectQueue();
@@ -60,8 +65,12 @@ namespace Assets.Code.Queue
 
 		public GameObject Create(Packet packet)
 		{
-			var square = Instantiate(PacketCreator, ParentTransform, false);
+			var square = Instantiate(PacketCreator);
+
+			square.transform.SetParent(ParentTransform, false);
+
 			var image = square.GetComponent<Image>();
+
 			switch (packet.Type)
 			{
 				case PacketType.Red:

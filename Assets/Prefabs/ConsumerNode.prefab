@@ -280,9 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6360e6fe32eea16499e2d504f558cbf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisplaySize: 0
-  AddPacket: {fileID: 0}
-  RemovePacket: {fileID: 0}
+  DisplaySize: 5
   ParentTransform: {fileID: 224695082290498628}
   PacketCreator: {fileID: 1728665534417140, guid: 254f273a5ddc1be42ac154ee96a1774b,
     type: 2}
@@ -298,8 +296,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DisplaySize: 0
-  AddPacket: {fileID: 0}
-  RemovePacket: {fileID: 0}
   ParentTransform: {fileID: 224695082290498628}
   PacketCreator: {fileID: 1728665534417140, guid: 254f273a5ddc1be42ac154ee96a1774b,
     type: 2}
