@@ -14,7 +14,7 @@ using static Assets.Code.Constants;
 	{
 		private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
 		private int _senderID => NetworkManagerInstance?.client?.connection?.connectionId ?? 0;
-
+		private bool _isClientConnected => NetworkManagerInstance?.IsClientConnected() ?? false;
 		public NetworkManager NetworkManagerInstance;
 
 		private ISubject<NetworkEvent> _eventSubject = new Subject<NetworkEvent>();
@@ -29,7 +29,7 @@ using static Assets.Code.Constants;
 		
 		void Update()
 		{
-			if (!NetworkManagerInstance.IsClientConnected())
+			if (!_isClientConnected)
 				return;
 
 			if (!NetworkManagerInstance.client.handlers.ContainsKey(SERVER_MESSAGE_TYPE_ID))
