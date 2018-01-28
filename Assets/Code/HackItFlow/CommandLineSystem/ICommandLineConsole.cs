@@ -12,6 +12,6 @@ namespace Assets.Code.HackItFlow.CommandLineSystem
 	{
 		IReadOnlyReactiveCollection<string> Text { get; }
 
-		void AddText(string text);
+		void AddText(string firstLine, params string[] subsequentLines);
 	}
 }

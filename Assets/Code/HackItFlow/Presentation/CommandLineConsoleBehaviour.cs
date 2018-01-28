@@ -25,11 +25,10 @@ namespace Assets.Code.HackItFlow.Presentation
 		{
 			_commandLineConsole = commandLineConsole;
 
-			for (int i = 0; i < 100; i++)
-			{
-				_commandLineConsole.AddText("ls -l");
-				_commandLineConsole.AddText("rm -rf *");
-			}
+			// Seed initial ASCII art
+			_commandLineConsole.AddText(
+				"Initializing...",
+				"Art goes here");
 
 			_commandLineConsole
 				.Text
