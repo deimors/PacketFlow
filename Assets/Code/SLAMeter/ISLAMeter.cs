@@ -15,8 +15,10 @@ namespace Assets.Code.SLAMeter
 
 		float FailureThreashold { get; }
 
+		int MinimumPacketsRequired { get; }
+
 		bool TryAddPackets(int count, PacketStatus packetStatus);
 
-		void InitializeThreashold(float threashold);
+		void InitializeMeter(float threashold, int minimumNumberOfPackets);
 	}
 }

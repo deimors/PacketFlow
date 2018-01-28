@@ -9,24 +9,49 @@ namespace Assets.Code.SLAMeter
 {
 	public class SLAMeter : ISLAMeter
 	{
-		public ReactiveProperty<int> CurrentPackets { get; set; } = new ReactiveProperty<int>();
+		public ReactiveProperty<int> SucceededCount { get; private set; }
 
-		IReadOnlyReactiveProperty<int> ISLAMeter.CurrentPackets => CurrentPackets;
+		IReadOnlyReactiveProperty<int> ISLAMeter.SucceededCount => SucceededCount;
 
-		private int _maxPackets;
+		public ReactiveProperty<int> FailedCount { get; private set; }
 
-		public int MaxPackets => _maxPackets;
+		IReadOnlyReactiveProperty<int> ISLAMeter.FailedCount => FailedCount;
 
-		int ISLAMeter.MaxPackets => MaxPackets;
+		public float FailureThreashold { get; private set; }
 
-		public bool TryAddPackets(int level)
+		public int MinimumPacketsRequired { get; private set; }
+
+		public void InitializeMeter(float threashold, int minimumNumberOfPackets)
 		{
-			return true;
+			FailureThreashold = threashold;
+			MinimumPacketsRequired = minimumNumberOfPackets;
+			SucceededCount.Value = 0;
+			FailedCount.Value = 0;
 		}
 
-		public void InitializeThreashold(int maxPackets)
+		public bool TryAddPackets(int count, PacketStatus packetStatus)
 		{
-			_maxPackets = maxPackets;
+			switch (packetStatus)
+			{
+				case PacketStatus.Failure:
+					FailedCount.Value += 1;
+					break;
+				case PacketStatus.Success:
+					SucceededCount.Value += 1;
+					break;
+			}
+
+			var failedCount = FailedCount.Value != 0 ? FailedCount.Value : 1.0f;
+
+			if ((SucceededCount.Value / (float)(SucceededCount.Value + FailedCount.Value) <= FailureThreashold) 
+				&& (FailedCount.Value + SucceededCount.Value >= MinimumPacketsRequired))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
 		}
 	}
 }
