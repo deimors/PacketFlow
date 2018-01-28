@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4876270339420288}
-  - component: {fileID: 114874602617705148}
   - component: {fileID: 114067996757614418}
   - component: {fileID: 114148625216628046}
   - component: {fileID: 114241801164461794}
@@ -131,21 +130,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _link: {fileID: 114062582829566162}
---- !u!114 &114874602617705148
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1339726271762410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6d370ec7251378489de49cb1144490b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _lineRenderer: {fileID: 0}
-  StartPoint: {x: 0, y: 0}
-  EndPoint: {x: 0, y: 0}
-  Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!120 &120065102973466308
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -185,7 +169,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 0.2
+    widthMultiplier: 0.05
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -232,5 +216,5 @@ LineRenderer:
     alignment: 0
     textureMode: 0
     generateLightingData: 0
-  m_UseWorldSpace: 1
+  m_UseWorldSpace: 0
   m_Loop: 0
