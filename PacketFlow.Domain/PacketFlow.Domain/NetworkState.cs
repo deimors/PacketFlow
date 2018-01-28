@@ -20,7 +20,9 @@ namespace PacketFlow.Domain
 				packedAdded => _packets.Add(packedAdded.Packet.Id, packedAdded.Packet),
 				packetEnqueued => EnqueuePacked(packetEnqueued.PacketId, packetEnqueued.NodeId),
 				portAssigned => AssignPort(portAssigned),
-				packetTypeDirectionChanged => ChangePacketTypeDirection(packetTypeDirectionChanged)
+				packetTypeDirectionChanged => ChangePacketTypeDirection(packetTypeDirectionChanged),
+				packetTransmissionStarted => AddPacketToLinkContent(packetTransmissionStarted),
+				packetTransmissionFinished => RemovePacketFromLinkContent(packetTransmissionFinished)
 			);
 
 		private void EnqueuePacked(PacketIdentifier packetId, NodeIdentifier nodeId)
@@ -42,6 +44,20 @@ namespace PacketFlow.Domain
 			var routerNode = _nodes[@event.NodeId].AsT1;
 
 			_nodes[routerNode.Id] = routerNode.With(state: s => s.WithPacketDirection(@event.PacketType, @event.Port));
+		}
+
+		private void AddPacketToLinkContent(NetworkEvent.PacketTransmissionStarted @event)
+		{
+			var link = _links[@event.LinkId];
+
+			_links[link.Id] = link.Add(@event.PacketId);
+		}
+
+		private void RemovePacketFromLinkContent(NetworkEvent.PacketTransmissionFinished @event)
+		{
+			var link = _links[@event.LinkId];
+
+			_links[link.Id] = link.Remove(@event.PacketId);
 		}
 	}
 }

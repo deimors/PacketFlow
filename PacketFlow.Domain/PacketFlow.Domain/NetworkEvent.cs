@@ -2,7 +2,16 @@
 
 namespace PacketFlow.Domain
 {
-	public abstract class NetworkEvent : OneOfBase<NetworkEvent.NodeAdded, NetworkEvent.LinkAdded, NetworkEvent.PacketAdded, NetworkEvent.PacketEnqueued, NetworkEvent.PortAssigned, NetworkEvent.PacketTypeDirectionChanged>
+	public abstract class NetworkEvent : OneOfBase<
+		NetworkEvent.NodeAdded, 
+		NetworkEvent.LinkAdded, 
+		NetworkEvent.PacketAdded, 
+		NetworkEvent.PacketEnqueued, 
+		NetworkEvent.PortAssigned,
+		NetworkEvent.PacketTypeDirectionChanged,
+		NetworkEvent.PacketTransmissionStarted,
+		NetworkEvent.PacketTransmissionFinished
+	>
 	{
 		public class NodeAdded : NetworkEvent
 		{
@@ -74,6 +83,30 @@ namespace PacketFlow.Domain
 			public NodeIdentifier NodeId { get; }
 			public PacketType PacketType { get; }
 			public PortDirection Port { get; }
+		}
+
+		public class PacketTransmissionStarted : NetworkEvent
+		{
+			public PacketTransmissionStarted(PacketIdentifier packetId, LinkIdentifier linkId)
+			{
+				PacketId = packetId ?? throw new System.ArgumentNullException(nameof(packetId));
+				LinkId = linkId ?? throw new System.ArgumentNullException(nameof(linkId));
+			}
+
+			public PacketIdentifier PacketId { get; }
+			public LinkIdentifier LinkId { get; }
+		}
+
+		public class PacketTransmissionFinished : NetworkEvent
+		{
+			public PacketTransmissionFinished(PacketIdentifier packetId, LinkIdentifier linkId)
+			{
+				PacketId = packetId ?? throw new System.ArgumentNullException(nameof(packetId));
+				LinkId = linkId ?? throw new System.ArgumentNullException(nameof(linkId));
+			}
+
+			public PacketIdentifier PacketId { get; }
+			public LinkIdentifier LinkId { get; }
 		}
 	}
 }

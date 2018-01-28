@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="ConnectionDirection.cs" />
     <Compile Include="Link.cs" />
+    <Compile Include="LinkAttributes.cs" />
     <Compile Include="LinkIdentifier.cs" />
     <Compile Include="NetworkAggregate.cs" />
     <Compile Include="NetworkCommand.cs" />

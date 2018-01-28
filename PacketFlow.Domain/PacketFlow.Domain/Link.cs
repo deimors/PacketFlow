@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 
 namespace PacketFlow.Domain
 {
@@ -8,25 +9,21 @@ namespace PacketFlow.Domain
 		public NodeIdentifier Source { get; }
 		public NodeIdentifier Sink { get; }
 		public LinkAttributes Attributes { get; }
+		public ImmutableList<PacketIdentifier> Content { get; }
 
-		public Link(LinkIdentifier id, NodeIdentifier source, NodeIdentifier sink, LinkAttributes attributes)
+		public Link(LinkIdentifier id, NodeIdentifier source, NodeIdentifier sink, LinkAttributes attributes, ImmutableList<PacketIdentifier> content)
 		{
 			Id = id ?? throw new ArgumentNullException(nameof(id));
 			Source = source ?? throw new ArgumentNullException(nameof(source));
 			Sink = sink ?? throw new ArgumentNullException(nameof(sink));
-			Attributes = attributes;
-		}
-	}
-
-	public class LinkAttributes
-	{
-		public LinkAttributes(int bandwidth, float latency)
-		{
-			Bandwidth = bandwidth;
-			Latency = latency;
+			Attributes = attributes ?? throw new ArgumentNullException(nameof(attributes));
+			Content = content ?? throw new ArgumentNullException(nameof(content));
 		}
 
-		public int Bandwidth { get; }
-		public float Latency { get; }
+		public Link Add(PacketIdentifier linkId)
+			=> new Link(Id, Source, Sink, Attributes, Content.Add(linkId));
+
+		public Link Remove(PacketIdentifier linkId)
+			=> new Link(Id, Source, Sink, Attributes, Content.Remove(linkId));
 	}
 }
