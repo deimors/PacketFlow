@@ -28,9 +28,12 @@ public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, Net
 		_history.Enqueue(@event);
 	}
 
-	private void OnClientConnected()
+	private void PlayerConnected(NetworkMessage message)
 	{
 		NetworkEvent historyEvent;
+
+		Debug.Log("Connected");
+
 
 		while (_history.TryDequeue(out historyEvent))
 		{
@@ -58,6 +61,8 @@ public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, Net
 			var message = networkMessage.ReadMessage<PacketFlowMessage>();
 			_messageQueue.Enqueue(message);
 		});
+
+		NetworkServer.RegisterHandler(SERVER_CLIENT_CONNECT, PlayerConnected);
 	}
 
 	void Update()
