@@ -24,7 +24,7 @@ namespace Assets.Code.HackItFlow.Presentation
 		/// </summary>
 		void Update()
 		{
-			if (Event.current.Equals(Event.KeyboardEvent("space")))
+			if (Input.GetKeyDown(KeyCode.Space))
 			{
 				// emit stuff
 			}

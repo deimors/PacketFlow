@@ -1,15 +1,18 @@
-﻿using Assets.Code.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UniRx;
 
 namespace Assets.Code.HackItFlow.CommandLineSystem
 {
-	public interface ICommandLineConsole
+	public class CommandLineTextAddedEvent
 	{
-		void AddText(string firstLine, params string[] subsequentLines);
+		public string Text { get; }
+
+		public CommandLineTextAddedEvent(string text)
+		{
+			Text = text;
+		}
 	}
 }
