@@ -12,4 +12,12 @@ namespace PhotonNetworking.UseCases
 			Observable.Timer(delay).Subscribe(_ => connection.Connect());
 		}
 	}
+
+	public class DisconnectAfterDelay
+	{
+		public DisconnectAfterDelay(IConnection connection, TimeSpan delay)
+		{
+			Observable.Timer(delay).Subscribe(_ => connection.Disconnect());
+		}
+	}
 }

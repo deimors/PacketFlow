@@ -1,6 +1,7 @@
 ﻿using Photon;
 using System;
 using UniRx;
+using UnityEngine;
 
 namespace PhotonNetworking.Photon
 {
@@ -10,38 +11,37 @@ namespace PhotonNetworking.Photon
 
 		void Start()
 		{
-			ConnectionEvents.Subscribe(_connectionSubject);
+			Send<ConnectionEvent.Disconnected>();
 		}
 
 		public void Connect()
 		{
 			PhotonNetwork.ConnectUsingSettings("v0.1");
+			Send<ConnectionEvent.Connecting>();
 		}
 		
 		public void Disconnect()
 		{
 			PhotonNetwork.Disconnect();
+			Send<ConnectionEvent.Disconnecting>();
+		}
+
+		public override void OnConnectedToMaster()
+		{
+			Send<ConnectionEvent.Connected>();
+		}
+
+		public override void OnDisconnectedFromPhoton()
+		{
+			Send<ConnectionEvent.Disconnected>();
 		}
 
 		public IDisposable Subscribe(IObserver<ConnectionEvent> observer)
 			=> _connectionSubject.Subscribe(observer);
-		
-		private static IObservable<ConnectionEvent> ConnectionEvents
-			=> Observable
-				.EveryUpdate()
-				.Select(_ => PhotonNetwork.connectionState)
-				.DistinctUntilChanged()
-				.Select(ToConnectionEvent);
 
-		private static ConnectionEvent ToConnectionEvent(ConnectionState newState)
+		private void Send<TEvent>() where TEvent : ConnectionEvent, new()
 		{
-			switch (newState)
-			{
-				case ConnectionState.Connecting: return new ConnectionEvent.Connecting();
-				case ConnectionState.Connected: return new ConnectionEvent.Connected();
-				case ConnectionState.Disconnecting: return new ConnectionEvent.Disconnecting();
-				default: return new ConnectionEvent.Disconnected();
-			}
+			_connectionSubject.OnNext(new TEvent());
 		}
 	}
 }
