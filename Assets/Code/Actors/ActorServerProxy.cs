@@ -7,7 +7,7 @@ namespace PacketFlow.Actors
 	{
 		private readonly IActor<TEvent, TCommand> _wrapped;
 
-		public ActorServerProxy(IActor<TEvent, TCommand> wrapped, IActorServer<TEvent, TCommand> server)
+		public ActorServerProxy(IActor<TEvent, TCommand> wrapped, IActorHost<TEvent, TCommand> server)
 		{
 			_wrapped = wrapped;
 

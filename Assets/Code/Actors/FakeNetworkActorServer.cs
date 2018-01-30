@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PacketFlow.Actors
 {
-	public class FakeNetworkActorServer : IActorServer<NetworkEvent, NetworkCommand>
+	public class FakeNetworkActorServer : IActorHost<NetworkEvent, NetworkCommand>
 	{
 		public IObservable<NetworkCommand> ReceivedCommands { get { return Observable.Empty<NetworkCommand>(); } }
 

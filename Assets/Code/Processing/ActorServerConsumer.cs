@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using static Assets.Code.Constants;
 
-public class ActorServerConsumer : MonoBehaviour, IActorServer<NetworkEvent, NetworkCommand>
+public class ActorServerConsumer : MonoBehaviour, IActorHost<NetworkEvent, NetworkCommand>
 {
 	private readonly ConcurrentQueue<PacketFlowMessage> _messageQueue = new ConcurrentQueue<PacketFlowMessage>();
 	private readonly ISubject<NetworkCommand> _commandSubject = new Subject<NetworkCommand>();

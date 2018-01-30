@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace PhotonNetworking.Photon
 {
-	public class AdminPlayerClient : PunBehaviour, IActorServer<NetworkEvent, NetworkCommand>
+	public class AdminPlayerClient : PunBehaviour, IActorHost<NetworkEvent, NetworkCommand>
 	{
 		private readonly ISubject<NetworkCommand> _commandSubject = new Subject<NetworkCommand>();
 		public IObservable<NetworkCommand> ReceivedCommands => _commandSubject;

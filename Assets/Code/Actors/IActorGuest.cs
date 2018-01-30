@@ -2,7 +2,7 @@
 
 namespace PacketFlow.Actors
 {
-	public interface IActorClient<TEvent, TCommand>
+	public interface IActorGuest<TEvent, TCommand>
 	{
 		void SendCommand(TCommand command);
 

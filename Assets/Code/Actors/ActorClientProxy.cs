@@ -5,9 +5,9 @@ namespace PacketFlow.Actors
 	public class ActorClientProxy<TEvent, TCommand> : IActor<TEvent, TCommand>
 	{
 		private readonly EventHistory<TEvent> _eventHistory = new EventHistory<TEvent>();
-		private readonly IActorClient<TEvent, TCommand> _client;
+		private readonly IActorGuest<TEvent, TCommand> _client;
 
-		public ActorClientProxy(IActorClient<TEvent, TCommand> client)
+		public ActorClientProxy(IActorGuest<TEvent, TCommand> client)
 		{
 			_client = client;
 		}
