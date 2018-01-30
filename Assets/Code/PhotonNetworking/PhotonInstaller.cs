@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 
 namespace PhotonNetworking
 {
@@ -6,7 +7,7 @@ namespace PhotonNetworking
 	{
 		public override void InstallBindings()
 		{
-			Container.Bind<UseCases.ConnectImmediately>().AsSingle().NonLazy();
+			Container.Bind<UseCases.ConnectAfterDelay>().AsSingle().WithArguments(TimeSpan.FromSeconds(1)).NonLazy();
 		}
 	}
 }
