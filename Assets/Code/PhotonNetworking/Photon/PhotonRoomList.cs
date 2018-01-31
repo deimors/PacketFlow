@@ -8,8 +8,14 @@ namespace PhotonNetworking.Photon
 
 	public class PhotonRoomList : PunBehaviour, IRoomList
 	{
-		public IEnumerable<string> RoomList 
-			=> PhotonNetwork.GetRoomList().Select(roomInfo => roomInfo.Name);
+		public IEnumerable<string> RoomList
+		{
+			get
+			{
+				PhotonNetwork.GetCustomRoomList(PhotonNetwork.lobby, string.Empty);
+				return PhotonNetwork.GetRoomList().Select(roomInfo => roomInfo.Name);
+			}
+		}
 
 		public void CreateRoom(string name)
 		{

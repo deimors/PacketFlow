@@ -1,5 +1,6 @@
 ﻿using Photon;
 using System;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ namespace PhotonNetworking.Photon
 			if (PhotonNetwork.connectionState != ConnectionState.Disconnected)
 				return;
 
+			PhotonNetwork.autoJoinLobby = true;
+
 			PhotonNetwork.ConnectUsingSettings("v0.1");
 			Send<ConnectionEvent.Connecting>();
 		}
@@ -32,6 +35,45 @@ namespace PhotonNetworking.Photon
 
 			PhotonNetwork.Disconnect();
 			Send<ConnectionEvent.Disconnecting>();
+		}
+
+		public override void OnConnectionFail(DisconnectCause cause)
+		{
+			Debug.Log($"Connection Failed: {cause.ToString()}");
+			Send<ConnectionEvent.Disconnected>();
+		}
+
+		public override void OnConnectedToPhoton()
+		{
+			Debug.Log("OnConnectedToPhoton()");
+		}
+
+		public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
+		{
+			Debug.Log($"OnPhotonPlayerConnected({newPlayer.ToString()})");
+		}
+
+		public override void OnFailedToConnectToPhoton(DisconnectCause cause)
+		{
+			Debug.Log($"OnFailedToConnectToPhoton({cause.ToString()}");
+		}
+
+		public override void OnJoinedLobby()
+		{
+			Debug.Log($"OnJoinedLobby({PhotonNetwork.lobby.ToString()})");
+			Debug.Log($"Rooms: {string.Join(", ", PhotonNetwork.GetRoomList().Select(room => room.ToString()))}");
+			PhotonNetwork.CreateRoom("PacketFlow");
+		}
+
+		public override void OnCreatedRoom()
+		{
+			Debug.Log("OnCreatedRoom()");
+			Debug.Log($"Rooms: {string.Join(", ", PhotonNetwork.GetRoomList().Select(room => room.ToString()))}");
+		}
+
+		public override void OnJoinedRoom()
+		{
+			Debug.Log($"OnJoinedRoom({PhotonNetwork.room.ToString()})");
 		}
 
 		public override void OnConnectedToMaster()
