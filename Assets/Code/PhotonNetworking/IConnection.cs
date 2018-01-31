@@ -11,9 +11,11 @@ namespace PhotonNetworking
 		public class Disconnected : ConnectionEvent { }
 	}
 
-	public interface IConnection : IObservable<ConnectionEvent>
+	public interface IConnection
 	{
 		void Connect();
 		void Disconnect();
+
+		IObservable<ConnectionEvent> Events { get; }
 	}
 }
