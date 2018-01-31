@@ -76,6 +76,11 @@ namespace PhotonNetworking.Photon
 			Debug.Log($"OnJoinedRoom({PhotonNetwork.room.ToString()})");
 		}
 
+		public override void OnReceivedRoomListUpdate()
+		{
+			Debug.Log($"OnReceivedRoomListUpdate({string.Join(", ", PhotonNetwork.GetRoomList().Select(room => room.ToString()))})");
+		}
+
 		public override void OnConnectedToMaster()
 		{
 			Send<ConnectionEvent.Connected>();
