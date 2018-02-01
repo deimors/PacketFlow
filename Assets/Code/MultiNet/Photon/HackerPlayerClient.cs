@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PhotonNetworking.Photon
+namespace MultiNet.Photon
 {
 	public class HackerPlayerClient : MonoBehaviour
 	{

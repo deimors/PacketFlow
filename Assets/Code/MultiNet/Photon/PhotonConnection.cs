@@ -4,7 +4,7 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 
-namespace PhotonNetworking.Photon
+namespace MultiNet.Photon
 {
 	public class PhotonConnection : PunBehaviour, IConnection
 	{

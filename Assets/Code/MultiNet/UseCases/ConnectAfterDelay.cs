@@ -1,9 +1,9 @@
-﻿using PhotonNetworking.Photon;
+﻿using MultiNet.Photon;
 using System;
 using UniRx;
 using UnityEngine;
 
-namespace PhotonNetworking.UseCases
+namespace MultiNet.UseCases
 {
 	public class ConnectAfterDelay
 	{

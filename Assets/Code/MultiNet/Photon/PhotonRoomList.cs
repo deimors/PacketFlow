@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace PhotonNetworking.Photon
+namespace MultiNet.Photon
 {
 
 	public class PhotonRoomList : PunBehaviour, IRoomList

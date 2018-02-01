@@ -1,7 +1,7 @@
 ﻿using System;
 using UniRx;
 
-namespace PhotonNetworking.UseCases
+namespace MultiNet.UseCases
 {
 	public class DisconnectAfterDelay
 	{

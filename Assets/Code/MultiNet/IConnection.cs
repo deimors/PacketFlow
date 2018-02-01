@@ -1,7 +1,7 @@
 ﻿using OneOf;
 using System;
 
-namespace PhotonNetworking
+namespace MultiNet
 {
 	public class ConnectionEvent : OneOfBase<ConnectionEvent.Connecting, ConnectionEvent.Connected, ConnectionEvent.Disconnecting, ConnectionEvent.Disconnected>
 	{

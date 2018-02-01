@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-namespace PhotonNetworking.Photon
+namespace MultiNet.Photon
 {
 	public class AdminPlayerClient : PunBehaviour, IActorHost<NetworkEvent, NetworkCommand>
 	{

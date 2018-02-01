@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace PhotonNetworking.Photon
+namespace MultiNet.Photon
 {
+
 	public interface IRoomList
 	{
 		IEnumerable<string> RoomList { get; }

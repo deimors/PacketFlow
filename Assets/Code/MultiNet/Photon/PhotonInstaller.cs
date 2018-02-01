@@ -1,8 +1,8 @@
-﻿using PhotonNetworking.Photon;
+﻿using MultiNet.Photon;
 using System;
 using Zenject;
 
-namespace PhotonNetworking
+namespace MultiNet
 {
 	public class PhotonInstaller : MonoInstaller
 	{
