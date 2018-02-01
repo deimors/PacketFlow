@@ -19,7 +19,16 @@ namespace PhotonNetworking.Photon
 
 		public void CreateRoom(string name)
 		{
-			PhotonNetwork.CreateRoom(name);
+
+			PhotonNetwork.CreateRoom(
+				name, 
+				new RoomOptions
+				{
+					MaxPlayers = 2
+				},	
+				PhotonNetwork.lobby
+			);
+			
 		}
 
 		public override void OnCreatedRoom()

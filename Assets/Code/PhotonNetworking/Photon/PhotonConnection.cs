@@ -46,6 +46,7 @@ namespace PhotonNetworking.Photon
 		public override void OnConnectedToPhoton()
 		{
 			Debug.Log("OnConnectedToPhoton()");
+			Send<ConnectionEvent.Connected>();
 		}
 
 		public override void OnPhotonPlayerConnected(PhotonPlayer newPlayer)
@@ -62,7 +63,6 @@ namespace PhotonNetworking.Photon
 		{
 			Debug.Log($"OnJoinedLobby({PhotonNetwork.lobby.ToString()})");
 			Debug.Log($"Rooms: {string.Join(", ", PhotonNetwork.GetRoomList().Select(room => room.ToString()))}");
-			PhotonNetwork.CreateRoom("PacketFlow");
 		}
 
 		public override void OnCreatedRoom()
@@ -83,7 +83,7 @@ namespace PhotonNetworking.Photon
 
 		public override void OnConnectedToMaster()
 		{
-			Send<ConnectionEvent.Connected>();
+			Debug.Log("OnConnectedToMaster()");
 		}
 
 		public override void OnDisconnectedFromPhoton()

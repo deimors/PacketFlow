@@ -31,7 +31,12 @@ namespace PhotonNetworking.UseCases
 			connection.Events
 				.OfType<ConnectionEvent, ConnectionEvent.Connected>()
 				.Delay(delay)
-				.Subscribe(_ => rooms.CreateRoom(roomName));
+				.Subscribe(_ => CreateRoom(rooms, roomName));
+		}
+
+		private static void CreateRoom(IRoomList rooms, string roomName)
+		{
+			rooms.CreateRoom(roomName);
 		}
 	}
 }
