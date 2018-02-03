@@ -1,5 +1,6 @@
 ﻿using OneOf;
 using System;
+using System.Collections.Generic;
 
 namespace PacketFlow.MultiNet.Domain
 {
@@ -14,20 +15,11 @@ namespace PacketFlow.MultiNet.Domain
 
 			public ConnectionState NewState { get; }
 
-			public bool Equals(ConnectionStateUpdated other)
-			{
-				if (ReferenceEquals(null, other)) return false;
-				if (ReferenceEquals(this, other)) return true;
-				return base.Equals(other) && Equals(NewState, other.NewState);
-			}
-
 			public override bool Equals(object obj)
-			{
-				if (ReferenceEquals(null, obj)) return false;
-				if (ReferenceEquals(this, obj)) return true;
-				if (obj.GetType() != this.GetType()) return false;
-				return Equals((ConnectionStateUpdated) obj);
-			}
+				=> Equals(obj as ConnectionStateUpdated);
+
+			public bool Equals(ConnectionStateUpdated other)
+				=> !(other is null) && Equals(NewState, other.NewState);
 
 			public override int GetHashCode()
 			{
