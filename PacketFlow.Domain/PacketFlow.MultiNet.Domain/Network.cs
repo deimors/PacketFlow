@@ -2,11 +2,11 @@
 {
 	public class Network
 	{
-		public Network(NetworkIdentifier id)
+		public Network(NetworkAddress address)
 		{
-			Id = id;
+			Address = address;
 		}
 
-		public NetworkIdentifier Id { get; }
+		public NetworkAddress Address { get; }
 	}
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketFlow.Core", "PacketFl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketFlow.MultiNet.Domain", "PacketFlow.MultiNet.Domain\PacketFlow.MultiNet.Domain.csproj", "{4125C60D-6F95-49D7-A58E-1288C3ACCDF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketFlow.MultiNet.Domain.Tests", "PacketFlow.MultiNet.Domain.Tests\PacketFlow.MultiNet.Domain.Tests.csproj", "{B166753D-8E99-477D-A641-7BD7B5A1ABCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4125C60D-6F95-49D7-A58E-1288C3ACCDF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4125C60D-6F95-49D7-A58E-1288C3ACCDF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4125C60D-6F95-49D7-A58E-1288C3ACCDF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B166753D-8E99-477D-A641-7BD7B5A1ABCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B166753D-8E99-477D-A641-7BD7B5A1ABCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B166753D-8E99-477D-A641-7BD7B5A1ABCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B166753D-8E99-477D-A641-7BD7B5A1ABCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

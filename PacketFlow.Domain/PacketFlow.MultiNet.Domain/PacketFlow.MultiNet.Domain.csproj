@@ -52,7 +52,7 @@
     <Compile Include="MultiNetEvent.cs" />
     <Compile Include="MultiNetState.cs" />
     <Compile Include="Network.cs" />
-    <Compile Include="NetworkIdentifier.cs" />
+    <Compile Include="NetworkAddress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

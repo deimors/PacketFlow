@@ -15,9 +15,19 @@ namespace PacketFlow.MultiNet.Domain
 			public ConnectionState NewState { get; }
 		}
 
+		public class AddNetwork : MultiNetCommand
+		{
+			public AddNetwork(NetworkAddress address)
+			{
+				Address = address ?? throw new ArgumentNullException(nameof(address));
+			}
+
+			public NetworkAddress Address { get; }
+		}
+
 		public enum Error
 		{
-
+			NetworkAlreadyAdded
 		}
 	}
 }

@@ -23,6 +23,7 @@ namespace MultiNet.Photon
 				return;
 
 			PhotonNetwork.autoJoinLobby = true;
+			PhotonNetwork.playerName = "h4x0r";
 
 			PhotonNetwork.ConnectUsingSettings("v0.1");
 			Send<ConnectionEvent.Connecting>();
@@ -46,6 +47,7 @@ namespace MultiNet.Photon
 		public override void OnConnectedToPhoton()
 		{
 			Debug.Log("OnConnectedToPhoton()");
+			Debug.Log($"Players: {string.Join(", ", PhotonNetwork.playerList.Select(player => player.NickName))}");
 			Send<ConnectionEvent.Connected>();
 		}
 

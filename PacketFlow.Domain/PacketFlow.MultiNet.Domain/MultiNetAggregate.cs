@@ -5,7 +5,7 @@ namespace PacketFlow.MultiNet.Domain
 {
 	public class MultiNetAggregate : AggregateRoot<MultiNetEvent, MultiNetState>, IHandleCommand<MultiNetCommand, MultiNetCommand.Error>
 	{
-		protected MultiNetAggregate() : base(new MultiNetState()) { }
+		public MultiNetAggregate() : base(new MultiNetState()) { }
 
 		public Maybe<MultiNetCommand.Error> HandleCommand(MultiNetCommand command)
 			=> command.Match(
